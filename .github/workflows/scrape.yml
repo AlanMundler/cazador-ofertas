@@ -1,0 +1,44 @@
+name: Cazador de Ofertas
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    name: Buscar ofertas en Cordoba
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Puppeteer browser
+        run: npx puppeteer browsers install chrome
+
+      - name: Run offer hunter
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          LATITUDE: '-31.4201'
+          LONGITUDE: '-64.1888'
+          MIN_DISCOUNT: '60'
+        run: node index.js
+
+      - name: Commit history data
+        run: |
+          git config --global user.name "cazador-bot"
+          git config --global user.email "bot@cazador-ofertas.local"
+          git add data/ || true
+          git diff --cached --quiet || git commit -m "update history $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push || true

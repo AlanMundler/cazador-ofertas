@@ -1,0 +1,19 @@
+{
+  "name": "cazador-ofertas",
+  "version": "1.0.0",
+  "description": "Cazador de ofertas para apps de delivery en Cordoba, Argentina",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node index.js --test"
+  },
+  "dependencies": {
+    "puppeteer": "^23.0.0",
+    "node-fetch": "^3.3.2",
+    "dotenv": "^16.4.5"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
