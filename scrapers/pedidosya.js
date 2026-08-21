@@ -122,7 +122,7 @@ export async function scrapePedidosYa() {
 
             const discountedItems = [];
             const cheapItems = [];
-            const catsScanned = Math.min(allCatIds.length, 30);
+            const catsScanned = allCatIds.length;
 
             for (const catId of allCatIds.slice(0, catsScanned)) {
               try {
