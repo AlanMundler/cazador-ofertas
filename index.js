@@ -9,7 +9,8 @@ async function main() {
   const startTime = Date.now();
   console.log(`\n${'='.repeat(50)}`);
   console.log(`CAZADOR DE OFERTAS - ${new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' })}`);
-  console.log(`Cordoba, Argentina | Min discount: ${process.env.MIN_DISCOUNT || '60'}%`);
+  console.log(`Córdoba, Argentina`);
+  console.log(`Super/market: >60% OFF | Restaurantes: >70% OFF`);
   console.log(`${'='.repeat(50)}\n`);
 
   const allOffers = [];
@@ -23,19 +24,21 @@ async function main() {
   const uberEatsOffers = await scrapeUberEats();
   allOffers.push(...uberEatsOffers);
 
-  console.log(`\nTotal bruto: ${allOffers.length} ofertas`);
+  const superCount = allOffers.filter(o => o.category === 'supermercado').length;
+  const restCount = allOffers.filter(o => o.category === 'restaurante').length;
+  console.log(`\nTotal bruto: ${allOffers.length} ofertas (${superCount} super, ${restCount} restaurantes)`);
 
   const deduplicated = deduplicateOffers(allOffers);
-  console.log(`Despues de dedup: ${deduplicated.length} ofertas`);
+  console.log(`Después de dedup: ${deduplicated.length} ofertas`);
 
   const newOffers = filterNewOffers(deduplicated);
-  console.log(`Ofertas nuevas (no vistas en ultimos 30min): ${newOffers.length}`);
+  console.log(`Ofertas nuevas (no vistas en últimos 30min): ${newOffers.length}`);
 
   if (newOffers.length > 0) {
     await sendMessage(newOffers);
-    console.log(`\nNotificacion enviada!`);
+    console.log(`\n¡Notificación enviada!`);
   } else {
-    console.log(`\nSin ofertas nuevas, no se envia notificacion.`);
+    console.log(`\nSin ofertas nuevas, no se envía notificación.`);
   }
 
   const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);

@@ -2,6 +2,7 @@ import fetch from 'node-fetch';
 
 const LAT = process.env.LATITUDE || '-31.4201';
 const LNG = process.env.LONGITUDE || '-64.1888';
+const MIN_RESTAURANT = 70;
 
 const LOC_COOKIE = encodeURIComponent(JSON.stringify({
   address: { title: "Cordoba, Argentina" },
@@ -76,7 +77,6 @@ export async function scrapeUberEats() {
       const store = item.store;
       if (!store) continue;
 
-      // Parse signposts for discount info
       const signposts = store.signposts || [];
       let discount = 0;
       let promoText = '';
@@ -91,7 +91,6 @@ export async function scrapeUberEats() {
             promoText = text;
           }
         }
-        // Check for BOGO
         if (text.match(/buy\s*1.*get\s*1/i) || text.match(/2x1/i)) {
           if (50 > discount) {
             discount = 50;
@@ -100,13 +99,11 @@ export async function scrapeUberEats() {
         }
       }
 
-      if (discount >= parseFloat(process.env.MIN_DISCOUNT || '60')) {
+      if (discount >= MIN_RESTAURANT) {
         const name = store.title?.text || 'Restaurante';
         const uuid = store.storeUuid || store.uuid || '';
         const eta = store.meta?.find(m => m.badgeType === 'ETD')?.text || '';
-        const ratingObj = store.rating;
-        const rating = ratingObj?.text || '';
-        const deliveryFee = store.meta?.find(m => m.badgeType === 'FARE')?.text || '';
+        const rating = store.rating?.text || '';
         const actionUrl = store.actionUrl || '';
 
         let url = 'https://www.ubereats.com/ar';
@@ -118,6 +115,7 @@ export async function scrapeUberEats() {
 
         offers.push({
           platform: 'UberEats',
+          category: 'restaurante',
           restaurant: name,
           slug: uuid,
           discount,
@@ -132,7 +130,7 @@ export async function scrapeUberEats() {
       }
     }
 
-    console.log(`[UberEats] ${offers.length} ofertas >${process.env.MIN_DISCOUNT || '60'}% encontradas`);
+    console.log(`[UberEats] ${offers.length} ofertas >${MIN_RESTAURANT}% de restaurantes`);
   } catch (err) {
     console.error(`[UberEats] Error: ${err.message}`);
   }

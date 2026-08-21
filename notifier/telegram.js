@@ -14,26 +14,65 @@ export async function sendMessage(offers) {
     return;
   }
 
-  const header = `OFERTONES ENCONTRADOS ${offers.length} ofertas >${process.env.MIN_DISCOUNT || '60'}% OFF\n\n`;
+  const superOffers = offers.filter(o => o.category === 'supermercado');
+  const restaurantOffers = offers.filter(o => o.category === 'restaurante');
 
-  const grouped = groupByPlatform(offers);
-  let message = header;
+  let message = `OFERTAS EN CÓRDOBA\n`;
+  message += `${new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' })}\n\n`;
 
-  for (const [platform, platformOffers] of Object.entries(grouped)) {
-    message += `${platformEmoji(platform)} ${platform.toUpperCase()}\n`;
-    message += '─'.repeat(25) + '\n';
+  if (superOffers.length > 0) {
+    message += `🛒 SUPER / MERCADO (>60% OFF)\n`;
+    message += `─`.repeat(30) + `\n`;
 
-    for (const offer of platformOffers.slice(0, 10)) {
-      message += formatOffer(offer) + '\n';
+    const byStore = {};
+    for (const o of superOffers) {
+      if (!byStore[o.restaurant]) byStore[o.restaurant] = [];
+      byStore[o.restaurant].push(o);
     }
 
-    if (platformOffers.length > 10) {
-      message += `  ... y ${platformOffers.length - 10} mas\n`;
+    for (const [store, items] of Object.entries(byStore)) {
+      message += `\n<b>${store}</b>\n`;
+      for (const item of items.slice(0, 5)) {
+        const priceInfo = item.originalPrice && item.currentPrice
+          ? ` <s>${item.originalPrice}</s> → ${item.currentPrice}`
+          : '';
+        message += `  ${item.discount}% OFF | ${item.description.split(' - ').slice(1).join(' - ') || item.description}${priceInfo}\n`;
+      }
+      if (items.length > 5) {
+        message += `  ... y ${items.length - 5} más\n`;
+      }
     }
     message += '\n';
   }
 
-  message += `Actualizado: ${new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' })}`;
+  if (restaurantOffers.length > 0) {
+    message += `🍽️ RESTAURANTES (>70% OFF)\n`;
+    message += `─`.repeat(30) + `\n`;
+
+    const byPlatform = {};
+    for (const o of restaurantOffers) {
+      const key = o.platform;
+      if (!byPlatform[key]) byPlatform[key] = [];
+      byPlatform[key].push(o);
+    }
+
+    for (const [platform, items] of Object.entries(byPlatform)) {
+      message += `\n${platformEmoji(platform)} ${platform}\n`;
+      for (const item of items.slice(0, 8)) {
+        const eta = item.deliveryTime ? ` (${item.deliveryTime})` : '';
+        message += `  ${item.discount}% OFF | ${item.restaurant}${eta}\n`;
+        if (item.url) message += `  ${item.url}\n`;
+      }
+      if (items.length > 8) {
+        message += `  ... y ${items.length - 8} más\n`;
+      }
+    }
+    message += '\n';
+  }
+
+  if (superOffers.length === 0 && restaurantOffers.length > 0) {
+    message += `_Sin ofertas de supermercado hoy_\n\n`;
+  }
 
   try {
     const url = `${API_BASE}${token}/sendMessage`;
@@ -58,23 +97,6 @@ export async function sendMessage(offers) {
   } catch (err) {
     console.error(`[Telegram] Error: ${err.message}`);
   }
-}
-
-function formatOffer(offer) {
-  const priceInfo = offer.originalPrice && offer.currentPrice
-    ? ` ($${offer.originalPrice} -> $${offer.currentPrice})`
-    : '';
-  const link = offer.url ? `\n  ${offer.url}` : '';
-  return `  ${offer.discount}% OFF | ${offer.restaurant}${priceInfo}\n  ${offer.description}${link}`;
-}
-
-function groupByPlatform(offers) {
-  const groups = {};
-  for (const offer of offers) {
-    if (!groups[offer.platform]) groups[offer.platform] = [];
-    groups[offer.platform].push(offer);
-  }
-  return groups;
 }
 
 function platformEmoji(platform) {
