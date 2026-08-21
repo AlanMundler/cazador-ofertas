@@ -21,7 +21,7 @@ export async function sendMessage(offers, cheapProducts = []) {
     const restaurantOffers = offers.filter(o => o.category === 'restaurante');
 
     if (superOffers.length > 0) {
-      message += `\n🛒 SUPER (≥60% OFF)\n`;
+      message += `\n🛒 SUPER (≥50% OFF)\n`;
       const byPlatform = {};
       for (const o of superOffers) {
         if (!byPlatform[o.platform]) byPlatform[o.platform] = {};
@@ -60,7 +60,7 @@ export async function sendMessage(offers, cheapProducts = []) {
 }
 
 async function sendTelegramMessage(token, chatId, text) {
-  const MAX = 4000;
+  const MAX = 3900;
   const chunks = [];
 
   while (text.length > MAX) {
@@ -71,10 +71,14 @@ async function sendTelegramMessage(token, chatId, text) {
   }
   chunks.push(text);
 
+  const totalLen = chunks.reduce((a, c) => a + c.length, 0);
+  console.log(`[Telegram] Mensaje total: ${totalLen} chars, ${chunks.length} parte(s)`);
+
   try {
     const url = `${API_BASE}${token}/sendMessage`;
     for (let i = 0; i < chunks.length; i++) {
       const part = i > 0 ? `📊 (parte ${i + 1})\n${chunks[i]}` : chunks[i];
+      console.log(`[Telegram] Parte ${i + 1}: ${part.length} chars`);
       const res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
