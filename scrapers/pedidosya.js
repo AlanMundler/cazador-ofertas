@@ -140,7 +140,13 @@ export async function scrapePedidosYa() {
 
             title = await page.title();
             if (title.includes('momento') || title.includes('denegado')) {
-              console.log(`  [${store.name}] Blocked, skipping`);
+              if (attempt === 1) {
+                console.log(`  [${store.name}] Blocked attempt 1, reloading home to refresh cookies...`);
+                await page.goto('https://www.pedidosya.com.ar/', { waitUntil: 'domcontentloaded', timeout: 30000 });
+                await page.waitForTimeout(2000);
+                continue;
+              }
+              console.log(`  [${store.name}] Blocked on retry, skipping`);
               break;
             }
           }

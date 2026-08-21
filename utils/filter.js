@@ -60,11 +60,6 @@ export function filterNewOffers(offers) {
   return newOffers;
 }
 
-export function filterByDiscount(offers, minDiscount) {
-  const min = minDiscount || parseFloat(process.env.MIN_DISCOUNT || '60');
-  return offers.filter(o => o.discount >= min);
-}
-
 export function deduplicateOffers(offers) {
   const seen = new Set();
   return offers.filter(offer => {

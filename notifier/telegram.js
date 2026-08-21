@@ -8,22 +8,24 @@ const API_BASE = 'https://api.telegram.org/bot';
 
 function loadSubscribers() {
   try {
-    if (!existsSync(SUBSCRIBERS_FILE)) return [];
-    return JSON.parse(readFileSync(SUBSCRIBERS_FILE, 'utf-8'));
+    if (!existsSync(SUBSCRIBERS_FILE)) return { ids: [], offset: 0 };
+    const raw = JSON.parse(readFileSync(SUBSCRIBERS_FILE, 'utf-8'));
+    if (Array.isArray(raw)) return { ids: raw, offset: 0 };
+    return { ids: raw.ids || [], offset: raw.offset || 0 };
   } catch {
-    return [];
+    return { ids: [], offset: 0 };
   }
 }
 
-function saveSubscribers(ids) {
+function saveSubscribers(ids, offset) {
   const dir = join(__dirname, '..', 'data');
   if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
-  writeFileSync(SUBSCRIBERS_FILE, JSON.stringify([...new Set(ids)], null, 2));
+  writeFileSync(SUBSCRIBERS_FILE, JSON.stringify({ ids: [...new Set(ids)], offset }, null, 2));
 }
 
 export async function pollUpdates(token) {
-  const subscribers = loadSubscribers();
-  let offset = subscribers._offset || 0;
+  const { ids: subscribers, offset: savedOffset } = loadSubscribers();
+  let offset = savedOffset;
 
   try {
     const resp = await fetch(`${API_BASE}${token}/getUpdates?offset=${offset}&limit=10&timeout=1`, {
@@ -44,14 +46,12 @@ export async function pollUpdates(token) {
       if (text === '/start' || text === '/start@' + process.env.BOT_USERNAME) {
         if (!subscribers.includes(chatId)) {
           subscribers.push(chatId);
-          saveSubscribers(subscribers);
           console.log(`[Telegram] Nuevo suscriptor: ${chatId} (${firstName})`);
         }
-
       }
     }
 
-    subscribers._offset = offset;
+    saveSubscribers(subscribers, offset);
   } catch (e) {
     console.log(`[Telegram] Poll error: ${e.message}`);
   }
@@ -77,7 +77,7 @@ export async function sendMessage(offers, cheapProducts = []) {
     return;
   }
 
-  const subscribers = loadSubscribers().filter(id => typeof id === 'number');
+  const { ids: subscribers } = loadSubscribers();
   if (subscribers.length === 0) {
     console.log('[Telegram] No hay suscriptores');
     return;
@@ -169,8 +169,8 @@ async function sendTelegramMessage(token, chatId, text) {
       if (!data.ok) {
         console.error(`[Telegram] Error chat ${chatId} parte ${i + 1}: ${data.description}`);
         if (data.description && data.description.includes('blocked')) {
-          const subs = loadSubscribers().filter(id => typeof id === 'number' && id !== chatId);
-          saveSubscribers(subs);
+          const { ids: subs, offset } = loadSubscribers();
+          saveSubscribers(subs.filter(id => id !== chatId), offset);
           console.log(`[Telegram] Suscriptor ${chatId} bloqueado, eliminado`);
         }
       } else {

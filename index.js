@@ -5,8 +5,15 @@ import { scrapeUberEats } from './scrapers/ubereats.js';
 import { sendMessage, pollUpdates } from './notifier/telegram.js';
 import { filterNewOffers, deduplicateOffers } from './utils/filter.js';
 
+const TIMEOUT_MS = 8 * 60 * 1000;
+
 async function main() {
   const startTime = Date.now();
+  const timer = setTimeout(() => {
+    console.error(`\n[TIMEOUT] Límite de ${TIMEOUT_MS / 60000}min alcanzado, forzando salida`);
+    process.exit(1);
+  }, TIMEOUT_MS);
+
   console.log(`\n${'='.repeat(50)}`);
   console.log(`CAZADOR DE OFERTAS - ${new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' })}`);
   console.log(`Córdoba, Argentina`);
@@ -20,9 +27,9 @@ async function main() {
   }
 
   const [rappiOffers, pedidosYaOffers, uberEatsOffers] = await Promise.all([
-    scrapeRappi(),
-    scrapePedidosYa(),
-    scrapeUberEats(),
+    scrapeRappi().catch(e => { console.error('[Rappi] Error:', e.message); return []; }),
+    scrapePedidosYa().catch(e => { console.error('[PedidosYa] Error:', e.message); return []; }),
+    scrapeUberEats().catch(e => { console.error('[UberEats] Error:', e.message); return []; }),
   ]);
 
   const allOffers = [...rappiOffers, ...pedidosYaOffers, ...uberEatsOffers];
@@ -51,6 +58,7 @@ async function main() {
     console.log(`\nSin ofertas nuevas, no se envía notificación.`);
   }
 
+  clearTimeout(timer);
   const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
   console.log(`\nTiempo total: ${elapsed}s`);
   console.log(`${'='.repeat(50)}\n`);
