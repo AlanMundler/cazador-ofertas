@@ -14,99 +14,28 @@ export async function sendMessage(offers, cheapProducts = []) {
     return;
   }
 
-  const superOffers = offers.filter(o => o.category === 'supermercado');
-  const restaurantOffers = offers.filter(o => o.category === 'restaurante');
+  let message = `OFERTAS CÓRDOBA\n`;
 
-  let message = `OFERTAS EN CÓRDOBA\n`;
-  message += `${new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' })}\n\n`;
-
-  if (superOffers.length > 0) {
-    message += `🛒 SUPER / MERCADO (>60% OFF)\n`;
-    message += `─`.repeat(30) + `\n`;
-
-    const byStore = {};
-    for (const o of superOffers) {
-      if (!byStore[o.restaurant]) byStore[o.restaurant] = [];
-      byStore[o.restaurant].push(o);
+  if (offers.length > 0) {
+    message += `\n🛒 SUPER (≥60% OFF)\n`;
+    for (const o of offers.filter(o => o.category === 'supermercado')) {
+      const name = o.description.split(' - ').slice(1).join(' - ') || o.description;
+      message += `${o.discount}% ${name}\n`;
     }
-
-    for (const [store, items] of Object.entries(byStore)) {
-      message += `\n<b>${store}</b>\n`;
-      for (const item of items.slice(0, 5)) {
-        const priceInfo = item.originalPrice && item.currentPrice
-          ? ` <s>${item.originalPrice}</s> → ${item.currentPrice}`
-          : '';
-        message += `  ${item.discount}% OFF | ${item.description.split(' - ').slice(1).join(' - ') || item.description}${priceInfo}\n`;
-      }
-      if (items.length > 5) {
-        message += `  ... y ${items.length - 5} más\n`;
-      }
+    message += `\n🍽️ RESTAURANTES (>70% OFF)\n`;
+    for (const o of offers.filter(o => o.category === 'restaurante')) {
+      message += `${o.discount}% ${o.restaurant}\n`;
     }
-    message += '\n';
-  }
-
-  if (restaurantOffers.length > 0) {
-    message += `🍽️ RESTAURANTES (>70% OFF)\n`;
-    message += `─`.repeat(30) + `\n`;
-
-    const byPlatform = {};
-    for (const o of restaurantOffers) {
-      const key = o.platform;
-      if (!byPlatform[key]) byPlatform[key] = [];
-      byPlatform[key].push(o);
-    }
-
-    for (const [platform, items] of Object.entries(byPlatform)) {
-      message += `\n${platformEmoji(platform)} ${platform}\n`;
-      for (const item of items.slice(0, 8)) {
-        const eta = item.deliveryTime ? ` (${item.deliveryTime})` : '';
-        message += `  ${item.discount}% OFF | ${item.restaurant}${eta}\n`;
-        if (item.url) message += `  ${item.url}\n`;
-      }
-      if (items.length > 8) {
-        message += `  ... y ${items.length - 8} más\n`;
-      }
-    }
-    message += '\n';
   }
 
   if (cheapProducts.length > 0) {
-    message += `💰 PRODUCTOS BARATOS (<$100 ARS)\n`;
-    message += `─`.repeat(30) + `\n`;
-
-    const byStore = {};
+    message += `\n💰 BARATOS (<$100)\n`;
     for (const o of cheapProducts) {
-      if (!byStore[o.restaurant]) byStore[o.restaurant] = [];
-      byStore[o.restaurant].push(o);
+      message += `$${o.currentPrice} ${o.description}\n`;
     }
-
-    for (const [store, items] of Object.entries(byStore)) {
-      message += `\n<b>${store}</b>\n`;
-      for (const item of items.slice(0, 8)) {
-        message += `  ${item.currentPrice} | ${item.description.replace(/^\$[\d.,]+ - /, '')}\n`;
-      }
-      if (items.length > 8) {
-        message += `  ... y ${items.length - 8} más\n`;
-      }
-    }
-    message += '\n';
   }
 
-  if (superOffers.length === 0 && restaurantOffers.length === 0 && cheapProducts.length > 0) {
-    message += `_Sin ofertas de descuento hoy, solo productos baratos_\n\n`;
-  }
-  if (superOffers.length === 0 && restaurantOffers.length === 0 && cheapProducts.length === 0) {
-    message += `_Sin ofertas de supermercado hoy_\n\n`;
-  }
-
-  if (message.length > 4000) {
-    const chunks = splitMessage(message);
-    for (const chunk of chunks) {
-      await sendTelegramMessage(token, chatId, chunk);
-    }
-  } else {
-    await sendTelegramMessage(token, chatId, message);
-  }
+  await sendTelegramMessage(token, chatId, message);
 }
 
 async function sendTelegramMessage(token, chatId, text) {
@@ -117,8 +46,7 @@ async function sendTelegramMessage(token, chatId, text) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         chat_id: chatId,
-        text,
-        parse_mode: 'HTML',
+        text: text.slice(0, 4000),
         disable_web_page_preview: true,
       }),
       signal: AbortSignal.timeout(10000),
@@ -133,28 +61,4 @@ async function sendTelegramMessage(token, chatId, text) {
   } catch (err) {
     console.error(`[Telegram] Error: ${err.message}`);
   }
-}
-
-function splitMessage(message) {
-  const maxLen = 4000;
-  const lines = message.split('\n');
-  const chunks = [];
-  let current = '';
-
-  for (const line of lines) {
-    if ((current + line + '\n').length > maxLen && current) {
-      chunks.push(current);
-      current = line + '\n';
-    } else {
-      current += line + '\n';
-    }
-  }
-
-  if (current) chunks.push(current);
-  return chunks;
-}
-
-function platformEmoji(platform) {
-  const emojis = { Rappi: '🟠', PedidosYa: '🔴', UberEats: '🟢' };
-  return emojis[platform] || '⚪';
 }
