@@ -194,6 +194,7 @@ export async function scrapePedidosYa() {
             offers.push({
               platform: 'PedidosYa', category: 'supermercado',
               restaurant: store.name, slug: store.url || '', discount: item.discount,
+              name: item.name,
               description: `${item.discount}% OFF ${item.campaignTag} - ${item.name}`,
               originalPrice: item.originalPrice ? `$${item.originalPrice}` : null,
               currentPrice: item.price ? `$${item.price}` : null,
@@ -207,6 +208,7 @@ export async function scrapePedidosYa() {
           offers.push({
             platform: 'PedidosYa', category: 'supermercado',
             restaurant: store.name, slug: store.url || '', discount: 0,
+            name: item.name,
             description: `$${item.price} - ${item.name}`,
             originalPrice: null, currentPrice: `$${item.price}`,
             url: store.url || '', deliveryTime: '', rating: '', imageUrl: '',
