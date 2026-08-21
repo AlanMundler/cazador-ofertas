@@ -1,11 +1,85 @@
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const SUBSCRIBERS_FILE = join(__dirname, '..', 'data', 'subscribers.json');
 const API_BASE = 'https://api.telegram.org/bot';
+
+function loadSubscribers() {
+  try {
+    if (!existsSync(SUBSCRIBERS_FILE)) return [];
+    return JSON.parse(readFileSync(SUBSCRIBERS_FILE, 'utf-8'));
+  } catch {
+    return [];
+  }
+}
+
+function saveSubscribers(ids) {
+  const dir = join(__dirname, '..', 'data');
+  if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+  writeFileSync(SUBSCRIBERS_FILE, JSON.stringify([...new Set(ids)], null, 2));
+}
+
+export async function pollUpdates(token) {
+  const subscribers = loadSubscribers();
+  let offset = subscribers._offset || 0;
+
+  try {
+    const resp = await fetch(`${API_BASE}${token}/getUpdates?offset=${offset}&limit=10&timeout=1`, {
+      signal: AbortSignal.timeout(5000),
+    });
+    const data = await resp.json();
+    if (!data.ok) return subscribers;
+
+    for (const update of data.result) {
+      offset = update.update_id + 1;
+      const msg = update.message || update.my_chat_member;
+      if (!msg) continue;
+
+      const chatId = msg.chat.id;
+      const text = msg.text || '';
+      const firstName = msg.chat.first_name || 'Alguien';
+
+      if (text === '/start' || text === '/start@' + process.env.BOT_USERNAME) {
+        if (!subscribers.includes(chatId)) {
+          subscribers.push(chatId);
+          saveSubscribers(subscribers);
+          console.log(`[Telegram] Nuevo suscriptor: ${chatId} (${firstName})`);
+        }
+        await sendDirect(token, chatId, `Hola ${firstName}! Te suscribiste al Cazador de Ofertas de Córdoba. Te llegaran las ofertas cada ~10 min.`);
+      }
+    }
+
+    subscribers._offset = offset;
+  } catch (e) {
+    console.log(`[Telegram] Poll error: ${e.message}`);
+  }
+
+  return subscribers;
+}
+
+async function sendDirect(token, chatId, text) {
+  try {
+    await fetch(`${API_BASE}${token}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: chatId, text, disable_web_page_preview: true }),
+      signal: AbortSignal.timeout(10000),
+    });
+  } catch {}
+}
 
 export async function sendMessage(offers, cheapProducts = []) {
   const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
+  if (!token) {
+    console.error('[Telegram] Token no configurado');
+    return;
+  }
 
-  if (!token || !chatId) {
-    console.error('[Telegram] Token o Chat ID no configurados');
+  const subscribers = loadSubscribers().filter(id => typeof id === 'number');
+  if (subscribers.length === 0) {
+    console.log('[Telegram] No hay suscriptores');
     return;
   }
 
@@ -56,7 +130,9 @@ export async function sendMessage(offers, cheapProducts = []) {
     }
   }
 
-  await sendTelegramMessage(token, chatId, message);
+  for (const chatId of subscribers) {
+    await sendTelegramMessage(token, chatId, message);
+  }
 }
 
 async function sendTelegramMessage(token, chatId, text) {
@@ -72,13 +148,12 @@ async function sendTelegramMessage(token, chatId, text) {
   chunks.push(text);
 
   const totalLen = chunks.reduce((a, c) => a + c.length, 0);
-  console.log(`[Telegram] Mensaje total: ${totalLen} chars, ${chunks.length} parte(s)`);
+  console.log(`[Telegram] Chat ${chatId}: ${totalLen} chars, ${chunks.length} parte(s)`);
 
   try {
     const url = `${API_BASE}${token}/sendMessage`;
     for (let i = 0; i < chunks.length; i++) {
       const part = i > 0 ? `📊 (parte ${i + 1})\n${chunks[i]}` : chunks[i];
-      console.log(`[Telegram] Parte ${i + 1}: ${part.length} chars`);
       const res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -92,9 +167,14 @@ async function sendTelegramMessage(token, chatId, text) {
 
       const data = await res.json();
       if (!data.ok) {
-        console.error(`[Telegram] Error parte ${i + 1}: ${data.description}`);
+        console.error(`[Telegram] Error chat ${chatId} parte ${i + 1}: ${data.description}`);
+        if (data.description && data.description.includes('blocked')) {
+          const subs = loadSubscribers().filter(id => typeof id === 'number' && id !== chatId);
+          saveSubscribers(subs);
+          console.log(`[Telegram] Suscriptor ${chatId} bloqueado, eliminado`);
+        }
       } else {
-        console.log(`[Telegram] Parte ${i + 1}/${chunks.length} enviada`);
+        console.log(`[Telegram] Chat ${chatId} parte ${i + 1}/${chunks.length} enviada`);
       }
     }
   } catch (err) {

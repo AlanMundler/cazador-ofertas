@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { scrapeRappi } from './scrapers/rappi.js';
 import { scrapePedidosYa } from './scrapers/pedidosya.js';
 import { scrapeUberEats } from './scrapers/ubereats.js';
-import { sendMessage } from './notifier/telegram.js';
+import { sendMessage, pollUpdates } from './notifier/telegram.js';
 import { filterNewOffers, deduplicateOffers } from './utils/filter.js';
 
 async function main() {
@@ -12,6 +12,12 @@ async function main() {
   console.log(`Córdoba, Argentina`);
   console.log(`Super/market: >50% OFF | Restaurantes: >60% OFF | Baratos: <$100 ARS`);
   console.log(`${'='.repeat(50)}\n`);
+
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  if (token) {
+    const subs = await pollUpdates(token);
+    console.log(`[Telegram] Suscriptores activos: ${subs.filter(id => typeof id === 'number').length}`);
+  }
 
   const allOffers = [];
 
