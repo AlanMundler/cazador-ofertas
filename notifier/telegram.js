@@ -32,8 +32,7 @@ export async function sendMessage(offers, cheapProducts = []) {
         for (const [store, items] of Object.entries(stores)) {
           message += `\n${platform} - ${store}\n`;
           for (const o of items) {
-            const parts = o.description.split(' - ');
-            const name = parts.length > 1 ? parts.slice(1).join(' - ') : o.description;
+            const name = o.name || o.description || '';
             const short = name.length > 50 ? name.substring(0, 47) + '...' : name;
             message += `${o.discount}% ${short}\n`;
           }
@@ -52,7 +51,8 @@ export async function sendMessage(offers, cheapProducts = []) {
   if (cheapProducts.length > 0) {
     message += `\n💰 BARATOS (<$100)\n`;
     for (const o of cheapProducts) {
-      message += `$${o.currentPrice} ${o.description}\n`;
+      const name = o.name || o.description || '';
+      message += `$${o.currentPrice} ${name}\n`;
     }
   }
 
@@ -60,24 +60,38 @@ export async function sendMessage(offers, cheapProducts = []) {
 }
 
 async function sendTelegramMessage(token, chatId, text) {
+  const MAX = 4000;
+  const chunks = [];
+
+  while (text.length > MAX) {
+    let splitAt = text.lastIndexOf('\n', MAX);
+    if (splitAt < MAX / 2) splitAt = MAX;
+    chunks.push(text.substring(0, splitAt));
+    text = text.substring(splitAt);
+  }
+  chunks.push(text);
+
   try {
     const url = `${API_BASE}${token}/sendMessage`;
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text: text.slice(0, 4000),
-        disable_web_page_preview: true,
-      }),
-      signal: AbortSignal.timeout(10000),
-    });
+    for (let i = 0; i < chunks.length; i++) {
+      const part = i > 0 ? `📊 (parte ${i + 1})\n${chunks[i]}` : chunks[i];
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: part,
+          disable_web_page_preview: true,
+        }),
+        signal: AbortSignal.timeout(10000),
+      });
 
-    const data = await res.json();
-    if (!data.ok) {
-      console.error(`[Telegram] Error: ${data.description}`);
-    } else {
-      console.log(`[Telegram] Mensaje enviado a chat ${chatId}`);
+      const data = await res.json();
+      if (!data.ok) {
+        console.error(`[Telegram] Error parte ${i + 1}: ${data.description}`);
+      } else {
+        console.log(`[Telegram] Parte ${i + 1}/${chunks.length} enviada`);
+      }
     }
   } catch (err) {
     console.error(`[Telegram] Error: ${err.message}`);
