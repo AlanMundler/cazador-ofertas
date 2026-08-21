@@ -2,13 +2,15 @@ import { chromium } from 'patchright';
 
 const LAT = process.env.LATITUDE || '-31.41307';
 const LNG = process.env.LONGITUDE || '-64.19635';
-const AREA_ID = process.env.AREA_ID || '16631';
-const AREA_NAME = process.env.AREA_NAME || 'Alberdi';
-const ADDRESS = process.env.ADDRESS || 'San José de Calasanz 49';
 const MIN_DISCOUNT_SUPER = parseInt(process.env.MIN_DISCOUNT_SUPER || '60');
 const MAX_PRICE_CHEAP = parseInt(process.env.MAX_PRICE_CHEAP || '100');
 
-const GROCERIES_URL = `https://www.pedidosya.com.ar/restaurantes?bt=GROCERIES&origin=home&lat=${LAT}&lng=${LNG}&areaId=${AREA_ID}&areaName=${encodeURIComponent(AREA_NAME)}&address=${encodeURIComponent(ADDRESS)}`;
+const GROCERIES_URL = `https://www.pedidosya.com.ar/restaurantes?bt=GROCERIES&origin=home&lat=${LAT}&lng=${LNG}&areaId=16631&areaName=Alberdi&address=San%20Jos%C3%A9%20de%20Calasanz%2049`;
+
+const KNOWN_STORES = [
+  { name: 'Carrefour Express', url: 'https://www.pedidosya.com.ar/restaurantes/cordoba/carrefour-express-blvd-san-juan-785-93a8196b-9665-4322-8f7e-31b7af23c22f-menu?origin=shop_list' },
+  { name: 'PedidosYa Market 25 de Mayo', url: 'https://www.pedidosya.com.ar/restaurantes/cordoba/pedidosya-market-25-de-mayo-bb184a2a-707c-4e62-86e8-0003e06e57af-menu?origin=shop_list' },
+];
 
 export async function scrapePedidosYa() {
   const offers = [];
@@ -38,87 +40,38 @@ export async function scrapePedidosYa() {
       return offers;
     }
 
-    console.log('[PedidosYa] Cloudflare passed, navigating to GROCERIES...');
+    console.log('[PedidosYa] Cloudflare passed!');
 
-    await page.goto(GROCERIES_URL, { waitUntil: 'networkidle', timeout: 30000 });
-    await page.waitForTimeout(5000);
+    let vendorUrls = [...KNOWN_STORES];
 
-    title = await page.title();
-    if (title.includes('momento') || title.includes('denegado')) {
-      console.log('[PedidosYa] Blocked on GROCERIES page');
-      return offers;
-    }
+    try {
+      console.log('[PedidosYa] Trying to discover vendors from GROCERIES page...');
+      await page.goto(GROCERIES_URL, { waitUntil: 'networkidle', timeout: 30000 });
+      await page.waitForTimeout(8000);
 
-    console.log('[PedidosYa] GROCERIES page loaded, intercepting vendor list...');
+      title = await page.title();
+      if (!title.includes('momento') && !title.includes('denegado')) {
+        const allLinks = await page.evaluate(() => {
+          const links = Array.from(document.querySelectorAll('a'));
+          return links
+            .map(a => ({ href: a.href, text: a.innerText.split('\n')[0].trim() }))
+            .filter(l => l.href.includes('-menu') && l.text.length > 1 && l.text.length < 80);
+        });
 
-    let capturedVendors = [];
-    const vendorHandler = async (response) => {
-      const url = response.url();
-      if (url.includes('/shoplist/vendors') || url.includes('/v4/shoplist/vendors')) {
-        try {
-          const data = await response.json();
-          const vendors = data.vendors || data.data || data;
-          if (Array.isArray(vendors)) {
-            capturedVendors = vendors.map(v => ({
-              id: v.id || v.vendorId,
-              name: v.name || v.title || '',
-              link: v.link || v.url || '',
-            })).filter(v => v.name);
+        console.log(`[PedidosYa] Found ${allLinks.length} vendor links on page`);
+        for (const link of allLinks) {
+          if (!vendorUrls.find(v => v.url === link.href)) {
+            vendorUrls.push({ name: link.text, url: link.href });
           }
-        } catch {}
-      }
-    };
-    page.on('response', vendorHandler);
-
-    await page.waitForTimeout(5000);
-    page.off('response', vendorHandler);
-
-    const vendorLinks = capturedVendors.length > 0
-      ? capturedVendors.map(v => ({
-          href: v.link ? `https://www.pedidosya.com.ar${v.link}` : '',
-          name: v.name,
-        })).filter(v => v.href)
-      : await page.$$eval('a[href*="-menu"]', els =>
-          els.map(e => ({
-            href: e.href,
-            name: e.innerText.split('\n')[0].trim(),
-          })).filter(l => l.name && l.href.includes('/restaurantes/'))
-        );
-
-    console.log(`[PedidosYa] Found ${vendorLinks.length} grocery stores`);
-
-    if (vendorLinks.length === 0) {
-      console.log('[PedidosYa] Trying direct API call...');
-      const apiVendors = await page.evaluate(async (lat, lng) => {
-        try {
-          const resp = await fetch(`/v4/shoplist/vendors?size=30&page=1&businessTypes=GROCERIES&country=3&point=${lat},${lng}`, { credentials: 'include' });
-          if (!resp.ok) return { error: resp.status };
-          const data = await resp.json();
-          const vendors = data.vendors || data.data || [];
-          return vendors.map(v => ({
-            id: v.id || v.vendorId,
-            name: v.name || v.title || '',
-            link: v.link || '',
-          })).filter(v => v.name && v.link);
-        } catch(e) {
-          return { error: e.message };
         }
-      }, LAT, LNG);
-
-      if (apiVendors && !apiVendors.error && apiVendors.length > 0) {
-        console.log(`[PedidosYa] API returned ${apiVendors.length} vendors`);
-        for (const v of apiVendors) {
-          vendorLinks.push({
-            href: `https://www.pedidosya.com.ar${v.link}`,
-            name: v.name,
-          });
-        }
-      } else {
-        console.log(`[PedidosYa] API fallback failed: ${JSON.stringify(apiVendors)}`);
       }
+    } catch (e) {
+      console.log(`[PedidosYa] GROCERIES page error: ${e.message.substring(0, 80)}`);
     }
 
-    for (const vendor of vendorLinks.slice(0, 15)) {
+    console.log(`[PedidosYa] Scraping ${vendorUrls.length} stores`);
+
+    for (const vendor of vendorUrls.slice(0, 15)) {
       console.log(`\n[PedidosYa] Scraping: ${vendor.name}`);
 
       try {
@@ -131,7 +84,7 @@ export async function scrapePedidosYa() {
         };
         page.on('response', responseHandler);
 
-        await page.goto(vendor.href, { waitUntil: 'networkidle', timeout: 30000 });
+        await page.goto(vendor.url, { waitUntil: 'networkidle', timeout: 30000 });
         await page.waitForTimeout(8000);
 
         page.off('response', responseHandler);
@@ -160,7 +113,8 @@ export async function scrapePedidosYa() {
 
         console.log(`  [${vendor.name}] vendorId=${capturedVendorId}`);
 
-        const storeData = await page.evaluate(async (vendorId) => {
+        const storeData = await page.evaluate(async (args) => {
+          const vendorId = args.vendorId;
           try {
             const catResp = await fetch(`/groceries/web/v1/vendors/${vendorId}/categories`, { credentials: 'include' });
             if (!catResp.ok) return { error: `categories:${catResp.status}` };
@@ -216,25 +170,25 @@ export async function scrapePedidosYa() {
           } catch (e) {
             return { error: e.message };
           }
-        }, capturedVendorId);
+        }, { vendorId: capturedVendorId });
 
         if (!storeData || storeData.error) {
           console.log(`  [${vendor.name}] Error: ${JSON.stringify(storeData)}`);
           continue;
         }
 
-        console.log(`  [${vendor.name}] ${storeData.catsScanned}/${storeData.totalCats} cats scanned, ${storeData.discountedItems.length} discounted, ${storeData.cheapItems.length} under $${MAX_PRICE_CHEAP}`);
+        console.log(`  [${vendor.name}] ${storeData.catsScanned}/${storeData.totalCats} cats, ${storeData.discountedItems.length} discounted, ${storeData.cheapItems.length} under $${MAX_PRICE_CHEAP}`);
 
         for (const item of storeData.discountedItems) {
           console.log(`    ${item.discount}% OFF ${item.campaignTag} - ${item.name}`);
           if (item.discount >= MIN_DISCOUNT_SUPER) {
             offers.push({
               platform: 'PedidosYa', category: 'supermercado',
-              restaurant: vendor.name, slug: vendor.href, discount: item.discount,
+              restaurant: vendor.name, slug: vendor.url, discount: item.discount,
               description: `${item.discount}% OFF ${item.campaignTag} - ${item.name}`,
               originalPrice: item.originalPrice ? `$${item.originalPrice}` : null,
               currentPrice: item.price ? `$${item.price}` : null,
-              url: vendor.href, deliveryTime: '', rating: '', imageUrl: '',
+              url: vendor.url, deliveryTime: '', rating: '', imageUrl: '',
             });
           }
         }
@@ -243,10 +197,10 @@ export async function scrapePedidosYa() {
           console.log(`    $${item.price} - ${item.name}`);
           offers.push({
             platform: 'PedidosYa', category: 'supermercado',
-            restaurant: vendor.name, slug: vendor.href, discount: 0,
+            restaurant: vendor.name, slug: vendor.url, discount: 0,
             description: `$${item.price} - ${item.name}`,
             originalPrice: null, currentPrice: `$${item.price}`,
-            url: vendor.href, deliveryTime: '', rating: '', imageUrl: '',
+            url: vendor.url, deliveryTime: '', rating: '', imageUrl: '',
             isCheapProduct: true,
           });
         }
