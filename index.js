@@ -10,7 +10,7 @@ async function main() {
   console.log(`\n${'='.repeat(50)}`);
   console.log(`CAZADOR DE OFERTAS - ${new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' })}`);
   console.log(`Córdoba, Argentina`);
-  console.log(`Super/market: >60% OFF | Restaurantes: >70% OFF`);
+  console.log(`Super/market: >60% OFF | Restaurantes: >70% OFF | Baratos: <$100 ARS`);
   console.log(`${'='.repeat(50)}\n`);
 
   const allOffers = [];
@@ -24,18 +24,25 @@ async function main() {
   const uberEatsOffers = await scrapeUberEats();
   allOffers.push(...uberEatsOffers);
 
-  const superCount = allOffers.filter(o => o.category === 'supermercado').length;
-  const restCount = allOffers.filter(o => o.category === 'restaurante').length;
-  console.log(`\nTotal bruto: ${allOffers.length} ofertas (${superCount} super, ${restCount} restaurantes)`);
+  const discountOffers = allOffers.filter(o => !o.isCheapProduct);
+  const cheapProducts = allOffers.filter(o => o.isCheapProduct);
 
-  const deduplicated = deduplicateOffers(allOffers);
-  console.log(`Después de dedup: ${deduplicated.length} ofertas`);
+  const superCount = discountOffers.filter(o => o.category === 'supermercado').length;
+  const restCount = discountOffers.filter(o => o.category === 'restaurante').length;
+  console.log(`\nTotal bruto: ${discountOffers.length} ofertas (${superCount} super, ${restCount} restaurantes) + ${cheapProducts.length} productos baratos`);
 
-  const newOffers = filterNewOffers(deduplicated);
-  console.log(`Ofertas nuevas (no vistas en últimos 30min): ${newOffers.length}`);
+  const deduplicatedDiscounts = deduplicateOffers(discountOffers);
+  const deduplicatedCheap = deduplicateOffers(cheapProducts);
+  console.log(`Después de dedup: ${deduplicatedDiscounts.length} ofertas + ${deduplicatedCheap.length} baratos`);
 
-  if (newOffers.length > 0) {
-    await sendMessage(newOffers);
+  const newDiscounts = filterNewOffers(deduplicatedDiscounts);
+  const newCheap = filterNewOffers(deduplicatedCheap);
+  console.log(`Nuevos (30min): ${newDiscounts.length} ofertas + ${newCheap.length} baratos`);
+
+  const hasNewContent = newDiscounts.length > 0 || newCheap.length > 0;
+
+  if (hasNewContent) {
+    await sendMessage(newDiscounts, newCheap);
     console.log(`\n¡Notificación enviada!`);
   } else {
     console.log(`\nSin ofertas nuevas, no se envía notificación.`);

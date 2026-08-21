@@ -1,6 +1,6 @@
 const API_BASE = 'https://api.telegram.org/bot';
 
-export async function sendMessage(offers) {
+export async function sendMessage(offers, cheapProducts = []) {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
 
@@ -9,7 +9,7 @@ export async function sendMessage(offers) {
     return;
   }
 
-  if (offers.length === 0) {
+  if (offers.length === 0 && cheapProducts.length === 0) {
     console.log('[Telegram] No hay ofertas nuevas para enviar');
     return;
   }
@@ -70,10 +70,46 @@ export async function sendMessage(offers) {
     message += '\n';
   }
 
-  if (superOffers.length === 0 && restaurantOffers.length > 0) {
+  if (cheapProducts.length > 0) {
+    message += `💰 PRODUCTOS BARATOS (<$100 ARS)\n`;
+    message += `─`.repeat(30) + `\n`;
+
+    const byStore = {};
+    for (const o of cheapProducts) {
+      if (!byStore[o.restaurant]) byStore[o.restaurant] = [];
+      byStore[o.restaurant].push(o);
+    }
+
+    for (const [store, items] of Object.entries(byStore)) {
+      message += `\n<b>${store}</b>\n`;
+      for (const item of items.slice(0, 8)) {
+        message += `  ${item.currentPrice} | ${item.description.replace(/^\$[\d.,]+ - /, '')}\n`;
+      }
+      if (items.length > 8) {
+        message += `  ... y ${items.length - 8} más\n`;
+      }
+    }
+    message += '\n';
+  }
+
+  if (superOffers.length === 0 && restaurantOffers.length === 0 && cheapProducts.length > 0) {
+    message += `_Sin ofertas de descuento hoy, solo productos baratos_\n\n`;
+  }
+  if (superOffers.length === 0 && restaurantOffers.length === 0 && cheapProducts.length === 0) {
     message += `_Sin ofertas de supermercado hoy_\n\n`;
   }
 
+  if (message.length > 4000) {
+    const chunks = splitMessage(message);
+    for (const chunk of chunks) {
+      await sendTelegramMessage(token, chatId, chunk);
+    }
+  } else {
+    await sendTelegramMessage(token, chatId, message);
+  }
+}
+
+async function sendTelegramMessage(token, chatId, text) {
   try {
     const url = `${API_BASE}${token}/sendMessage`;
     const res = await fetch(url, {
@@ -81,7 +117,7 @@ export async function sendMessage(offers) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         chat_id: chatId,
-        text: message,
+        text,
         parse_mode: 'HTML',
         disable_web_page_preview: true,
       }),
@@ -97,6 +133,25 @@ export async function sendMessage(offers) {
   } catch (err) {
     console.error(`[Telegram] Error: ${err.message}`);
   }
+}
+
+function splitMessage(message) {
+  const maxLen = 4000;
+  const lines = message.split('\n');
+  const chunks = [];
+  let current = '';
+
+  for (const line of lines) {
+    if ((current + line + '\n').length > maxLen && current) {
+      chunks.push(current);
+      current = line + '\n';
+    } else {
+      current += line + '\n';
+    }
+  }
+
+  if (current) chunks.push(current);
+  return chunks;
 }
 
 function platformEmoji(platform) {
