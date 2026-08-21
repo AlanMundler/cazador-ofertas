@@ -19,16 +19,13 @@ async function main() {
     console.log(`[Telegram] Suscriptores activos: ${subs.filter(id => typeof id === 'number').length}`);
   }
 
-  const allOffers = [];
+  const [rappiOffers, pedidosYaOffers, uberEatsOffers] = await Promise.all([
+    scrapeRappi(),
+    scrapePedidosYa(),
+    scrapeUberEats(),
+  ]);
 
-  const rappiOffers = await scrapeRappi();
-  allOffers.push(...rappiOffers);
-
-  const pedidosYaOffers = await scrapePedidosYa();
-  allOffers.push(...pedidosYaOffers);
-
-  const uberEatsOffers = await scrapeUberEats();
-  allOffers.push(...uberEatsOffers);
+  const allOffers = [...rappiOffers, ...pedidosYaOffers, ...uberEatsOffers];
 
   const discountOffers = allOffers.filter(o => !o.isCheapProduct);
   const cheapProducts = allOffers.filter(o => o.isCheapProduct);

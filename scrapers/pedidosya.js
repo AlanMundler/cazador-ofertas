@@ -29,13 +29,18 @@ async function fetchStoreData(page, vendorId) {
 
       const discountedItems = [];
       const cheapItems = [];
+      const BATCH = 10;
 
-      for (const catId of allCatIds) {
-        try {
-          const pResp = await fetch(`/groceries/web/v1/vendors/${vendorId}/products?categoryId=${catId}&limit=50`, { credentials: 'include' });
-          if (pResp.status !== 200) continue;
-          const pData = await pResp.json();
+      for (let i = 0; i < allCatIds.length; i += BATCH) {
+        const batch = allCatIds.slice(i, i + BATCH);
+        const results = await Promise.all(batch.map(catId =>
+          fetch(`/groceries/web/v1/vendors/${vendorId}/products?categoryId=${catId}&limit=50`, { credentials: 'include' })
+            .then(r => r.status === 200 ? r.json() : null)
+            .catch(() => null)
+        ));
 
+        for (const pData of results) {
+          if (!pData) continue;
           for (const item of (pData.items || [])) {
             const name = item.name || item.description || '';
             const price = item.selling_price ?? item.price ?? item.salePrice ?? 0;
@@ -78,7 +83,7 @@ async function fetchStoreData(page, vendorId) {
               cheapItems.push({ name, price });
             }
           }
-        } catch {}
+        }
       }
 
       return { discountedItems, cheapItems, totalCats: allCatIds.length, catsScanned: allCatIds.length };
@@ -101,8 +106,8 @@ export async function scrapePedidosYa() {
     const page = context.pages()[0] || await context.newPage();
 
     console.log('[PedidosYa] Loading home...');
-    await page.goto('https://www.pedidosya.com.ar/', { waitUntil: 'networkidle', timeout: 30000 });
-    await page.waitForTimeout(5000);
+    await page.goto('https://www.pedidosya.com.ar/', { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await page.waitForTimeout(3000);
 
     let title = await page.title();
     if (title.includes('momento')) {
@@ -130,8 +135,8 @@ export async function scrapePedidosYa() {
       for (let attempt = 1; attempt <= 2; attempt++) {
         try {
           if (store.url) {
-            await page.goto(store.url, { waitUntil: 'networkidle', timeout: 30000 });
-            await page.waitForTimeout(5000);
+            await page.goto(store.url, { waitUntil: 'domcontentloaded', timeout: 25000 });
+            await page.waitForTimeout(2000);
 
             title = await page.title();
             if (title.includes('momento') || title.includes('denegado')) {
@@ -144,8 +149,8 @@ export async function scrapePedidosYa() {
 
           if (storeData && storeData.error && attempt === 1) {
             console.log(`  [${store.name}] Attempt1 failed (${storeData.error}), retrying with fresh page...`);
-            await page.goto('https://www.pedidosya.com.ar/', { waitUntil: 'networkidle', timeout: 30000 });
-            await page.waitForTimeout(3000);
+            await page.goto('https://www.pedidosya.com.ar/', { waitUntil: 'domcontentloaded', timeout: 30000 });
+            await page.waitForTimeout(2000);
             storeData = null;
             continue;
           }
@@ -192,7 +197,7 @@ export async function scrapePedidosYa() {
         });
       }
 
-      await new Promise(r => setTimeout(r, 2000 + Math.random() * 2000));
+      await page.waitForTimeout(1000 + Math.random() * 1000);
     }
 
     console.log(`[PedidosYa] ${offers.length} ofertas encontradas`);
