@@ -140,7 +140,7 @@ export async function scrapePedidosYa() {
                   if (item.campaigns && item.campaigns.length > 0) {
                     for (const c of item.campaigns) {
                       const val = c.configuration?.value || 0;
-                      const tag = c.tag || '';
+                      const tag = (c.tag || '').toLowerCase();
                       const type = c.type || '';
                       let effectiveDiscount = val;
 
@@ -153,9 +153,13 @@ export async function scrapePedidosYa() {
                         }
                       }
 
+                      if (/2da\.?\s*ud|segunda\s*unidad/.test(tag)) {
+                        effectiveDiscount = Math.round(val / 2);
+                      }
+
                       if (effectiveDiscount > discount) {
                         discount = effectiveDiscount;
-                        campaignTag = tag;
+                        campaignTag = c.tag || '';
                       }
                     }
                   }
