@@ -131,7 +131,7 @@ export async function scrapePedidosYa() {
                 const pData = await pResp.json();
 
                 for (const item of (pData.items || [])) {
-                  const name = item.description || '';
+                  const name = item.name || item.description || '';
                   const price = item.selling_price ?? item.price ?? item.salePrice ?? 0;
                   const originalPrice = item.price_without_discount ?? item.originalPrice ?? item.price ?? 0;
                   let discount = 0;

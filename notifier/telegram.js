@@ -19,8 +19,10 @@ export async function sendMessage(offers, cheapProducts = []) {
   if (offers.length > 0) {
     message += `\n🛒 SUPER (≥60% OFF)\n`;
     for (const o of offers.filter(o => o.category === 'supermercado')) {
-      const name = o.description.split(' - ').slice(1).join(' - ') || o.description;
-      message += `${o.discount}% ${name}\n`;
+      const parts = o.description.split(' - ');
+      const name = parts.length > 1 ? parts.slice(1).join(' - ') : o.description;
+      const short = name.length > 60 ? name.substring(0, 57) + '...' : name;
+      message += `${o.discount}% ${short}\n`;
     }
     message += `\n🍽️ RESTAURANTES (>70% OFF)\n`;
     for (const o of offers.filter(o => o.category === 'restaurante')) {
