@@ -49,16 +49,74 @@ export async function scrapePedidosYa() {
       return offers;
     }
 
-    console.log('[PedidosYa] GROCERIES page loaded, getting vendor list...');
+    console.log('[PedidosYa] GROCERIES page loaded, intercepting vendor list...');
 
-    const vendorLinks = await page.$$eval('a[href*="/restaurantes/cordoba/"]', els =>
-      els.map(e => ({
-        href: e.href,
-        name: e.innerText.split('\n')[0].trim(),
-      })).filter(l => l.name && l.href.includes('-menu'))
-    );
+    let capturedVendors = [];
+    const vendorHandler = async (response) => {
+      const url = response.url();
+      if (url.includes('/shoplist/vendors') || url.includes('/v4/shoplist/vendors')) {
+        try {
+          const data = await response.json();
+          const vendors = data.vendors || data.data || data;
+          if (Array.isArray(vendors)) {
+            capturedVendors = vendors.map(v => ({
+              id: v.id || v.vendorId,
+              name: v.name || v.title || '',
+              link: v.link || v.url || '',
+            })).filter(v => v.name);
+          }
+        } catch {}
+      }
+    };
+    page.on('response', vendorHandler);
+
+    await page.waitForTimeout(5000);
+    page.off('response', vendorHandler);
+
+    const vendorLinks = capturedVendors.length > 0
+      ? capturedVendors.map(v => ({
+          href: v.link ? `https://www.pedidosya.com.ar${v.link}` : '',
+          name: v.name,
+        })).filter(v => v.href)
+      : await page.$$eval('a[href*="-menu"]', els =>
+          els.map(e => ({
+            href: e.href,
+            name: e.innerText.split('\n')[0].trim(),
+          })).filter(l => l.name && l.href.includes('/restaurantes/'))
+        );
 
     console.log(`[PedidosYa] Found ${vendorLinks.length} grocery stores`);
+
+    if (vendorLinks.length === 0) {
+      console.log('[PedidosYa] Trying direct API call...');
+      const apiVendors = await page.evaluate(async (lat, lng) => {
+        try {
+          const resp = await fetch(`/v4/shoplist/vendors?size=30&page=1&businessTypes=GROCERIES&country=3&point=${lat},${lng}`, { credentials: 'include' });
+          if (!resp.ok) return { error: resp.status };
+          const data = await resp.json();
+          const vendors = data.vendors || data.data || [];
+          return vendors.map(v => ({
+            id: v.id || v.vendorId,
+            name: v.name || v.title || '',
+            link: v.link || '',
+          })).filter(v => v.name && v.link);
+        } catch(e) {
+          return { error: e.message };
+        }
+      }, LAT, LNG);
+
+      if (apiVendors && !apiVendors.error && apiVendors.length > 0) {
+        console.log(`[PedidosYa] API returned ${apiVendors.length} vendors`);
+        for (const v of apiVendors) {
+          vendorLinks.push({
+            href: `https://www.pedidosya.com.ar${v.link}`,
+            name: v.name,
+          });
+        }
+      } else {
+        console.log(`[PedidosYa] API fallback failed: ${JSON.stringify(apiVendors)}`);
+      }
+    }
 
     for (const vendor of vendorLinks.slice(0, 15)) {
       console.log(`\n[PedidosYa] Scraping: ${vendor.name}`);
