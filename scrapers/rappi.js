@@ -14,6 +14,9 @@ const SUPER_STORES = [
   { slug: '248079-vea', name: 'Vea' },
   { slug: '262682-turbo-veinticuatro-market-nc', name: 'Turbo Market' },
   { slug: '126292-carrefour-express', name: 'Carrefour Express' },
+  { slug: '258919-turbo-express-nc', name: 'La Despensa' },
+  { slug: '115860-punto-sur', name: 'Punto Sur Multimercado' },
+  { slug: '188551-minishoppritty-mt-nc', name: 'Maxikiosco Pritty' },
 ];
 
 export async function scrapeRappi() {
