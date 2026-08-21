@@ -140,9 +140,22 @@ export async function scrapePedidosYa() {
                   if (item.campaigns && item.campaigns.length > 0) {
                     for (const c of item.campaigns) {
                       const val = c.configuration?.value || 0;
-                      if (val > discount) {
-                        discount = val;
-                        campaignTag = c.tag || '';
+                      const tag = c.tag || '';
+                      const type = c.type || '';
+                      let effectiveDiscount = val;
+
+                      if (type === 'multi-buy' || type === 'free_item') {
+                        const m = tag.match(/(\d+)\s*x\s*(\d+)/);
+                        if (m) {
+                          const pay = parseInt(m[2]);
+                          const get = parseInt(m[1]);
+                          effectiveDiscount = Math.round(((get - pay) / get) * 100);
+                        }
+                      }
+
+                      if (effectiveDiscount > discount) {
+                        discount = effectiveDiscount;
+                        campaignTag = tag;
                       }
                     }
                   }
