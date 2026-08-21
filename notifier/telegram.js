@@ -17,16 +17,35 @@ export async function sendMessage(offers, cheapProducts = []) {
   let message = `OFERTAS CÓRDOBA\n`;
 
   if (offers.length > 0) {
-    message += `\n🛒 SUPER (≥60% OFF)\n`;
-    for (const o of offers.filter(o => o.category === 'supermercado')) {
-      const parts = o.description.split(' - ');
-      const name = parts.length > 1 ? parts.slice(1).join(' - ') : o.description;
-      const short = name.length > 60 ? name.substring(0, 57) + '...' : name;
-      message += `${o.discount}% ${short}\n`;
+    const superOffers = offers.filter(o => o.category === 'supermercado');
+    const restaurantOffers = offers.filter(o => o.category === 'restaurante');
+
+    if (superOffers.length > 0) {
+      message += `\n🛒 SUPER (≥60% OFF)\n`;
+      const byPlatform = {};
+      for (const o of superOffers) {
+        if (!byPlatform[o.platform]) byPlatform[o.platform] = {};
+        if (!byPlatform[o.platform][o.restaurant]) byPlatform[o.platform][o.restaurant] = [];
+        byPlatform[o.platform][o.restaurant].push(o);
+      }
+      for (const [platform, stores] of Object.entries(byPlatform)) {
+        for (const [store, items] of Object.entries(stores)) {
+          message += `\n${platform} - ${store}\n`;
+          for (const o of items) {
+            const parts = o.description.split(' - ');
+            const name = parts.length > 1 ? parts.slice(1).join(' - ') : o.description;
+            const short = name.length > 50 ? name.substring(0, 47) + '...' : name;
+            message += `${o.discount}% ${short}\n`;
+          }
+        }
+      }
     }
-    message += `\n🍽️ RESTAURANTES (>70% OFF)\n`;
-    for (const o of offers.filter(o => o.category === 'restaurante')) {
-      message += `${o.discount}% ${o.restaurant}\n`;
+
+    if (restaurantOffers.length > 0) {
+      message += `\n🍽️ RESTAURANTES (>70% OFF)\n`;
+      for (const o of restaurantOffers) {
+        message += `${o.discount}% ${o.platform} - ${o.restaurant}\n`;
+      }
     }
   }
 
