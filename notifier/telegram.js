@@ -47,7 +47,7 @@ export async function pollUpdates(token) {
           saveSubscribers(subscribers);
           console.log(`[Telegram] Nuevo suscriptor: ${chatId} (${firstName})`);
         }
-        await sendDirect(token, chatId, `Hola ${firstName}! Te suscribiste al Cazador de Ofertas de Córdoba. Te llegaran las ofertas cada ~10 min.`);
+
       }
     }
 
