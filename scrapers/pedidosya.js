@@ -59,7 +59,7 @@ async function fetchStoreData(page, vendorId) {
                   }
                 }
 
-                if (/2da\.?\s*ud|segunda\s*unidad|dto\.?\s*en\s*2da/.test(tag)) {
+                if (/1\s*ud\.?\s*al\s*\d+%|2da\.?\s*ud|segunda\s*unidad|dto\.?\s*en\s*2da/.test(tag)) {
                   effectiveDiscount = Math.round(val / 2);
                 }
 
