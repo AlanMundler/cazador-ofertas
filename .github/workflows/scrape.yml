@@ -36,7 +36,7 @@ jobs:
           LATITUDE: '-31.4201'
           LONGITUDE: '-64.1888'
           MIN_DISCOUNT: '60'
-          MIN_DISCOUNT_SUPER: '60'
+          MIN_DISCOUNT_SUPER: '50'
           MAX_PRICE_CHEAP: '100'
           AREA_ID: '16631'
           AREA_NAME: 'Alberdi'
