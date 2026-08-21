@@ -41,7 +41,7 @@ export async function sendMessage(offers, cheapProducts = []) {
     }
 
     if (restaurantOffers.length > 0) {
-      message += `\n🍽️ RESTAURANTES (>70% OFF)\n`;
+      message += `\n🍽️ RESTAURANTES (≥60% OFF)\n`;
       for (const o of restaurantOffers) {
         message += `${o.discount}% ${o.platform} - ${o.restaurant}\n`;
       }

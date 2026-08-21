@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 
 const LAT = process.env.LATITUDE || '-31.4201';
 const LNG = process.env.LONGITUDE || '-64.1888';
-const MIN_RESTAURANT = 70;
+const MIN_RESTAURANT = 60;
 
 const LOC_COOKIE = encodeURIComponent(JSON.stringify({
   address: { title: "Cordoba, Argentina" },

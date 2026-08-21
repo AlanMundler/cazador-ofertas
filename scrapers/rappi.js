@@ -6,7 +6,7 @@ puppeteer.use(StealthPlugin());
 const LAT = process.env.LATITUDE || '-31.4201';
 const LNG = process.env.LONGITUDE || '-64.1888';
 const MIN_SUPER = 60;
-const MIN_RESTAURANT = 70;
+const MIN_RESTAURANT = 60;
 
 const SUPER_STORES = [
   { slug: '214965-jumbo', name: 'Jumbo' },
