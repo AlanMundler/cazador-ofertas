@@ -17,8 +17,8 @@ export async function sendMessage(offers, cheapProducts = []) {
   let message = `OFERTAS CÓRDOBA\n`;
 
   if (offers.length > 0) {
-    const superOffers = offers.filter(o => o.category === 'supermercado');
-    const restaurantOffers = offers.filter(o => o.category === 'restaurante');
+    const superOffers = offers.filter(o => o.category === 'supermercado').sort((a, b) => b.discount - a.discount);
+    const restaurantOffers = offers.filter(o => o.category === 'restaurante').sort((a, b) => b.discount - a.discount);
 
     if (superOffers.length > 0) {
       message += `\n🛒 SUPER (≥50% OFF)\n`;
@@ -31,7 +31,7 @@ export async function sendMessage(offers, cheapProducts = []) {
       for (const [platform, stores] of Object.entries(byPlatform)) {
         for (const [store, items] of Object.entries(stores)) {
           message += `\n${platform} - ${store}\n`;
-          for (const o of items) {
+          for (const o of items.sort((a, b) => b.discount - a.discount)) {
             const name = o.name || o.description || '';
             const short = name.length > 50 ? name.substring(0, 47) + '...' : name;
             message += `${o.discount}% ${short}\n`;
