@@ -143,16 +143,16 @@ async function fetchStoreData(page, vendorId, maxPriceCheap) {
       }
 
       const sampleItem = discountedItems[0] || null;
-      let sampleRaw = null;
+      let sampleRawStr = null;
       try {
         const firstCatId = allCatIds[0];
         if (firstCatId) {
           const r = await fetch(`/groceries/web/v1/vendors/${vendorId}/products?categoryId=${firstCatId}&limit=5`, { credentials: 'include' });
-          if (r.ok) { const d = await r.json(); sampleRaw = (d.items || [])[0] || null; }
+          if (r.ok) { const d = await r.json(); const raw = (d.items || [])[0] || null; if (raw) sampleRawStr = JSON.stringify(raw); }
         }
       } catch {}
 
-      return { discountedItems, cheapItems, totalCats: allCatIds.length, catsScanned: rateLimited ? Math.min(i + BATCH, allCatIds.length) : allCatIds.length, rateLimited, sampleItem, sampleRaw };
+      return { discountedItems, cheapItems, totalCats: allCatIds.length, catsScanned: rateLimited ? Math.min(i + BATCH, allCatIds.length) : allCatIds.length, rateLimited, sampleItem, sampleRawStr };
     } catch (e) {
       return { error: e.message };
     }
@@ -247,13 +247,10 @@ export async function scrapePedidosYa() {
       scannedIds.push(store.vendorId);
       console.log(`  [${store.name}] ${storeData.catsScanned}/${storeData.totalCats} cats, ${storeData.discountedItems.length} discounted, ${storeData.cheapItems.length} under $${MAX_PRICE_CHEAP}${storeData.rateLimited ? ' [RATE LIMITED]' : ''}`);
 
-      if (storeData.sampleRaw) {
-        const s = storeData.sampleRaw;
-        console.log(`  [SAMPLE RAW] ${JSON.stringify(Object.keys(s))}`);
-        console.log(`  [SAMPLE FULL] ${JSON.stringify(s).substring(0, 500)}`);
-      }
-      if (storeData.sampleItem) {
-        console.log(`  [PARSED] price=${storeData.sampleItem.price} originalPrice=${storeData.sampleItem.originalPrice}`);
+      if (storeData.sampleRawStr) {
+        console.log(`  [SAMPLE FULL] ${storeData.sampleRawStr.substring(0, 500)}`);
+      } else {
+        console.log(`  [SAMPLE] no raw item captured`);
       }
 
       for (const item of storeData.discountedItems) {
