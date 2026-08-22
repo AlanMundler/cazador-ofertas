@@ -248,7 +248,7 @@ export async function scrapePedidosYa() {
       console.log(`  [${store.name}] ${storeData.catsScanned}/${storeData.totalCats} cats, ${storeData.discountedItems.length} discounted, ${storeData.cheapItems.length} under $${MAX_PRICE_CHEAP}${storeData.rateLimited ? ' [RATE LIMITED]' : ''}`);
 
       if (storeData.sampleRawStr) {
-        console.log(`  [SAMPLE FULL] ${storeData.sampleRawStr.substring(0, 500)}`);
+        console.log(`  [SAMPLE FULL] ${storeData.sampleRawStr.substring(0, 2000)}`);
       } else {
         console.log(`  [SAMPLE] no raw item captured`);
       }
