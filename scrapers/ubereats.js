@@ -42,6 +42,30 @@ function extractDiscounts(item) {
     }
   }
 
+  for (const field of [store.meta, store.meta2, store.meta4]) {
+    if (!Array.isArray(field)) continue;
+    for (const entry of field) {
+      const text = entry?.text || entry?.richText?.accessibilityText || '';
+      const m = text.match(/(\d+)%\s*(off|dto|descuento)/i);
+      if (m) {
+        const d = parseInt(m[1], 10);
+        if (d > discount) { discount = d; promoText = text; }
+      }
+      if (text.match(/2x1|buy\s*1.*get\s*1|2da\s*unidad/i)) {
+        if (50 > discount) { discount = 50; promoText = text; }
+      }
+    }
+  }
+
+  const overlay = store.imageOverlay;
+  if (overlay?.text) {
+    const m = overlay.text.match(/(\d+)%\s*(off|dto)/i);
+    if (m) {
+      const d = parseInt(m[1], 10);
+      if (d > discount) { discount = d; promoText = overlay.text; }
+    }
+  }
+
   if (discount < MIN_RESTAURANT) return null;
 
   const name = store.title?.text || 'Restaurante';
@@ -106,6 +130,14 @@ export async function scrapeUberEats() {
         const feedItems = feedData.data?.feedItems || [];
         const meta = feedData.data?.meta || {};
         hasMore = meta.hasMore === true && feedItems.length > 0;
+
+        if (offset === 0 && feedItems.length > 0) {
+          const sample = feedItems.find(i => i.type === 'REGULAR_STORE');
+          if (sample?.store) {
+            const s = sample.store;
+            console.log(`[UberEats] Sample store fields: signposts=${JSON.stringify(s.signposts)?.substring(0,100)} meta=${JSON.stringify(s.meta)?.substring(0,100)} meta2=${JSON.stringify(s.meta2)?.substring(0,100)} meta4=${JSON.stringify(s.meta4)?.substring(0,100)} imageOverlay=${JSON.stringify(s.imageOverlay)?.substring(0,100)} endorsements=${JSON.stringify(s.endorsements)?.substring(0,100)}`);
+          }
+        }
 
         for (const item of feedItems) {
           if (item.type !== 'REGULAR_STORE') continue;
