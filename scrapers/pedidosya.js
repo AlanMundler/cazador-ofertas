@@ -105,42 +105,47 @@ async function fetchStoreData(page, vendorId, maxPriceCheap) {
 
 export async function scrapePedidosYa() {
   const offers = [];
-  let context;
+  const stores = [...KNOWN_STORES];
 
-  try {
-    context = await chromium.launchPersistentContext('', {
+  async function bypassCloudflare() {
+    const ctx = await chromium.launchPersistentContext('', {
       headless: false,
       viewport: { width: 1366, height: 768 },
     });
+    const pg = ctx.pages()[0] || await ctx.newPage();
 
-    const page = context.pages()[0] || await context.newPage();
+    await pg.goto('https://www.pedidosya.com.ar/', { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await pg.waitForTimeout(3000);
 
-    console.log('[PedidosYa] Loading home...');
-    await page.goto('https://www.pedidosya.com.ar/', { waitUntil: 'domcontentloaded', timeout: 30000 });
-    await page.waitForTimeout(3000);
-
-    let title = await page.title();
+    let title = await pg.title();
     if (title.includes('momento')) {
       console.log('[PedidosYa] Waiting for Turnstile...');
-      await page.waitForTimeout(20000);
-      title = await page.title();
+      await pg.waitForTimeout(20000);
+      title = await pg.title();
     }
 
     if (title.includes('momento')) {
       console.log('[PedidosYa] Blocked by Cloudflare');
-      return offers;
+      await ctx.close().catch(() => {});
+      return null;
     }
 
     console.log('[PedidosYa] Cloudflare passed!');
+    return { ctx, page: pg };
+  }
 
-    const stores = [...KNOWN_STORES];
+  let session = await bypassCloudflare();
+  if (!session) return offers;
 
+  try {
     console.log(`[PedidosYa] Scraping ${stores.length} stores`);
 
-    for (const store of stores) {
+    for (let si = 0; si < stores.length; si++) {
+      const store = stores[si];
       console.log(`\n[PedidosYa] Scraping: ${store.name} (vendorId=${store.vendorId})`);
 
       let storeData = null;
+      let { ctx, page } = session;
 
       for (let attempt = 1; attempt <= 2; attempt++) {
         try {
@@ -148,12 +153,14 @@ export async function scrapePedidosYa() {
             await page.goto(store.url, { waitUntil: 'domcontentloaded', timeout: 25000 });
             await page.waitForTimeout(2000);
 
-            title = await page.title();
+            const title = await page.title();
             if (title.includes('momento') || title.includes('denegado')) {
               if (attempt === 1) {
-                console.log(`  [${store.name}] Blocked attempt 1, reloading home to refresh cookies...`);
-                await page.goto('https://www.pedidosya.com.ar/', { waitUntil: 'domcontentloaded', timeout: 30000 });
-                await page.waitForTimeout(2000);
+                console.log(`  [${store.name}] Blocked, creating fresh session...`);
+                await ctx.close().catch(() => {});
+                session = await bypassCloudflare();
+                if (!session) return offers;
+                ({ ctx, page } = session);
                 continue;
               }
               console.log(`  [${store.name}] Blocked on retry, skipping`);
@@ -164,9 +171,11 @@ export async function scrapePedidosYa() {
           storeData = await fetchStoreData(page, store.vendorId, MAX_PRICE_CHEAP);
 
           if (storeData && storeData.error && attempt === 1) {
-            console.log(`  [${store.name}] Attempt1 failed (${storeData.error}), retrying with fresh page...`);
-            await page.goto('https://www.pedidosya.com.ar/', { waitUntil: 'domcontentloaded', timeout: 30000 });
-            await page.waitForTimeout(2000);
+            console.log(`  [${store.name}] Failed (${storeData.error}), creating fresh session...`);
+            await ctx.close().catch(() => {});
+            session = await bypassCloudflare();
+            if (!session) return offers;
+            ({ ctx, page } = session);
             storeData = null;
             continue;
           }
@@ -186,7 +195,6 @@ export async function scrapePedidosYa() {
       console.log(`  [${store.name}] ${storeData.catsScanned}/${storeData.totalCats} cats, ${storeData.discountedItems.length} discounted, ${storeData.cheapItems.length} under $${MAX_PRICE_CHEAP}${storeData.rateLimited ? ' [RATE LIMITED]' : ''}`);
 
       for (const item of storeData.discountedItems) {
-        console.log(`    ${item.discount}% OFF ${item.campaignTag} - ${item.name}`);
         if (item.discount >= (store.minDiscount || MIN_DISCOUNT_SUPER)) {
           offers.push({
             platform: 'PedidosYa', category: 'supermercado',
@@ -201,7 +209,6 @@ export async function scrapePedidosYa() {
       }
 
       for (const item of storeData.cheapItems) {
-        console.log(`    $${item.price} - ${item.name}`);
         offers.push({
           platform: 'PedidosYa', category: 'supermercado',
           restaurant: store.name, slug: store.url || '', discount: 0,
@@ -213,19 +220,17 @@ export async function scrapePedidosYa() {
         });
       }
 
-      await page.waitForTimeout(1000 + Math.random() * 1000);
-
-      if (store !== stores[stores.length - 1]) {
-        await page.goto('https://www.pedidosya.com.ar/', { waitUntil: 'domcontentloaded', timeout: 30000 });
-        await page.waitForTimeout(3000 + Math.random() * 2000);
+      if (si < stores.length - 1) {
+        await ctx.close().catch(() => {});
+        await new Promise(r => setTimeout(r, 2000 + Math.random() * 2000));
+        session = await bypassCloudflare();
+        if (!session) return offers;
       }
     }
 
     console.log(`[PedidosYa] ${offers.length} ofertas encontradas`);
-  } catch (err) {
-    console.error(`[PedidosYa] Error: ${err.message}`);
   } finally {
-    if (context) await context.close().catch(() => {});
+    if (session?.ctx) await session.ctx.close().catch(() => {});
   }
 
   return offers;
