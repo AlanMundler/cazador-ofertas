@@ -195,6 +195,19 @@ export async function scrapeUberEats() {
         hasMore = meta.hasMore === true && feedItems.length > 0;
 
         for (const item of feedItems) {
+          if (item.type === 'REGULAR_CAROUSEL') {
+            const children = item.children || item.storeList || [];
+            for (const child of children) {
+              const store = child.store || child;
+              const uuid = store?.storeUuid || store?.uuid || '';
+              if (!uuid || seen.has(uuid)) continue;
+              seen.add(uuid);
+              const offer = extractFromFeed({ store });
+              if (offer) offers.push(offer);
+              else needStoreV1.push(uuid);
+            }
+            continue;
+          }
           if (item.type !== 'REGULAR_STORE') continue;
 
           const store = item.store;
@@ -217,9 +230,14 @@ export async function scrapeUberEats() {
       console.log(`[UberEats] Feed: ${seen.size} stores, ${offers.length} from signposts, ${needStoreV1.length} need getStoreV1`);
 
       if (needStoreV1.length > 0) {
+        let debugCount = 0;
         const results = await batchMap(needStoreV1, async (uuid) => {
           try {
             const data = await fetchStoreV1(cookies, uuid);
+            if (data && debugCount < 3) {
+              debugCount++;
+              console.log(`[UberEats] getStoreV1 sample: title=${data.title} promotion=${JSON.stringify(data.promotion)} hasStorePromotion=${data.hasStorePromotion} suggestedPromo=${JSON.stringify(data.suggestedPromotion)} sections=${Object.keys(data.catalogSectionsMap||{}).length}`);
+            }
             return data ? extractFromStoreV1(data, uuid) : null;
           } catch {
             return null;
