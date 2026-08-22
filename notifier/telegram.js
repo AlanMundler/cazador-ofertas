@@ -59,6 +59,13 @@ export async function pollUpdates(token) {
   return subscribers;
 }
 
+function formatPrice(original, current) {
+  if (original && current) return `${original} → ${current}`;
+  if (current) return current;
+  if (original) return original;
+  return '';
+}
+
 export async function sendMessage(offers, cheapProducts = []) {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   if (!token) {
@@ -77,14 +84,14 @@ export async function sendMessage(offers, cheapProducts = []) {
     return;
   }
 
-  let message = `OFERTAS CÓRDOBA\n`;
+  let message = `🎯 OFERTAS CÓRDOBA\n${'─'.repeat(20)}\n`;
 
   if (offers.length > 0) {
     const superOffers = offers.filter(o => o.category === 'supermercado').sort((a, b) => b.discount - a.discount);
     const restaurantOffers = offers.filter(o => o.category === 'restaurante').sort((a, b) => b.discount - a.discount);
 
     if (superOffers.length > 0) {
-      message += `\n🛒 SUPER (≥50% OFF)\n`;
+      message += `\n🛒 SUPERMERCADO\n`;
       const byPlatform = {};
       for (const o of superOffers) {
         if (!byPlatform[o.platform]) byPlatform[o.platform] = {};
@@ -93,29 +100,42 @@ export async function sendMessage(offers, cheapProducts = []) {
       }
       for (const [platform, stores] of Object.entries(byPlatform)) {
         for (const [store, items] of Object.entries(stores)) {
-          message += `\n${platform} - ${store}\n`;
+          message += `\n📍 ${platform} — ${store}\n`;
           for (const o of items.sort((a, b) => b.discount - a.discount)) {
-            const name = o.name || o.description || '';
+            const name = o.name || o.description?.replace(/^\d+%\s*(OFF\s*)?/, '').replace(/\s*-\s*.+$/, '') || '';
             const short = name.length > 50 ? name.substring(0, 47) + '...' : name;
-            message += `${o.discount}% ${short}\n`;
+            const price = formatPrice(o.originalPrice, o.currentPrice);
+            message += `\n🏷️ ${o.discount}% OFF\n`;
+            message += `${short}\n`;
+            if (price) message += `${price}\n`;
           }
+          message += `${'─'.repeat(16)}\n`;
         }
       }
     }
 
     if (restaurantOffers.length > 0) {
-      message += `\n🍽️ RESTAURANTES (≥60% OFF)\n`;
+      message += `\n🍽️ RESTAURANTES\n`;
       for (const o of restaurantOffers) {
-        message += `${o.discount}% ${o.platform} - ${o.restaurant}\n`;
+        const price = formatPrice(o.originalPrice, o.currentPrice);
+        message += `\n🏷️ ${o.discount}% OFF\n`;
+        message += `${o.restaurant}\n`;
+        message += `${o.platform}\n`;
+        if (price) message += `${price}\n`;
+        message += `${'─'.repeat(16)}\n`;
       }
     }
   }
 
   if (cheapProducts.length > 0) {
-    message += `\n💰 BARATOS (<$100)\n`;
+    message += `\n💰 BARATOS (<$500)\n`;
     for (const o of cheapProducts) {
-      const name = o.name || o.description || '';
-      message += `$${o.currentPrice} ${name}\n`;
+      const name = o.name || o.description?.replace(/^\$[\d.,]+\s*-\s*/, '') || '';
+      const short = name.length > 50 ? name.substring(0, 47) + '...' : name;
+      message += `\n${o.currentPrice}\n`;
+      message += `${short}\n`;
+      message += `${o.platform} — ${o.restaurant}\n`;
+      message += `${'─'.repeat(16)}\n`;
     }
   }
 
