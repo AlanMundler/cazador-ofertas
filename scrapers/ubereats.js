@@ -12,19 +12,22 @@ const LOC_COOKIE = encodeURIComponent(JSON.stringify({
 
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 
+async function fetchSession() {
+  const res = await fetch('https://www.ubereats.com/ar', {
+    headers: { 'User-Agent': UA, 'Accept': 'text/html,application/xhtml+xml' },
+    redirect: 'follow',
+  });
+  const setCookies = res.headers.getSetCookie?.() || [];
+  const cookies = setCookies.map(c => c.split(';')[0]).join('; ');
+  return `${cookies}; uev2.loc=${LOC_COOKIE}`;
+}
+
 export async function scrapeUberEats() {
   const offers = [];
 
   for (let attempt = 1; attempt <= 2; attempt++) {
     try {
-      const sessionRes = await fetch('https://www.ubereats.com/ar', {
-        headers: { 'User-Agent': UA, 'Accept': 'text/html,application/xhtml+xml' },
-        redirect: 'follow',
-      });
-
-      const setCookies = sessionRes.headers.getSetCookie?.() || [];
-      const cookies = setCookies.map(c => c.split(';')[0]).join('; ');
-      const finalCookies = `${cookies}; uev2.loc=${LOC_COOKIE}`;
+      const cookies = await fetchSession();
 
       const feedRes = await fetch('https://www.ubereats.com/_p/api/getFeedV1?localeCode=es-ar', {
         method: 'POST',
@@ -34,7 +37,7 @@ export async function scrapeUberEats() {
           'User-Agent': UA,
           'Origin': 'https://www.ubereats.com',
           'Referer': 'https://www.ubereats.com/ar/feed',
-          'Cookie': finalCookies,
+          'Cookie': cookies,
         },
         body: JSON.stringify({
           cacheKey: '/DELIVERY///0/0//JTVCJTVE/undefined//////HOME////////',
@@ -65,7 +68,7 @@ export async function scrapeUberEats() {
 
       if (feedData.status !== 'success') {
         console.log(`[UberEats] API status: ${feedData.status}`);
-        if (attempt === 1) continue;
+        if (attempt === 1) { await new Promise(r => setTimeout(r, 2000)); continue; }
         return offers;
       }
 
@@ -133,7 +136,7 @@ export async function scrapeUberEats() {
       return offers;
     } catch (err) {
       console.error(`[UberEats] Attempt ${attempt} error: ${err.message}`);
-      if (attempt === 2) return offers;
+      if (attempt < 2) await new Promise(r => setTimeout(r, 2000));
     }
   }
 

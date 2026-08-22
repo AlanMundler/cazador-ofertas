@@ -14,6 +14,7 @@ const KNOWN_STORES = [
 
 async function fetchStoreData(page, vendorId) {
   return page.evaluate(async ({ vendorId }) => {
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
     try {
       const catResp = await fetch(`/groceries/web/v1/vendors/${vendorId}/categories`, { credentials: 'include' });
       if (!catResp.ok) return { error: `categories:${catResp.status}` };
@@ -29,13 +30,18 @@ async function fetchStoreData(page, vendorId) {
 
       const discountedItems = [];
       const cheapItems = [];
-      const BATCH = 10;
+      const BATCH = 8;
+      let rateLimited = false;
 
       for (let i = 0; i < allCatIds.length; i += BATCH) {
+        if (rateLimited) break;
         const batch = allCatIds.slice(i, i + BATCH);
         const results = await Promise.all(batch.map(catId =>
           fetch(`/groceries/web/v1/vendors/${vendorId}/products?categoryId=${catId}&limit=50`, { credentials: 'include' })
-            .then(r => r.status === 200 ? r.json() : null)
+            .then(r => {
+              if (r.status === 429) { rateLimited = true; return null; }
+              return r.status === 200 ? r.json() : null;
+            })
             .catch(() => null)
         ));
 
@@ -84,9 +90,11 @@ async function fetchStoreData(page, vendorId) {
             }
           }
         }
+
+        if (i + BATCH < allCatIds.length) await sleep(150);
       }
 
-      return { discountedItems, cheapItems, totalCats: allCatIds.length, catsScanned: allCatIds.length };
+      return { discountedItems, cheapItems, totalCats: allCatIds.length, catsScanned: rateLimited ? Math.min(i + BATCH, allCatIds.length) : allCatIds.length, rateLimited };
     } catch (e) {
       return { error: e.message };
     }
@@ -173,7 +181,7 @@ export async function scrapePedidosYa() {
         continue;
       }
 
-      console.log(`  [${store.name}] ${storeData.catsScanned}/${storeData.totalCats} cats, ${storeData.discountedItems.length} discounted, ${storeData.cheapItems.length} under $${MAX_PRICE_CHEAP}`);
+      console.log(`  [${store.name}] ${storeData.catsScanned}/${storeData.totalCats} cats, ${storeData.discountedItems.length} discounted, ${storeData.cheapItems.length} under $${MAX_PRICE_CHEAP}${storeData.rateLimited ? ' [RATE LIMITED]' : ''}`);
 
       for (const item of storeData.discountedItems) {
         console.log(`    ${item.discount}% OFF ${item.campaignTag} - ${item.name}`);

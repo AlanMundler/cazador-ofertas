@@ -119,6 +119,15 @@ export async function scrapeRappi() {
         await page.goto(storeUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
         await page.waitForTimeout(1500);
 
+        const blocked = await page.evaluate(() => {
+          const t = document.title.toLowerCase();
+          return t.includes('blocked') || t.includes('captcha') || t.includes('verificación') || document.body.innerText.length < 100;
+        });
+        if (blocked) {
+          console.log(`  [${store.name}] Blocked/bot detection, skipping`);
+          continue;
+        }
+
         await autoScroll(page, 6, 700, 500);
 
         const storeOffers = await page.evaluate(() => {

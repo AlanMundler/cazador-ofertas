@@ -59,17 +59,6 @@ export async function pollUpdates(token) {
   return subscribers;
 }
 
-async function sendDirect(token, chatId, text) {
-  try {
-    await fetch(`${API_BASE}${token}/sendMessage`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: chatId, text, disable_web_page_preview: true }),
-      signal: AbortSignal.timeout(10000),
-    });
-  } catch {}
-}
-
 export async function sendMessage(offers, cheapProducts = []) {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   if (!token) {
@@ -130,9 +119,7 @@ export async function sendMessage(offers, cheapProducts = []) {
     }
   }
 
-  for (const chatId of subscribers) {
-    await sendTelegramMessage(token, chatId, message);
-  }
+  await Promise.all(subscribers.map(chatId => sendTelegramMessage(token, chatId, message)));
 }
 
 async function sendTelegramMessage(token, chatId, text) {

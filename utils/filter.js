@@ -21,14 +21,16 @@ function saveHistory(history) {
     mkdirSync(dir, { recursive: true });
   }
 
-  const entries = Object.entries(history);
+  const now = Date.now();
+  const DAY = 24 * 60 * 60 * 1000;
+  let entries = Object.entries(history).filter(([, v]) => (now - v.lastSeen) < DAY);
+
   if (entries.length > 5000) {
-    const sorted = entries.sort((a, b) => b[1].lastSeen - a[1].lastSeen);
-    const trimmed = Object.fromEntries(sorted.slice(0, 3000));
-    writeFileSync(HISTORY_FILE, JSON.stringify(trimmed, null, 2));
-  } else {
-    writeFileSync(HISTORY_FILE, JSON.stringify(history, null, 2));
+    entries.sort((a, b) => b[1].lastSeen - a[1].lastSeen);
+    entries = entries.slice(0, 3000);
   }
+
+  writeFileSync(HISTORY_FILE, JSON.stringify(Object.fromEntries(entries), null, 2));
 }
 
 function offerKey(offer) {
