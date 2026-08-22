@@ -17,7 +17,7 @@ async function main() {
   console.log(`\n${'='.repeat(50)}`);
   console.log(`CAZADOR DE OFERTAS - ${new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' })}`);
   console.log(`Córdoba, Argentina`);
-  console.log(`Super/market: >50% OFF | Restaurantes: >60% OFF | Baratos: <$100 ARS`);
+  console.log(`Super/market: >50% OFF | Restaurantes: >60% OFF | Baratos: <$500 ARS`);
   console.log(`${'='.repeat(50)}\n`);
 
   const token = process.env.TELEGRAM_BOT_TOKEN;

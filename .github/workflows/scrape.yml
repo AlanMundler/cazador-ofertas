@@ -37,7 +37,7 @@ jobs:
           LONGITUDE: '-64.1888'
           MIN_DISCOUNT: '60'
           MIN_DISCOUNT_SUPER: '51'
-          MAX_PRICE_CHEAP: '100'
+          MAX_PRICE_CHEAP: '500'
           AREA_ID: '16631'
           AREA_NAME: 'Alberdi'
           ADDRESS: 'San José de Calasanz 49'

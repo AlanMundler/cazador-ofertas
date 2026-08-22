@@ -3,7 +3,7 @@ import { chromium } from 'patchright';
 const LAT = process.env.LATITUDE || '-31.41307';
 const LNG = process.env.LONGITUDE || '-64.19635';
 const MIN_DISCOUNT_SUPER = parseInt(process.env.MIN_DISCOUNT_SUPER || '60');
-const MAX_PRICE_CHEAP = parseInt(process.env.MAX_PRICE_CHEAP || '100');
+const MAX_PRICE_CHEAP = parseInt(process.env.MAX_PRICE_CHEAP || '500');
 
 const KNOWN_STORES = [
   { name: 'Carrefour Express', vendorId: '398683', url: 'https://www.pedidosya.com.ar/restaurantes/cordoba/carrefour-express-blvd-san-juan-785-93a8196b-9665-4322-8f7e-31b7af23c22f-menu?origin=shop_list' },
@@ -85,7 +85,7 @@ async function fetchStoreData(page, vendorId) {
               discountedItems.push({ name, discount, campaignTag, price, originalPrice });
             }
 
-            if (price > 0 && price < 100 && name) {
+            if (price > 0 && price < MAX_PRICE_CHEAP && name) {
               cheapItems.push({ name, price });
             }
           }
