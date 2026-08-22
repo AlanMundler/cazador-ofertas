@@ -59,26 +59,6 @@ export async function pollUpdates(token) {
   return subscribers;
 }
 
-function formatPrice(original, current) {
-  if (original && current) return `${original} → ${current}`;
-  if (current) return current;
-  if (original) return original;
-  return '';
-}
-
-function formatPriceFromCents(cents) {
-  if (!cents || cents <= 0) return null;
-  const pesos = cents / 100;
-  return `$${pesos.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
-}
-
-function resolvePrice(offer) {
-  if (offer.originalPrice && offer.currentPrice) return `${offer.originalPrice} → ${offer.currentPrice}`;
-  if (offer.currentPrice) return offer.currentPrice;
-  if (offer.originalPrice) return offer.originalPrice;
-  return '';
-}
-
 export async function sendMessage(offers, cheapProducts = []) {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   if (!token) {
@@ -117,9 +97,8 @@ export async function sendMessage(offers, cheapProducts = []) {
           for (const o of items.sort((a, b) => b.discount - a.discount)) {
             const name = o.name || o.description?.replace(/^\d+%\s*(OFF\s*)?/, '').replace(/\s*-\s*.+$/, '') || '';
             const short = name.length > 45 ? name.substring(0, 42) + '...' : name;
-            const price = resolvePrice(o);
-            message += `${o.discount}% ${short}\n`;
-            if (price) message += `  ${price}\n`;
+            const price = o.currentPrice || o.originalPrice || '';
+            message += `- ${o.discount}% ${short} ${price}\n`;
           }
         }
       }
@@ -128,7 +107,7 @@ export async function sendMessage(offers, cheapProducts = []) {
     if (restaurantOffers.length > 0) {
       message += `\n🍽️ RESTAURANTES\n`;
       for (const o of restaurantOffers) {
-        message += `${o.discount}% ${o.platform} — ${o.restaurant}\n`;
+        message += `- ${o.discount}% ${o.platform} — ${o.restaurant}\n`;
       }
     }
   }
