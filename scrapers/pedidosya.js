@@ -142,7 +142,17 @@ async function fetchStoreData(page, vendorId, maxPriceCheap) {
         if (i + BATCH < allCatIds.length) await sleep(150);
       }
 
-      return { discountedItems, cheapItems, totalCats: allCatIds.length, catsScanned: rateLimited ? Math.min(i + BATCH, allCatIds.length) : allCatIds.length, rateLimited };
+      const sampleItem = discountedItems[0] || null;
+      let sampleRaw = null;
+      try {
+        const firstCatId = allCatIds[0];
+        if (firstCatId) {
+          const r = await fetch(`/groceries/web/v1/vendors/${vendorId}/products?categoryId=${firstCatId}&limit=5`, { credentials: 'include' });
+          if (r.ok) { const d = await r.json(); sampleRaw = (d.items || [])[0] || null; }
+        }
+      } catch {}
+
+      return { discountedItems, cheapItems, totalCats: allCatIds.length, catsScanned: rateLimited ? Math.min(i + BATCH, allCatIds.length) : allCatIds.length, rateLimited, sampleItem, sampleRaw };
     } catch (e) {
       return { error: e.message };
     }
@@ -236,6 +246,14 @@ export async function scrapePedidosYa() {
 
       scannedIds.push(store.vendorId);
       console.log(`  [${store.name}] ${storeData.catsScanned}/${storeData.totalCats} cats, ${storeData.discountedItems.length} discounted, ${storeData.cheapItems.length} under $${MAX_PRICE_CHEAP}${storeData.rateLimited ? ' [RATE LIMITED]' : ''}`);
+
+      if (storeData.sampleRaw) {
+        const s = storeData.sampleRaw;
+        console.log(`  [SAMPLE] name=${s.name} selling_price=${s.selling_price} price=${s.price} price_without_discount=${s.price_without_discount} originalPrice=${s.originalPrice} salePrice=${s.salePrice} tagline=${s.priceTagline}`);
+      }
+      if (storeData.sampleItem) {
+        console.log(`  [PARSED] price=${storeData.sampleItem.price} originalPrice=${storeData.sampleItem.originalPrice}`);
+      }
 
       for (const item of storeData.discountedItems) {
         if (item.discount >= (store.minDiscount || MIN_DISCOUNT_SUPER)) {

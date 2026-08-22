@@ -66,6 +66,19 @@ function formatPrice(original, current) {
   return '';
 }
 
+function formatPriceFromCents(cents) {
+  if (!cents || cents <= 0) return null;
+  const pesos = cents / 100;
+  return `$${pesos.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+}
+
+function resolvePrice(offer) {
+  if (offer.originalPrice && offer.currentPrice) return `${offer.originalPrice} → ${offer.currentPrice}`;
+  if (offer.currentPrice) return offer.currentPrice;
+  if (offer.originalPrice) return offer.originalPrice;
+  return '';
+}
+
 export async function sendMessage(offers, cheapProducts = []) {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   if (!token) {
@@ -103,13 +116,11 @@ export async function sendMessage(offers, cheapProducts = []) {
           message += `\n📍 ${platform} — ${store}\n`;
           for (const o of items.sort((a, b) => b.discount - a.discount)) {
             const name = o.name || o.description?.replace(/^\d+%\s*(OFF\s*)?/, '').replace(/\s*-\s*.+$/, '') || '';
-            const short = name.length > 50 ? name.substring(0, 47) + '...' : name;
-            const price = formatPrice(o.originalPrice, o.currentPrice);
-            message += `\n🏷️ ${o.discount}% OFF\n`;
-            message += `${short}\n`;
-            if (price) message += `${price}\n`;
+            const short = name.length > 45 ? name.substring(0, 42) + '...' : name;
+            const price = resolvePrice(o);
+            message += `${o.discount}% ${short}\n`;
+            if (price) message += `  ${price}\n`;
           }
-          message += `${'─'.repeat(16)}\n`;
         }
       }
     }
@@ -117,12 +128,7 @@ export async function sendMessage(offers, cheapProducts = []) {
     if (restaurantOffers.length > 0) {
       message += `\n🍽️ RESTAURANTES\n`;
       for (const o of restaurantOffers) {
-        const price = formatPrice(o.originalPrice, o.currentPrice);
-        message += `\n🏷️ ${o.discount}% OFF\n`;
-        message += `${o.restaurant}\n`;
-        message += `${o.platform}\n`;
-        if (price) message += `${price}\n`;
-        message += `${'─'.repeat(16)}\n`;
+        message += `${o.discount}% ${o.platform} — ${o.restaurant}\n`;
       }
     }
   }
@@ -131,11 +137,9 @@ export async function sendMessage(offers, cheapProducts = []) {
     message += `\n💰 BARATOS (<$500)\n`;
     for (const o of cheapProducts) {
       const name = o.name || o.description?.replace(/^\$[\d.,]+\s*-\s*/, '') || '';
-      const short = name.length > 50 ? name.substring(0, 47) + '...' : name;
-      message += `\n${o.currentPrice}\n`;
-      message += `${short}\n`;
-      message += `${o.platform} — ${o.restaurant}\n`;
-      message += `${'─'.repeat(16)}\n`;
+      const short = name.length > 45 ? name.substring(0, 42) + '...' : name;
+      const price = o.currentPrice || formatPriceFromCents(o.currentPriceCents) || '';
+      message += `${price} ${short}\n`;
     }
   }
 
