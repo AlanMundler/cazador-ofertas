@@ -1,6 +1,7 @@
 const LAT = process.env.LATITUDE || '-31.4201';
 const LNG = process.env.LONGITUDE || '-64.1888';
 const MIN_RESTAURANT = parseInt(process.env.MIN_DISCOUNT || '60');
+const CONCURRENCY = 5;
 
 const LOC_COOKIE = encodeURIComponent(JSON.stringify({
   address: { title: "Cordoba, Argentina" },
@@ -22,7 +23,68 @@ async function fetchSession() {
   return `${cookies}; uev2.loc=${LOC_COOKIE}`;
 }
 
-function extractDiscounts(item) {
+function parseDiscount(text) {
+  if (!text) return 0;
+  const m = text.match(/(\d+)%\s*(off|dto|descuento)/i);
+  if (m) return parseInt(m[1], 10);
+  if (/buy\s*1.*get\s*1|2x1|2da\s*unidad/i.test(text)) return 50;
+  return 0;
+}
+
+function extractFromStoreV1(data, uuid) {
+  let discount = 0;
+  let promoText = '';
+
+  if (data.promotion) {
+    const d = parseDiscount(data.promotion.text || data.promotion);
+    if (d > discount) { discount = d; promoText = data.promotion.text || data.promotion; }
+  }
+
+  if (data.suggestedPromotion?.text) {
+    const d = parseDiscount(data.suggestedPromotion.text);
+    if (d > discount) { discount = d; promoText = data.suggestedPromotion.text; }
+  }
+
+  if (data.hasStorePromotion && discount === 0) {
+    discount = 20;
+    promoText = 'Store promotion';
+  }
+
+  const sections = data.catalogSectionsMap || {};
+  for (const [key, arr] of Object.entries(sections)) {
+    for (const section of arr) {
+      const title = section?.payload?.standardItemsPayload?.title || '';
+      if (/buy\s*1.*get\s*1|2x1|ofertas?|descuentos?|promo/i.test(title)) {
+        const items = section.payload.standardItemsPayload.catalogItems || [];
+        for (const item of items) {
+          if (item.purchaseInfo?.purchaseOptions?.length > 0) {
+            if (50 > discount) { discount = 50; promoText = title; }
+          }
+        }
+      }
+    }
+  }
+
+  if (discount < MIN_RESTAURANT) return null;
+
+  const name = data.title || 'Restaurante';
+  const eta = data.etaRange?.text || '';
+  const rating = data.rating?.ratingValue || '';
+  const url = data.slug
+    ? `https://www.ubereats.com/store/${data.slug}/${uuid}`
+    : `https://www.ubereats.com/store/${uuid}`;
+
+  return {
+    platform: 'UberEats', category: 'restaurante',
+    restaurant: name, slug: uuid, discount,
+    description: promoText || `${discount}% OFF`,
+    originalPrice: null, currentPrice: null,
+    url, deliveryTime: eta, rating,
+    imageUrl: data.heroImageUrls?.[0] || '',
+  };
+}
+
+function extractFromFeed(item) {
   const store = item.store;
   if (!store) return null;
 
@@ -32,38 +94,8 @@ function extractDiscounts(item) {
 
   for (const sp of signposts) {
     const text = sp.text || '';
-    const match = text.match(/(\d+)%\s*off/i);
-    if (match) {
-      const d = parseInt(match[1], 10);
-      if (d > discount) { discount = d; promoText = text; }
-    }
-    if (text.match(/buy\s*1.*get\s*1/i) || text.match(/2x1/i)) {
-      if (50 > discount) { discount = 50; promoText = text; }
-    }
-  }
-
-  for (const field of [store.meta, store.meta2, store.meta4]) {
-    if (!Array.isArray(field)) continue;
-    for (const entry of field) {
-      const text = entry?.text || entry?.richText?.accessibilityText || '';
-      const m = text.match(/(\d+)%\s*(off|dto|descuento)/i);
-      if (m) {
-        const d = parseInt(m[1], 10);
-        if (d > discount) { discount = d; promoText = text; }
-      }
-      if (text.match(/2x1|buy\s*1.*get\s*1|2da\s*unidad/i)) {
-        if (50 > discount) { discount = 50; promoText = text; }
-      }
-    }
-  }
-
-  const overlay = store.imageOverlay;
-  if (overlay?.text) {
-    const m = overlay.text.match(/(\d+)%\s*(off|dto)/i);
-    if (m) {
-      const d = parseInt(m[1], 10);
-      if (d > discount) { discount = d; promoText = overlay.text; }
-    }
+    const m = parseDiscount(text);
+    if (m > discount) { discount = m; promoText = text; }
   }
 
   if (discount < MIN_RESTAURANT) return null;
@@ -91,9 +123,44 @@ function extractDiscounts(item) {
   };
 }
 
+async function fetchStoreV1(cookies, uuid) {
+  const res = await fetch('https://www.ubereats.com/_p/api/getStoreV1?localeCode=es-ar', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept-Language': 'es-AR,es;q=0.9',
+      'x-csrf-token': 'x',
+      'User-Agent': UA,
+      'Origin': 'https://www.ubereats.com',
+      'Referer': 'https://www.ubereats.com/ar/feed',
+      'Cookie': cookies,
+    },
+    body: JSON.stringify({
+      storeUuid: uuid,
+      diningMode: 'DELIVERY',
+      time: { asap: true },
+      cbType: 'EATER_ENDORSED',
+    }),
+  });
+  const json = await res.json();
+  return json.status === 'success' ? json.data : null;
+}
+
+async function batchMap(items, fn, concurrency) {
+  const results = [];
+  for (let i = 0; i < items.length; i += concurrency) {
+    const batch = items.slice(i, i + concurrency);
+    const batchResults = await Promise.all(batch.map(fn));
+    results.push(...batchResults);
+    if (i + concurrency < items.length) await new Promise(r => setTimeout(r, 200));
+  }
+  return results;
+}
+
 export async function scrapeUberEats() {
   const offers = [];
   const seen = new Set();
+  const needStoreV1 = [];
 
   for (let attempt = 1; attempt <= 2; attempt++) {
     try {
@@ -121,31 +188,25 @@ export async function scrapeUberEats() {
         });
 
         const feedData = await feedRes.json();
-
-        if (feedData.status !== 'success') {
-          console.log(`[UberEats] API status: ${feedData.status}`);
-          break;
-        }
+        if (feedData.status !== 'success') break;
 
         const feedItems = feedData.data?.feedItems || [];
         const meta = feedData.data?.meta || {};
         hasMore = meta.hasMore === true && feedItems.length > 0;
 
-        if (offset === 0 && feedItems.length > 0) {
-          const sample = feedItems.find(i => i.type === 'REGULAR_STORE');
-          if (sample?.store) {
-            const s = sample.store;
-            console.log(`[UberEats] Sample store fields: signposts=${JSON.stringify(s.signposts)?.substring(0,100)} meta=${JSON.stringify(s.meta)?.substring(0,100)} meta2=${JSON.stringify(s.meta2)?.substring(0,100)} meta4=${JSON.stringify(s.meta4)?.substring(0,100)} imageOverlay=${JSON.stringify(s.imageOverlay)?.substring(0,100)} endorsements=${JSON.stringify(s.endorsements)?.substring(0,100)}`);
-          }
-        }
-
         for (const item of feedItems) {
           if (item.type !== 'REGULAR_STORE') continue;
 
-          const offer = extractDiscounts(item);
-          if (offer && !seen.has(offer.slug)) {
-            seen.add(offer.slug);
-            offers.push(offer);
+          const store = item.store;
+          const uuid = store?.storeUuid || store?.uuid || '';
+          if (!uuid || seen.has(uuid)) continue;
+          seen.add(uuid);
+
+          const feedOffer = extractFromFeed(item);
+          if (feedOffer) {
+            offers.push(feedOffer);
+          } else {
+            needStoreV1.push(uuid);
           }
         }
 
@@ -153,7 +214,25 @@ export async function scrapeUberEats() {
         if (offset >= 500) break;
       }
 
-      console.log(`[UberEats] ${offers.length} ofertas >${MIN_RESTAURANT}% de restaurantes (${offset} stores scanned)`);
+      console.log(`[UberEats] Feed: ${seen.size} stores, ${offers.length} from signposts, ${needStoreV1.length} need getStoreV1`);
+
+      if (needStoreV1.length > 0) {
+        const results = await batchMap(needStoreV1, async (uuid) => {
+          try {
+            const data = await fetchStoreV1(cookies, uuid);
+            return data ? extractFromStoreV1(data, uuid) : null;
+          } catch {
+            return null;
+          }
+        }, CONCURRENCY);
+
+        for (const offer of results) {
+          if (offer) offers.push(offer);
+        }
+        console.log(`[UberEats] getStoreV1: ${results.filter(Boolean).length} offers from ${needStoreV1.length} stores`);
+      }
+
+      console.log(`[UberEats] Total: ${offers.length} offers >${MIN_RESTAURANT}%`);
       return offers;
     } catch (err) {
       console.error(`[UberEats] Attempt ${attempt} error: ${err.message}`);
