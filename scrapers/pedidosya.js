@@ -12,8 +12,8 @@ const KNOWN_STORES = [
   { name: 'La Anónima Jacinto Ríos', vendorId: '620891', url: 'https://www.pedidosya.com.ar/restaurantes/cordoba/la-anonima-jacinto-rios-f6d50a50-cb1d-40d8-b8a4-7aba60e16270-menu' },
 ];
 
-async function fetchStoreData(page, vendorId) {
-  return page.evaluate(async ({ vendorId }) => {
+async function fetchStoreData(page, vendorId, maxPriceCheap) {
+  return page.evaluate(async ({ vendorId, maxPriceCheap }) => {
     const sleep = ms => new Promise(r => setTimeout(r, ms));
     try {
       const catResp = await fetch(`/groceries/web/v1/vendors/${vendorId}/categories`, { credentials: 'include' });
@@ -30,7 +30,6 @@ async function fetchStoreData(page, vendorId) {
 
       const discountedItems = [];
       const cheapItems = [];
-      const priceSamples = [];
       const BATCH = 8;
       let rateLimited = false;
 
@@ -87,11 +86,8 @@ async function fetchStoreData(page, vendorId) {
             }
 
             if (price > 0 && name) {
-              if (price < MAX_PRICE_CHEAP) {
+              if (price < maxPriceCheap) {
                 cheapItems.push({ name, price });
-              }
-              if (priceSamples.length < 5) {
-                priceSamples.push({ name: name.substring(0, 30), sp: item.selling_price, p: item.price, op: item.price_without_discount, final: price });
               }
             }
           }
@@ -100,7 +96,7 @@ async function fetchStoreData(page, vendorId) {
         if (i + BATCH < allCatIds.length) await sleep(150);
       }
 
-      return { discountedItems, cheapItems, priceSamples, totalCats: allCatIds.length, catsScanned: rateLimited ? Math.min(i + BATCH, allCatIds.length) : allCatIds.length, rateLimited };
+      return { discountedItems, cheapItems, totalCats: allCatIds.length, catsScanned: rateLimited ? Math.min(i + BATCH, allCatIds.length) : allCatIds.length, rateLimited };
     } catch (e) {
       return { error: e.message };
     }
@@ -165,7 +161,7 @@ export async function scrapePedidosYa() {
             }
           }
 
-          storeData = await fetchStoreData(page, store.vendorId);
+          storeData = await fetchStoreData(page, store.vendorId, MAX_PRICE_CHEAP);
 
           if (storeData && storeData.error && attempt === 1) {
             console.log(`  [${store.name}] Attempt1 failed (${storeData.error}), retrying with fresh page...`);
@@ -188,11 +184,6 @@ export async function scrapePedidosYa() {
       }
 
       console.log(`  [${store.name}] ${storeData.catsScanned}/${storeData.totalCats} cats, ${storeData.discountedItems.length} discounted, ${storeData.cheapItems.length} under $${MAX_PRICE_CHEAP}${storeData.rateLimited ? ' [RATE LIMITED]' : ''}`);
-      if (storeData.priceSamples?.length > 0) {
-        console.log(`  [${store.name}] Price samples: ${JSON.stringify(storeData.priceSamples)}`);
-      }
-
-      let debugPriceCount = 0;
 
       for (const item of storeData.discountedItems) {
         console.log(`    ${item.discount}% OFF ${item.campaignTag} - ${item.name}`);
