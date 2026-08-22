@@ -37,7 +37,7 @@ function offerKey(offer) {
   if (offer.isCheapProduct) {
     return `${offer.platform}:${offer.restaurant}:cheap:${offer.currentPrice}:${offer.description}`;
   }
-  if (offer.discount > 0 && offer.description && offer.description.includes('OFF')) {
+  if (offer.discount > 0 && offer.description && /off/i.test(offer.description)) {
     return `${offer.platform}:${offer.restaurant}:${offer.discount}:${offer.description}`;
   }
   return `${offer.platform}:${offer.restaurant}:${offer.discount}`;

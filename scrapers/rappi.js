@@ -43,12 +43,13 @@ export async function scrapeRappi() {
     await page.waitForTimeout(2000);
 
     try {
-      const promoBtn = await page.evaluateHandle(() => {
+      const promoHandle = await page.evaluateHandle(() => {
         for (const s of document.querySelectorAll('span, button, div')) {
           if (s.textContent.trim() === 'Promos') return s;
         }
         return null;
       });
+      const promoBtn = promoHandle.asElement();
       if (promoBtn) { await promoBtn.click(); await page.waitForTimeout(1500); }
     } catch {}
 

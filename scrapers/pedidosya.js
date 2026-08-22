@@ -80,6 +80,7 @@ async function fetchStoreData(page, vendorId, maxPriceCheap) {
       const cheapItems = [];
       const BATCH = 8;
       let rateLimited = false;
+      let catsScanned = 0;
 
       for (let i = 0; i < allCatIds.length; i += BATCH) {
         if (rateLimited) break;
@@ -92,6 +93,8 @@ async function fetchStoreData(page, vendorId, maxPriceCheap) {
             })
             .catch(() => null)
         ));
+
+        catsScanned += batch.length;
 
         for (const pData of results) {
           if (!pData) continue;
@@ -132,7 +135,7 @@ async function fetchStoreData(page, vendorId, maxPriceCheap) {
             }
 
             if (discount > 0 && name) {
-              discountedItems.push({ name, discount, campaignTag, price, originalPrice });
+              discountedItems.push({ name, discount, campaignTag, price, originalPrice, formattedPrice, formattedOriginal });
             }
 
             if (price > 0 && name && price < maxPriceCheap) {
@@ -144,11 +147,11 @@ async function fetchStoreData(page, vendorId, maxPriceCheap) {
         if (i + BATCH < allCatIds.length) await sleep(150);
       }
 
-      return { discountedItems, cheapItems, totalCats: allCatIds.length, catsScanned: rateLimited ? Math.min(i + BATCH, allCatIds.length) : allCatIds.length, rateLimited };
+      return { discountedItems, cheapItems, totalCats: allCatIds.length, catsScanned: Math.min(catsScanned, allCatIds.length), rateLimited };
     } catch (e) {
       return { error: e.message };
     }
-  }, { vendorId });
+  }, { vendorId, maxPriceCheap });
 }
 
 export async function scrapePedidosYa() {

@@ -18,6 +18,7 @@ async function fetchSession() {
     headers: { 'User-Agent': UA, 'Accept': 'text/html,application/xhtml+xml' },
     redirect: 'follow',
   });
+  if (!res.ok) throw new Error(`session fetch failed: ${res.status}`);
   const setCookies = res.headers.getSetCookie?.() || [];
   const cookies = setCookies.map(c => c.split(';')[0]).join('; ');
   return `${cookies}; uev2.loc=${LOC_COOKIE}`;

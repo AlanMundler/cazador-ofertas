@@ -7,17 +7,18 @@ import { filterNewOffers, deduplicateOffers } from './utils/filter.js';
 
 const TIMEOUT_MS = 8 * 60 * 1000;
 
+let timedOut = false;
+
 async function main() {
   const startTime = Date.now();
   const timer = setTimeout(() => {
     console.error(`\n[TIMEOUT] Límite de ${TIMEOUT_MS / 60000}min alcanzado, forzando salida`);
-    process.exit(1);
+    timedOut = true;
   }, TIMEOUT_MS);
 
   console.log(`\n${'='.repeat(50)}`);
   console.log(`CAZADOR DE OFERTAS - ${new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' })}`);
   console.log(`Córdoba, Argentina`);
-  console.log(`Super/market: >50% OFF | Restaurantes: >60% OFF | Baratos: <$500 ARS`);
   console.log(`${'='.repeat(50)}\n`);
 
   const token = process.env.TELEGRAM_BOT_TOKEN;
@@ -31,6 +32,11 @@ async function main() {
     scrapePedidosYa().catch(e => { console.error('[PedidosYa] Error:', e.message); return []; }),
     scrapeUberEats().catch(e => { console.error('[UberEats] Error:', e.message); return []; }),
   ]);
+
+  if (timedOut) {
+    clearTimeout(timer);
+    console.log(`[TIMEOUT] Scraping completado antes del límite, continuando...`);
+  }
 
   const allOffers = [...rappiOffers, ...pedidosYaOffers, ...uberEatsOffers];
 
