@@ -1,16 +1,64 @@
 import { chromium } from 'patchright';
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const SCAN_FILE = join(__dirname, '..', 'data', 'py-store-scans.json');
 
 const LAT = process.env.LATITUDE || '-31.41307';
 const LNG = process.env.LONGITUDE || '-64.19635';
 const MIN_DISCOUNT_SUPER = parseInt(process.env.MIN_DISCOUNT_SUPER || '60');
 const MAX_PRICE_CHEAP = parseInt(process.env.MAX_PRICE_CHEAP || '500');
+const STORE_INTERVAL_MS = 55 * 60 * 1000;
 
 const KNOWN_STORES = [
+  { name: 'PedidosYa Market 25 de Mayo', vendorId: '169481', minDiscount: 45, priority: true, url: 'https://www.pedidosya.com.ar/restaurantes/cordoba/pedidosya-market-25-de-mayo-bb184a2a-707c-4e62-86e8-0003e06e57af-menu?origin=shop_list' },
   { name: 'Carrefour Express', vendorId: '398683', url: 'https://www.pedidosya.com.ar/restaurantes/cordoba/carrefour-express-blvd-san-juan-785-93a8196b-9665-4322-8f7e-31b7af23c22f-menu?origin=shop_list' },
-  { name: 'PedidosYa Market 25 de Mayo', vendorId: '169481', minDiscount: 45, url: 'https://www.pedidosya.com.ar/restaurantes/cordoba/pedidosya-market-25-de-mayo-bb184a2a-707c-4e62-86e8-0003e06e57af-menu?origin=shop_list' },
   { name: 'Jumbo Córdoba', vendorId: '550495', url: 'https://www.pedidosya.com.ar/restaurantes/cordoba/jumbo-cordoba-791c33b2-6317-4717-8b90-6bee5a9554fa-menu' },
   { name: 'La Anónima Jacinto Ríos', vendorId: '620891', url: 'https://www.pedidosya.com.ar/restaurantes/cordoba/la-anonima-jacinto-rios-f6d50a50-cb1d-40d8-b8a4-7aba60e16270-menu' },
 ];
+
+function loadScanTimes() {
+  try {
+    if (!existsSync(SCAN_FILE)) return {};
+    return JSON.parse(readFileSync(SCAN_FILE, 'utf-8'));
+  } catch { return {}; }
+}
+
+function saveScanTimes(times) {
+  const dir = dirname(SCAN_FILE);
+  if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+  writeFileSync(SCAN_FILE, JSON.stringify(times, null, 2));
+}
+
+function getStoresToScan() {
+  const now = Date.now();
+  const scans = loadScanTimes();
+  const toScan = [];
+
+  for (const store of KNOWN_STORES) {
+    if (store.priority) {
+      toScan.push(store);
+      continue;
+    }
+    const lastScan = scans[store.vendorId] || 0;
+    if (now - lastScan >= STORE_INTERVAL_MS) {
+      toScan.push(store);
+    }
+  }
+
+  return toScan;
+}
+
+function markScanned(vendorIds) {
+  const scans = loadScanTimes();
+  const now = Date.now();
+  for (const id of vendorIds) {
+    scans[id] = now;
+  }
+  saveScanTimes(scans);
+}
 
 async function fetchStoreData(page, vendorId, maxPriceCheap) {
   return page.evaluate(async ({ vendorId, maxPriceCheap }) => {
@@ -85,10 +133,8 @@ async function fetchStoreData(page, vendorId, maxPriceCheap) {
               discountedItems.push({ name, discount, campaignTag, price, originalPrice });
             }
 
-            if (price > 0 && name) {
-              if (price < maxPriceCheap) {
-                cheapItems.push({ name, price });
-              }
+            if (price > 0 && name && price < maxPriceCheap) {
+              cheapItems.push({ name, price });
             }
           }
         }
@@ -105,47 +151,47 @@ async function fetchStoreData(page, vendorId, maxPriceCheap) {
 
 export async function scrapePedidosYa() {
   const offers = [];
-  const stores = [...KNOWN_STORES];
+  const stores = getStoresToScan();
 
-  async function bypassCloudflare() {
-    const ctx = await chromium.launchPersistentContext('', {
+  if (stores.length === 0) {
+    console.log('[PedidosYa] All stores scanned recently, skipping');
+    return offers;
+  }
+
+  console.log(`[PedidosYa] Scraping ${stores.length} stores: ${stores.map(s => s.name).join(', ')}`);
+
+  let context;
+  try {
+    context = await chromium.launchPersistentContext('', {
       headless: false,
       viewport: { width: 1366, height: 768 },
     });
-    const pg = ctx.pages()[0] || await ctx.newPage();
 
-    await pg.goto('https://www.pedidosya.com.ar/', { waitUntil: 'domcontentloaded', timeout: 30000 });
-    await pg.waitForTimeout(3000);
+    const page = context.pages()[0] || await context.newPage();
 
-    let title = await pg.title();
+    await page.goto('https://www.pedidosya.com.ar/', { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await page.waitForTimeout(3000);
+
+    let title = await page.title();
     if (title.includes('momento')) {
       console.log('[PedidosYa] Waiting for Turnstile...');
-      await pg.waitForTimeout(20000);
-      title = await pg.title();
+      await page.waitForTimeout(20000);
+      title = await page.title();
     }
 
     if (title.includes('momento')) {
       console.log('[PedidosYa] Blocked by Cloudflare');
-      await ctx.close().catch(() => {});
-      return null;
+      return offers;
     }
 
     console.log('[PedidosYa] Cloudflare passed!');
-    return { ctx, page: pg };
-  }
 
-  let session = await bypassCloudflare();
-  if (!session) return offers;
+    const scannedIds = [];
 
-  try {
-    console.log(`[PedidosYa] Scraping ${stores.length} stores`);
-
-    for (let si = 0; si < stores.length; si++) {
-      const store = stores[si];
+    for (const store of stores) {
       console.log(`\n[PedidosYa] Scraping: ${store.name} (vendorId=${store.vendorId})`);
 
       let storeData = null;
-      let { ctx, page } = session;
 
       for (let attempt = 1; attempt <= 2; attempt++) {
         try {
@@ -153,14 +199,12 @@ export async function scrapePedidosYa() {
             await page.goto(store.url, { waitUntil: 'domcontentloaded', timeout: 25000 });
             await page.waitForTimeout(2000);
 
-            const title = await page.title();
+            title = await page.title();
             if (title.includes('momento') || title.includes('denegado')) {
               if (attempt === 1) {
-                console.log(`  [${store.name}] Blocked, creating fresh session...`);
-                await ctx.close().catch(() => {});
-                session = await bypassCloudflare();
-                if (!session) return offers;
-                ({ ctx, page } = session);
+                console.log(`  [${store.name}] Blocked, reloading home...`);
+                await page.goto('https://www.pedidosya.com.ar/', { waitUntil: 'domcontentloaded', timeout: 30000 });
+                await page.waitForTimeout(5000);
                 continue;
               }
               console.log(`  [${store.name}] Blocked on retry, skipping`);
@@ -171,11 +215,9 @@ export async function scrapePedidosYa() {
           storeData = await fetchStoreData(page, store.vendorId, MAX_PRICE_CHEAP);
 
           if (storeData && storeData.error && attempt === 1) {
-            console.log(`  [${store.name}] Failed (${storeData.error}), creating fresh session...`);
-            await ctx.close().catch(() => {});
-            session = await bypassCloudflare();
-            if (!session) return offers;
-            ({ ctx, page } = session);
+            console.log(`  [${store.name}] Failed (${storeData.error}), reloading home...`);
+            await page.goto('https://www.pedidosya.com.ar/', { waitUntil: 'domcontentloaded', timeout: 30000 });
+            await page.waitForTimeout(5000);
             storeData = null;
             continue;
           }
@@ -188,10 +230,11 @@ export async function scrapePedidosYa() {
       }
 
       if (!storeData || storeData.error) {
-        console.log(`  [${store.name}] Error: ${JSON.stringify(storeData)}`);
+        console.log(`  [${store.name}] Skipped: ${JSON.stringify(storeData)}`);
         continue;
       }
 
+      scannedIds.push(store.vendorId);
       console.log(`  [${store.name}] ${storeData.catsScanned}/${storeData.totalCats} cats, ${storeData.discountedItems.length} discounted, ${storeData.cheapItems.length} under $${MAX_PRICE_CHEAP}${storeData.rateLimited ? ' [RATE LIMITED]' : ''}`);
 
       for (const item of storeData.discountedItems) {
@@ -220,17 +263,17 @@ export async function scrapePedidosYa() {
         });
       }
 
-      if (si < stores.length - 1) {
-        await ctx.close().catch(() => {});
-        await new Promise(r => setTimeout(r, 2000 + Math.random() * 2000));
-        session = await bypassCloudflare();
-        if (!session) return offers;
+      if (store !== stores[stores.length - 1]) {
+        await page.waitForTimeout(2000 + Math.random() * 2000);
       }
     }
 
+    if (scannedIds.length > 0) markScanned(scannedIds);
     console.log(`[PedidosYa] ${offers.length} ofertas encontradas`);
+  } catch (err) {
+    console.error(`[PedidosYa] Error: ${err.message}`);
   } finally {
-    if (session?.ctx) await session.ctx.close().catch(() => {});
+    if (context) await context.close().catch(() => {});
   }
 
   return offers;
