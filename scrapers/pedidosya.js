@@ -214,6 +214,11 @@ export async function scrapePedidosYa() {
       }
 
       await page.waitForTimeout(1000 + Math.random() * 1000);
+
+      if (store !== stores[stores.length - 1]) {
+        await page.goto('https://www.pedidosya.com.ar/', { waitUntil: 'domcontentloaded', timeout: 30000 });
+        await page.waitForTimeout(3000 + Math.random() * 2000);
+      }
     }
 
     console.log(`[PedidosYa] ${offers.length} ofertas encontradas`);
