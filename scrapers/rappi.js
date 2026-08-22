@@ -2,8 +2,8 @@ import { chromium } from 'patchright';
 
 const LAT = process.env.LATITUDE || '-31.4201';
 const LNG = process.env.LONGITUDE || '-64.1888';
-const MIN_SUPER = parseInt(process.env.MIN_DISCOUNT_SUPER || '60');
-const MIN_RESTAURANT = parseInt(process.env.MIN_DISCOUNT || '60');
+const MIN_SUPER = parseInt(process.env.MIN_DISCOUNT_SUPER || '51');
+const MIN_RESTAURANT = parseInt(process.env.MIN_DISCOUNT || '61');
 
 const SUPER_STORES = [
   { slug: '214965-jumbo', name: 'Jumbo' },
@@ -115,7 +115,7 @@ export async function scrapeRappi() {
     console.log('[Rappi] Scrapeando supermercados...');
 
     for (const store of SUPER_STORES) {
-      const storeUrl = `https://www.rappi.com.ar/cordoba/tiendas/${store.slug}`;
+      const storeUrl = `https://www.rappi.com.ar/tiendas/${store.slug}`;
       try {
         await page.goto(storeUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
         await page.waitForTimeout(1500);

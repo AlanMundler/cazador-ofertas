@@ -3,7 +3,7 @@ import { scrapeRappi } from './scrapers/rappi.js';
 import { scrapePedidosYa } from './scrapers/pedidosya.js';
 import { scrapeUberEats } from './scrapers/ubereats.js';
 import { sendMessage, pollUpdates } from './notifier/telegram.js';
-import { filterNewOffers, deduplicateOffers } from './utils/filter.js';
+import { filterNewOffers, deduplicateOffers, detectFlashDeals } from './utils/filter.js';
 
 const TIMEOUT_MS = 8 * 60 * 1000;
 
@@ -55,10 +55,15 @@ async function main() {
   const newCheap = filterNewOffers(deduplicatedCheap);
   console.log(`Nuevos (30min): ${newDiscounts.length} ofertas + ${newCheap.length} baratos`);
 
-  const hasNewContent = newDiscounts.length > 0 || newCheap.length > 0;
+  const flashDeals = detectFlashDeals(deduplicatedDiscounts);
+  if (flashDeals.length > 0) {
+    console.log(`⚡ FLASH DEALS detectados: ${flashDeals.length}`);
+  }
+
+  const hasNewContent = newDiscounts.length > 0 || newCheap.length > 0 || flashDeals.length > 0;
 
   if (hasNewContent) {
-    await sendMessage(newDiscounts, newCheap);
+    await sendMessage(newDiscounts, newCheap, flashDeals);
     console.log(`\n¡Notificación enviada!`);
   } else {
     console.log(`\nSin ofertas nuevas, no se envía notificación.`);

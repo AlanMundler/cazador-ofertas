@@ -71,3 +71,36 @@ export function deduplicateOffers(offers) {
     return true;
   });
 }
+
+export function detectFlashDeals(offers) {
+  const history = loadHistory();
+  const flashDeals = [];
+  const now = Date.now();
+  const FLASH_THRESHOLD = 75;
+
+  for (const offer of offers) {
+    if (offer.isCheapProduct || offer.type === 'coupon') continue;
+    if (offer.discount < FLASH_THRESHOLD) continue;
+
+    const priceKey = `${offer.platform}:${offer.restaurant}:price`;
+    const priceHistory = history[priceKey];
+
+    if (!priceHistory || (now - priceHistory.lastSeen) > 2 * 60 * 60 * 1000) {
+      flashDeals.push({
+        ...offer,
+        isFlash: true,
+        message: `⚡ FLASH: ${offer.discount}% en ${offer.restaurant} (${offer.platform})`,
+      });
+    }
+
+    history[priceKey] = {
+      lastSeen: now,
+      price: offer.currentPrice || offer.originalPrice || '',
+      discount: offer.discount,
+      count: (priceHistory?.count || 0) + 1,
+    };
+  }
+
+  saveHistory(history);
+  return flashDeals;
+}

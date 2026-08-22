@@ -59,7 +59,7 @@ export async function pollUpdates(token) {
   return subscribers;
 }
 
-export async function sendMessage(offers, cheapProducts = []) {
+export async function sendMessage(offers, cheapProducts = [], flashDeals = []) {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   if (!token) {
     console.error('[Telegram] Token no configurado');
@@ -72,7 +72,7 @@ export async function sendMessage(offers, cheapProducts = []) {
     return;
   }
 
-  if (offers.length === 0 && cheapProducts.length === 0) {
+  if (offers.length === 0 && cheapProducts.length === 0 && flashDeals.length === 0) {
     console.log('[Telegram] No hay ofertas nuevas para enviar');
     return;
   }
@@ -119,6 +119,16 @@ export async function sendMessage(offers, cheapProducts = []) {
       const short = name.length > 45 ? name.substring(0, 42) + '...' : name;
       const price = o.currentPrice || '';
       message += `- ${price} ${short}\n`;
+    }
+  }
+
+  if (flashDeals.length > 0) {
+    message += `\n⚡ FLASH DEALS (>75% OFF)\n`;
+    for (const o of flashDeals) {
+      const name = o.name || o.description?.replace(/^\d+%\s*(OFF\s*)?/, '').replace(/\s*-\s*.+$/, '') || '';
+      const short = name.length > 45 ? name.substring(0, 42) + '...' : name;
+      const price = o.currentPrice || o.originalPrice || '';
+      message += `- ${o.discount}% ${short} ${price}\n`;
     }
   }
 
