@@ -97,8 +97,10 @@ async function fetchStoreData(page, vendorId, maxPriceCheap) {
           if (!pData) continue;
           for (const item of (pData.items || [])) {
             const name = item.name || item.description || '';
-            const price = item.selling_price ?? item.price ?? item.salePrice ?? 0;
-            const originalPrice = item.price_without_discount ?? item.originalPrice ?? item.price ?? 0;
+            const price = item.pricing?.price ?? 0;
+            const originalPrice = item.pricing?.beforePrice ?? item.pricing?.price ?? 0;
+            const formattedPrice = item.pricing?.formattedPrices?.price || null;
+            const formattedOriginal = item.pricing?.formattedPrices?.originalPrice || null;
             let discount = 0;
             let campaignTag = '';
 
@@ -142,17 +144,7 @@ async function fetchStoreData(page, vendorId, maxPriceCheap) {
         if (i + BATCH < allCatIds.length) await sleep(150);
       }
 
-      const sampleItem = discountedItems[0] || null;
-      let sampleRawStr = null;
-      try {
-        const firstCatId = allCatIds[0];
-        if (firstCatId) {
-          const r = await fetch(`/groceries/web/v1/vendors/${vendorId}/products?categoryId=${firstCatId}&limit=5`, { credentials: 'include' });
-          if (r.ok) { const d = await r.json(); const raw = (d.items || [])[0] || null; if (raw) sampleRawStr = JSON.stringify(raw); }
-        }
-      } catch {}
-
-      return { discountedItems, cheapItems, totalCats: allCatIds.length, catsScanned: rateLimited ? Math.min(i + BATCH, allCatIds.length) : allCatIds.length, rateLimited, sampleItem, sampleRawStr };
+      return { discountedItems, cheapItems, totalCats: allCatIds.length, catsScanned: rateLimited ? Math.min(i + BATCH, allCatIds.length) : allCatIds.length, rateLimited };
     } catch (e) {
       return { error: e.message };
     }
@@ -247,12 +239,6 @@ export async function scrapePedidosYa() {
       scannedIds.push(store.vendorId);
       console.log(`  [${store.name}] ${storeData.catsScanned}/${storeData.totalCats} cats, ${storeData.discountedItems.length} discounted, ${storeData.cheapItems.length} under $${MAX_PRICE_CHEAP}${storeData.rateLimited ? ' [RATE LIMITED]' : ''}`);
 
-      if (storeData.sampleRawStr) {
-        console.log(`  [SAMPLE FULL] ${storeData.sampleRawStr.substring(0, 2000)}`);
-      } else {
-        console.log(`  [SAMPLE] no raw item captured`);
-      }
-
       for (const item of storeData.discountedItems) {
         if (item.discount >= (store.minDiscount || MIN_DISCOUNT_SUPER)) {
           offers.push({
@@ -260,8 +246,8 @@ export async function scrapePedidosYa() {
             restaurant: store.name, slug: store.url || '', discount: item.discount,
             name: item.name,
             description: `${item.discount}% OFF ${item.campaignTag} - ${item.name}`,
-            originalPrice: item.originalPrice ? `$${item.originalPrice}` : null,
-            currentPrice: item.price ? `$${item.price}` : null,
+            originalPrice: item.formattedOriginal || (item.originalPrice ? `$${item.originalPrice.toLocaleString('es-AR')}` : null),
+            currentPrice: item.formattedPrice || (item.price ? `$${item.price.toLocaleString('es-AR')}` : null),
             url: store.url || '', deliveryTime: '', rating: '', imageUrl: '',
           });
         }

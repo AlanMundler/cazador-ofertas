@@ -182,7 +182,7 @@ export async function scrapeRappi() {
         for (const o of storeDiscounts) {
           offers.push({
             platform: 'Rappi', category: 'supermercado', restaurant: store.name,
-            slug: storeUrl, discount: o.discount,
+            slug: storeUrl, discount: o.discount, name: o.productName,
             description: `${o.discount}% OFF - ${o.productName}`,
             originalPrice: o.originalPrice || null, currentPrice: o.currentPrice || null,
             url: storeUrl, deliveryTime: '', rating: '', imageUrl: '',
