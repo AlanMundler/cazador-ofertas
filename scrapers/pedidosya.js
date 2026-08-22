@@ -249,7 +249,8 @@ export async function scrapePedidosYa() {
 
       if (storeData.sampleRaw) {
         const s = storeData.sampleRaw;
-        console.log(`  [SAMPLE] name=${s.name} selling_price=${s.selling_price} price=${s.price} price_without_discount=${s.price_without_discount} originalPrice=${s.originalPrice} salePrice=${s.salePrice} tagline=${s.priceTagline}`);
+        console.log(`  [SAMPLE RAW] ${JSON.stringify(Object.keys(s))}`);
+        console.log(`  [SAMPLE FULL] ${JSON.stringify(s).substring(0, 500)}`);
       }
       if (storeData.sampleItem) {
         console.log(`  [PARSED] price=${storeData.sampleItem.price} originalPrice=${storeData.sampleItem.originalPrice}`);
