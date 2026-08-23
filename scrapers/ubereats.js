@@ -1,12 +1,12 @@
-const LAT = process.env.LATITUDE || '-31.4201';
-const LNG = process.env.LONGITUDE || '-64.1888';
-const MIN_RESTAURANT = parseInt(process.env.MIN_DISCOUNT || '60');
-const CONCURRENCY = 5;
+import config from '../config.js';
+
+const MIN_RESTAURANT = config.discounts.restaurant;
+const CONCURRENCY = config.ubereats.concurrency;
 
 const LOC_COOKIE = encodeURIComponent(JSON.stringify({
-  address: { title: "Cordoba, Argentina" },
-  latitude: parseFloat(LAT),
-  longitude: parseFloat(LNG),
+  address: { title: `${config.city}, ${config.country}` },
+  latitude: parseFloat(config.lat),
+  longitude: parseFloat(config.lng),
   type: "google_places",
   source: "manual_auto_complete",
 }));
@@ -14,7 +14,7 @@ const LOC_COOKIE = encodeURIComponent(JSON.stringify({
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 
 async function fetchSession() {
-  const res = await fetch('https://www.ubereats.com/ar', {
+  const res = await fetch(`${config.ubereats.baseUrl}/ar`, {
     headers: { 'User-Agent': UA, 'Accept': 'text/html,application/xhtml+xml' },
     redirect: 'follow',
   });
@@ -52,7 +52,7 @@ function extractFromStoreV1(data, uuid) {
   }
 
   const sections = data.catalogSectionsMap || {};
-  for (const [key, arr] of Object.entries(sections)) {
+  for (const [, arr] of Object.entries(sections)) {
     for (const section of arr) {
       const title = section?.payload?.standardItemsPayload?.title || '';
       if (/buy\s*1.*get\s*1|2x1|ofertas?|descuentos?|promo/i.test(title)) {
@@ -72,8 +72,8 @@ function extractFromStoreV1(data, uuid) {
   const eta = data.etaRange?.text || '';
   const rating = data.rating?.ratingValue || '';
   const url = data.slug
-    ? `https://www.ubereats.com/store/${data.slug}/${uuid}`
-    : `https://www.ubereats.com/store/${uuid}`;
+    ? `${config.ubereats.baseUrl}/store/${data.slug}/${uuid}`
+    : `${config.ubereats.baseUrl}/store/${uuid}`;
 
   return {
     platform: 'UberEats', category: 'restaurante',
@@ -107,11 +107,11 @@ function extractFromFeed(item) {
   const rating = store.rating?.text || '';
   const actionUrl = store.actionUrl || '';
 
-  let url = 'https://www.ubereats.com/ar';
+  let url = `${config.ubereats.baseUrl}/ar`;
   if (actionUrl) {
-    url = actionUrl.startsWith('http') ? actionUrl : `https://www.ubereats.com${actionUrl}`;
+    url = actionUrl.startsWith('http') ? actionUrl : `${config.ubereats.baseUrl}${actionUrl}`;
   } else if (uuid) {
-    url = `https://www.ubereats.com/store/${uuid}`;
+    url = `${config.ubereats.baseUrl}/store/${uuid}`;
   }
 
   return {
@@ -125,15 +125,15 @@ function extractFromFeed(item) {
 }
 
 async function fetchStoreV1(cookies, uuid) {
-  const res = await fetch('https://www.ubereats.com/_p/api/getStoreV1?localeCode=es-ar', {
+  const res = await fetch(`${config.ubereats.storeEndpoint}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Accept-Language': 'es-AR,es;q=0.9',
       'x-csrf-token': 'x',
       'User-Agent': UA,
-      'Origin': 'https://www.ubereats.com',
-      'Referer': 'https://www.ubereats.com/ar/feed',
+      'Origin': config.ubereats.baseUrl,
+      'Referer': `${config.ubereats.baseUrl}/ar/feed`,
       'Cookie': cookies,
     },
     body: JSON.stringify({
@@ -174,15 +174,15 @@ export async function scrapeUberEats() {
           ? { pageInfo: { offset, pageSize: 80 } }
           : {};
 
-        const feedRes = await fetch('https://www.ubereats.com/_p/api/getFeedV1?localeCode=es-ar', {
+        const feedRes = await fetch(config.ubereats.feedEndpoint, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Accept-Language': 'es-AR,es;q=0.9',
             'x-csrf-token': 'x',
             'User-Agent': UA,
-            'Origin': 'https://www.ubereats.com',
-            'Referer': 'https://www.ubereats.com/ar/feed',
+            'Origin': config.ubereats.baseUrl,
+            'Referer': `${config.ubereats.baseUrl}/ar/feed`,
             'Cookie': cookies,
           },
           body: JSON.stringify(body),

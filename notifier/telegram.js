@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import config from '../config.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const SUBSCRIBERS_FILE = join(__dirname, '..', 'data', 'subscribers.json');
@@ -43,7 +44,7 @@ export async function pollUpdates(token) {
       const text = msg.text || '';
       const firstName = msg.chat.first_name || 'Alguien';
 
-      if (text === '/start' || text === '/start@' + process.env.BOT_USERNAME) {
+      if (text === '/start' || text === '/start@' + config.telegram.botUsername) {
         if (!subscribers.includes(chatId)) {
           subscribers.push(chatId);
           console.log(`[Telegram] Nuevo suscriptor: ${chatId} (${firstName})`);
@@ -60,7 +61,7 @@ export async function pollUpdates(token) {
 }
 
 export async function sendMessage(offers, cheapProducts = [], flashDeals = []) {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
+  const { token } = config.telegram;
   if (!token) {
     console.error('[Telegram] Token no configurado');
     return;
@@ -77,7 +78,7 @@ export async function sendMessage(offers, cheapProducts = [], flashDeals = []) {
     return;
   }
 
-  let message = `🎯 OFERTAS CÓRDOBA\n${'─'.repeat(20)}\n`;
+  let message = `🎯 OFERTAS ${config.city.toUpperCase()}\n${'─'.repeat(20)}\n`;
 
   if (offers.length > 0) {
     const superOffers = offers.filter(o => o.category === 'supermercado').sort((a, b) => b.discount - a.discount);
@@ -113,7 +114,7 @@ export async function sendMessage(offers, cheapProducts = [], flashDeals = []) {
   }
 
   if (cheapProducts.length > 0) {
-    message += `\n💰 BARATOS (<$500)\n`;
+    message += `\n💰 BARATOS (<$${config.maxPriceCheap})\n`;
     for (const o of cheapProducts) {
       const name = o.name || o.description?.replace(/^\$[\d.,]+\s*-\s*/, '') || '';
       const short = name.length > 45 ? name.substring(0, 42) + '...' : name;
@@ -123,7 +124,7 @@ export async function sendMessage(offers, cheapProducts = [], flashDeals = []) {
   }
 
   if (flashDeals.length > 0) {
-    message += `\n⚡ FLASH DEALS (>75% OFF)\n`;
+    message += `\n⚡ FLASH DEALS (>${config.discounts.flashThreshold}% OFF)\n`;
     for (const o of flashDeals) {
       const name = o.name || o.description?.replace(/^\d+%\s*(OFF\s*)?/, '').replace(/\s*-\s*.+$/, '') || '';
       const short = name.length > 45 ? name.substring(0, 42) + '...' : name;

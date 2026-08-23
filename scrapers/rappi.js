@@ -1,20 +1,8 @@
 import { chromium } from 'patchright';
+import config from '../config.js';
 
-const LAT = process.env.LATITUDE || '-31.4201';
-const LNG = process.env.LONGITUDE || '-64.1888';
-const MIN_SUPER = parseInt(process.env.MIN_DISCOUNT_SUPER || '51');
-const MIN_RESTAURANT = parseInt(process.env.MIN_DISCOUNT || '61');
-
-const SUPER_STORES = [
-  { slug: '214965-jumbo', name: 'Jumbo' },
-  { slug: '247115-disco', name: 'Disco' },
-  { slug: '248079-vea', name: 'Vea' },
-  { slug: '262682-turbo-veinticuatro-market-nc', name: 'Turbo Market' },
-  { slug: '126292-carrefour-express', name: 'Carrefour Express' },
-  { slug: '258919-turbo-express-nc', name: 'La Despensa' },
-  { slug: '115860-punto-sur', name: 'Punto Sur Multimercado' },
-  { slug: '188551-minishoppritty-mt-nc', name: 'Maxikiosco Pritty' },
-];
+const MIN_SUPER = config.discounts.super;
+const MIN_RESTAURANT = config.discounts.restaurant;
 
 async function autoScroll(page, times, distance, delay) {
   for (let i = 0; i < times; i++) {
@@ -35,9 +23,8 @@ export async function scrapeRappi() {
 
     const page = context.pages()[0] || await context.newPage();
 
-    // --- RESTAURANTES ---
     console.log('[Rappi] Scrapeando restaurantes...');
-    await page.goto(`https://www.rappi.com.ar/restaurantes?lat=${LAT}&lng=${LNG}`, {
+    await page.goto(config.rappi.restaurantsUrl, {
       waitUntil: 'domcontentloaded', timeout: 20000,
     });
     await page.waitForTimeout(2000);
@@ -111,10 +98,9 @@ export async function scrapeRappi() {
     }
     console.log(`[Rappi Restaurantes] ${offers.filter(o => o.category === 'restaurante').length} ofertas >${MIN_RESTAURANT}%`);
 
-    // --- SUPER / MARKET ---
     console.log('[Rappi] Scrapeando supermercados...');
 
-    for (const store of SUPER_STORES) {
+    for (const store of config.rappi.stores) {
       const storeUrl = `https://www.rappi.com.ar/tiendas/${store.slug}`;
       try {
         await page.goto(storeUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });

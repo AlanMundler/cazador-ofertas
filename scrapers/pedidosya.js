@@ -1,23 +1,11 @@
 import { chromium } from 'patchright';
+import config from '../config.js';
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const SCAN_FILE = join(__dirname, '..', 'data', 'py-store-scans.json');
-
-const LAT = process.env.LATITUDE || '-31.41307';
-const LNG = process.env.LONGITUDE || '-64.19635';
-const MIN_DISCOUNT_SUPER = parseInt(process.env.MIN_DISCOUNT_SUPER || '51');
-const MAX_PRICE_CHEAP = parseInt(process.env.MAX_PRICE_CHEAP || '500');
-const STORE_INTERVAL_MS = 55 * 60 * 1000;
-
-const KNOWN_STORES = [
-  { name: 'PedidosYa Market 25 de Mayo', vendorId: '169481', minDiscount: 50, priority: true, url: 'https://www.pedidosya.com.ar/restaurantes/cordoba/pedidosya-market-25-de-mayo-bb184a2a-707c-4e62-86e8-0003e06e57af-menu?origin=shop_list' },
-  { name: 'Carrefour Express', vendorId: '398683', url: 'https://www.pedidosya.com.ar/restaurantes/cordoba/carrefour-express-blvd-san-juan-785-93a8196b-9665-4322-8f7e-31b7af23c22f-menu?origin=shop_list' },
-  { name: 'Jumbo Córdoba', vendorId: '550495', url: 'https://www.pedidosya.com.ar/restaurantes/cordoba/jumbo-cordoba-791c33b2-6317-4717-8b90-6bee5a9554fa-menu' },
-  { name: 'La Anónima Jacinto Ríos', vendorId: '620891', url: 'https://www.pedidosya.com.ar/restaurantes/cordoba/la-anonima-jacinto-rios-f6d50a50-cb1d-40d8-b8a4-7aba60e16270-menu' },
-];
 
 function loadScanTimes() {
   try {
@@ -37,13 +25,13 @@ function getStoresToScan() {
   const scans = loadScanTimes();
   const toScan = [];
 
-  for (const store of KNOWN_STORES) {
+  for (const store of config.pedidosya.stores) {
     if (store.priority) {
       toScan.push(store);
       continue;
     }
     const lastScan = scans[store.vendorId] || 0;
-    if (now - lastScan >= STORE_INTERVAL_MS) {
+    if (now - lastScan >= config.pedidosya.storeScanCooldownMs) {
       toScan.push(store);
     }
   }
@@ -220,7 +208,7 @@ export async function scrapePedidosYa() {
             }
           }
 
-          storeData = await fetchStoreData(page, store.vendorId, MAX_PRICE_CHEAP);
+          storeData = await fetchStoreData(page, store.vendorId, config.maxPriceCheap);
 
           if (storeData && storeData.error && attempt === 1) {
             console.log(`  [${store.name}] Failed (${storeData.error}), reloading home...`);
@@ -243,10 +231,10 @@ export async function scrapePedidosYa() {
       }
 
       scannedIds.push(store.vendorId);
-      console.log(`  [${store.name}] ${storeData.catsScanned}/${storeData.totalCats} cats, ${storeData.discountedItems.length} discounted, ${storeData.cheapItems.length} under $${MAX_PRICE_CHEAP}${storeData.rateLimited ? ' [RATE LIMITED]' : ''}`);
+      console.log(`  [${store.name}] ${storeData.catsScanned}/${storeData.totalCats} cats, ${storeData.discountedItems.length} discounted, ${storeData.cheapItems.length} under $${config.maxPriceCheap}${storeData.rateLimited ? ' [RATE LIMITED]' : ''}`);
 
       for (const item of storeData.discountedItems) {
-        if (item.discount >= (store.minDiscount || MIN_DISCOUNT_SUPER)) {
+        if (item.discount >= (store.minDiscount || config.discounts.super)) {
           offers.push({
             platform: 'PedidosYa', category: 'supermercado',
             restaurant: store.name, slug: store.url || '', discount: item.discount,

@@ -1,12 +1,11 @@
 {
   "name": "cazador-ofertas",
   "version": "1.0.0",
-  "description": "Cazador de ofertas para apps de delivery en Cordoba, Argentina",
+  "description": "Bot de Telegram que busca ofertas en apps de delivery (PedidosYa, Rappi, UberEats)",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node index.js",
-    "test": "node index.js --test"
+    "start": "node index.js"
   },
   "dependencies": {
     "dotenv": "^16.4.5",

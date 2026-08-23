@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import config from '../config.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const HISTORY_FILE = join(__dirname, '..', 'data', 'history.json');
@@ -8,8 +9,7 @@ const HISTORY_FILE = join(__dirname, '..', 'data', 'history.json');
 function loadHistory() {
   try {
     if (!existsSync(HISTORY_FILE)) return {};
-    const raw = readFileSync(HISTORY_FILE, 'utf-8');
-    return JSON.parse(raw);
+    return JSON.parse(readFileSync(HISTORY_FILE, 'utf-8'));
   } catch {
     return {};
   }
@@ -17,18 +17,15 @@ function loadHistory() {
 
 function saveHistory(history) {
   const dir = join(__dirname, '..', 'data');
-  if (!existsSync(dir)) {
-    mkdirSync(dir, { recursive: true });
-  }
+  if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
 
   const now = Date.now();
   const DAY = 24 * 60 * 60 * 1000;
-  const WINDOW = 2 * 60 * 60 * 1000;
   let entries = Object.entries(history).filter(([, v]) => (now - v.lastSeen) < DAY);
 
-  if (entries.length > 5000) {
+  if (entries.length > config.history.maxEntries) {
     entries.sort((a, b) => b[1].lastSeen - a[1].lastSeen);
-    entries = entries.slice(0, 3000);
+    entries = entries.slice(0, config.history.pruneKeep);
   }
 
   writeFileSync(HISTORY_FILE, JSON.stringify(Object.fromEntries(entries), null, 2));
@@ -53,7 +50,7 @@ export function filterNewOffers(offers) {
     const key = offerKey(offer);
     const seen = history[key];
 
-    if (!seen || (now - seen.lastSeen) > 2 * 60 * 60 * 1000) {
+    if (!seen || (now - seen.lastSeen) > config.history.dedupWindowMs) {
       newOffers.push(offer);
       history[key] = { lastSeen: now, count: (seen?.count || 0) + 1 };
     }
@@ -77,16 +74,15 @@ export function detectFlashDeals(offers) {
   const history = loadHistory();
   const flashDeals = [];
   const now = Date.now();
-  const FLASH_THRESHOLD = 75;
 
   for (const offer of offers) {
-    if (offer.isCheapProduct || offer.type === 'coupon') continue;
-    if (offer.discount < FLASH_THRESHOLD) continue;
+    if (offer.isCheapProduct) continue;
+    if (offer.discount < config.discounts.flashThreshold) continue;
 
     const priceKey = `${offer.platform}:${offer.restaurant}:price`;
     const priceHistory = history[priceKey];
 
-    if (!priceHistory || (now - priceHistory.lastSeen) > 2 * 60 * 60 * 1000) {
+    if (!priceHistory || (now - priceHistory.lastSeen) > config.history.dedupWindowMs) {
       flashDeals.push({
         ...offer,
         isFlash: true,

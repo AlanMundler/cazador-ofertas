@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import config from './config.js';
 import { scrapeRappi } from './scrapers/rappi.js';
 import { scrapePedidosYa } from './scrapers/pedidosya.js';
 import { scrapeUberEats } from './scrapers/ubereats.js';
@@ -18,13 +19,13 @@ async function main() {
 
   console.log(`\n${'='.repeat(50)}`);
   console.log(`CAZADOR DE OFERTAS - ${new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' })}`);
-  console.log(`Córdoba, Argentina`);
+  console.log(`${config.city}, ${config.country}`);
   console.log(`${'='.repeat(50)}\n`);
 
-  const token = process.env.TELEGRAM_BOT_TOKEN;
+  const { token } = config.telegram;
   if (token) {
     const subs = await pollUpdates(token);
-    console.log(`[Telegram] Suscriptores activos: ${subs.filter(id => typeof id === 'number').length}`);
+    console.log(`[Telegram] Suscriptores activos: ${subs.length}`);
   }
 
   const [rappiOffers, pedidosYaOffers, uberEatsOffers] = await Promise.all([
@@ -53,7 +54,7 @@ async function main() {
 
   const newDiscounts = filterNewOffers(deduplicatedDiscounts);
   const newCheap = filterNewOffers(deduplicatedCheap);
-  console.log(`Nuevos (30min): ${newDiscounts.length} ofertas + ${newCheap.length} baratos`);
+  console.log(`Nuevos: ${newDiscounts.length} ofertas + ${newCheap.length} baratos`);
 
   const flashDeals = detectFlashDeals(deduplicatedDiscounts);
   if (flashDeals.length > 0) {
