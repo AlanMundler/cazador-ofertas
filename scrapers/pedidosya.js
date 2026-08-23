@@ -139,7 +139,7 @@ async function fetchStoreData(page, vendorId, maxPriceCheap) {
             }
 
             if (price > 0 && name && price < maxPriceCheap) {
-              const isPowderedJuice = /jugo\s*(en\s*polvo|concentrado|instantáneo|en\s*polvo)|clight|jugoi|tang|drew|frutigran|naranjú|saborizante/i.test(name);
+              const isPowderedJuice = /jugo.*(polvo|concentrado|instantáneo)|en\s*polvo|clight|jugoi|tang(?!\s)|drew|frutigran|naranjú|saborizante/i.test(name);
               if (!isPowderedJuice) {
                 cheapItems.push({ name, price });
               }

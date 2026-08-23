@@ -23,6 +23,7 @@ function saveHistory(history) {
 
   const now = Date.now();
   const DAY = 24 * 60 * 60 * 1000;
+  const WINDOW = 2 * 60 * 60 * 1000;
   let entries = Object.entries(history).filter(([, v]) => (now - v.lastSeen) < DAY);
 
   if (entries.length > 5000) {
@@ -52,7 +53,7 @@ export function filterNewOffers(offers) {
     const key = offerKey(offer);
     const seen = history[key];
 
-    if (!seen || (now - seen.lastSeen) > 30 * 60 * 1000) {
+    if (!seen || (now - seen.lastSeen) > 2 * 60 * 60 * 1000) {
       newOffers.push(offer);
       history[key] = { lastSeen: now, count: (seen?.count || 0) + 1 };
     }
