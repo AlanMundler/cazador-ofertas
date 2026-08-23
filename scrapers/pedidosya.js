@@ -127,7 +127,7 @@ async function fetchStoreData(page, vendorId, maxPriceCheap) {
             }
 
             if (price > 0 && name && price < maxPriceCheap) {
-              const isAlwaysCheap = /jugo.*(polvo|concentrado|instantáneo)|en\s*polvo|clight|jugoi|tang(?!\s)|drew|frutigran|naranjú|saborizante|caramelo|masticable|turr[oó]n|oblea|alfajor|chupet|mentita|menta|cabezal|pastilla|golosina|chocolate.*\d+\s*g|galleta.*\d+\s*g|palito|surtido|bocadito|codito|lamparita|mini\s|bollar|buyla|bajonero|sedal|acondicionador|shampoo|crema\s*dental|cepillo|papel\s*higiénico|servilleta|algodón|hisopo/i.test(name);
+              const isAlwaysCheap = /jugo.*(polvo|concentrado|instantáneo)|en\s*polvo|clight|jugoi|tang(?!\s)|drew|frutigran|naranjú|saborizante|caramelo|masticable|turr[oó]n|oblea|alfajor|chupet|mentita|menta|cabezal|pastilla|golosina|chocolate.*\d+\s*g|galleta.*\d+\s*g|palito|surtido|bocadito|codito|lamparita|mini\s|bollar|buyla|bajonero/i.test(name);
               if (!isAlwaysCheap) {
                 cheapItems.push({ name, price });
               }
