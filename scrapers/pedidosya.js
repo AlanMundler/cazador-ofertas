@@ -235,6 +235,7 @@ export async function scrapePedidosYa() {
 
       for (const item of storeData.discountedItems) {
         if (item.discount >= (store.minDiscount || config.discounts.super)) {
+          const promoMatch = item.campaignTag?.match(/(\d+)\s*x\s*(\d+)/i);
           offers.push({
             platform: 'PedidosYa', category: 'supermercado',
             restaurant: store.name, slug: store.url || '', discount: item.discount,
@@ -243,6 +244,7 @@ export async function scrapePedidosYa() {
             originalPrice: item.formattedOriginal || (item.originalPrice ? `$${item.originalPrice.toLocaleString('es-AR')}` : null),
             currentPrice: item.formattedPrice || (item.price ? `$${item.price.toLocaleString('es-AR')}` : null),
             url: store.url || '', deliveryTime: '', rating: '', imageUrl: '',
+            promoType: promoMatch ? `${promoMatch[1]}x${promoMatch[2]}` : null,
           });
         }
       }

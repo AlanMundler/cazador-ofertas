@@ -95,11 +95,17 @@ export async function sendMessage(offers, cheapProducts = [], flashDeals = []) {
       for (const [platform, stores] of Object.entries(byPlatform)) {
         for (const [store, items] of Object.entries(stores)) {
           message += `\n📍 ${platform} — ${store}\n`;
-          for (const o of items.sort((a, b) => b.discount - a.discount)) {
+          const sorted = items.sort((a, b) => {
+            if (a.promoType && !b.promoType) return 1;
+            if (!a.promoType && b.promoType) return -1;
+            return b.discount - a.discount;
+          });
+          for (const o of sorted) {
             const name = o.name || o.description?.replace(/^\d+%\s*(OFF\s*)?/, '').replace(/\s*-\s*.+$/, '') || '';
-            const short = name.length > 45 ? name.substring(0, 42) + '...' : name;
+            const short = name.length > 40 ? name.substring(0, 37) + '...' : name;
             const price = o.currentPrice || o.originalPrice || '';
-            message += `- ${o.discount}% ${short} ${price}\n`;
+            const tag = o.promoType ? ` [${o.promoType}]` : '';
+            message += `- ${o.discount}%${tag} ${short} ${price}\n`;
           }
         }
       }
@@ -127,7 +133,7 @@ export async function sendMessage(offers, cheapProducts = [], flashDeals = []) {
     message += `\n⚡ FLASH DEALS (>${config.discounts.flashThreshold}% OFF)\n`;
     for (const o of flashDeals) {
       const name = o.name || o.description?.replace(/^\d+%\s*(OFF\s*)?/, '').replace(/\s*-\s*.+$/, '') || '';
-      const short = name.length > 45 ? name.substring(0, 42) + '...' : name;
+      const short = name.length > 40 ? name.substring(0, 37) + '...' : name;
       const price = o.currentPrice || o.originalPrice || '';
       message += `- ${o.discount}% ${short} ${price}\n`;
     }

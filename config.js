@@ -54,7 +54,7 @@ const config = {
   },
 
   history: {
-    dedupWindowMs: 2 * 60 * 60 * 1000,
+    dedupWindowMs: 45 * 60 * 1000,
     maxEntries: 5000,
     pruneKeep: 3000,
   },
