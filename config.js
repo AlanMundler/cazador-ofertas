@@ -25,6 +25,7 @@ const config = {
   pedidosya: {
     stores: [
       { name: 'PedidosYa Market 25 de Mayo', vendorId: '169481', minDiscount: 50, priority: true, url: 'https://www.pedidosya.com.ar/restaurantes/cordoba/pedidosya-market-25-de-mayo-bb184a2a-707c-4e62-86e8-0003e06e57af-menu?origin=shop_list' },
+      { name: 'PedidosYa Market Crisol', vendorId: '290812', minDiscount: 50, priority: true, url: 'https://www.pedidosya.com.ar/restaurantes/cordoba/pedidosya-market-crisol-047c172b-2380-4da9-901b-2f29711032db-menu?origin=shop_list' },
       { name: 'Carrefour Express', vendorId: '398683', url: 'https://www.pedidosya.com.ar/restaurantes/cordoba/carrefour-express-blvd-san-juan-785-93a8196b-9665-4322-8f7e-31b7af23c22f-menu?origin=shop_list' },
       { name: 'Jumbo Córdoba', vendorId: '550495', url: 'https://www.pedidosya.com.ar/restaurantes/cordoba/jumbo-cordoba-791c33b2-6317-4717-8b90-6bee5a9554fa-menu' },
       { name: 'La Anónima Jacinto Ríos', vendorId: '620891', url: 'https://www.pedidosya.com.ar/restaurantes/cordoba/la-anonima-jacinto-rios-f6d50a50-cb1d-40d8-b8a4-7aba60e16270-menu' },

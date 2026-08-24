@@ -77,12 +77,12 @@ async function fetchStoreData(page, vendorId, maxPriceCheap) {
 
         for (const catId of batch) {
           if (rateLimited) break;
-          let offset = 0;
+          let page = 0;
           let hasMore = true;
 
           while (hasMore && !rateLimited) {
             try {
-              const resp = await fetch(`/groceries/web/v1/vendors/${vendorId}/products?categoryId=${catId}&limit=${PAGE_LIMIT}&offset=${offset}`, { credentials: 'include' });
+              const resp = await fetch(`/groceries/web/v1/vendors/${vendorId}/products?categoryId=${catId}&limit=${PAGE_LIMIT}&page=${page}`, { credentials: 'include' });
               if (resp.status === 429) { rateLimited = true; break; }
               if (resp.status !== 200) break;
               const pData = await resp.json();
@@ -138,7 +138,7 @@ async function fetchStoreData(page, vendorId, maxPriceCheap) {
               }
 
               hasMore = items.length >= PAGE_LIMIT;
-              offset += items.length;
+              page++;
             } catch {
               break;
             }
