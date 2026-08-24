@@ -69,70 +69,81 @@ async function fetchStoreData(page, vendorId, maxPriceCheap) {
       const BATCH = 8;
       let rateLimited = false;
       let catsScanned = 0;
+      const PAGE_LIMIT = 100;
 
       for (let i = 0; i < allCatIds.length; i += BATCH) {
         if (rateLimited) break;
         const batch = allCatIds.slice(i, i + BATCH);
-        const results = await Promise.all(batch.map(catId =>
-          fetch(`/groceries/web/v1/vendors/${vendorId}/products?categoryId=${catId}&limit=100`, { credentials: 'include' })
-            .then(r => {
-              if (r.status === 429) { rateLimited = true; return null; }
-              return r.status === 200 ? r.json() : null;
-            })
-            .catch(() => null)
-        ));
 
-        catsScanned += batch.length;
+        for (const catId of batch) {
+          if (rateLimited) break;
+          let offset = 0;
+          let hasMore = true;
 
-        for (const pData of results) {
-          if (!pData) continue;
-          for (const item of (pData.items || [])) {
-            const name = item.name || item.description || '';
-            const price = item.pricing?.price ?? 0;
-            const originalPrice = item.pricing?.beforePrice ?? item.pricing?.price ?? 0;
-            const formattedPrice = item.pricing?.formattedPrices?.price || null;
-            const formattedOriginal = item.pricing?.formattedPrices?.originalPrice || null;
-            let discount = 0;
-            let campaignTag = '';
+          while (hasMore && !rateLimited) {
+            try {
+              const resp = await fetch(`/groceries/web/v1/vendors/${vendorId}/products?categoryId=${catId}&limit=${PAGE_LIMIT}&offset=${offset}`, { credentials: 'include' });
+              if (resp.status === 429) { rateLimited = true; break; }
+              if (resp.status !== 200) break;
+              const pData = await resp.json();
+              const items = pData.items || [];
+              if (items.length === 0) break;
 
-            if (item.campaigns && item.campaigns.length > 0) {
-              for (const c of item.campaigns) {
-                const val = c.configuration?.value || 0;
-                const tag = (c.tag || '').toLowerCase();
-                const type = c.type || '';
-                let effectiveDiscount = val;
+              for (const item of items) {
+                const name = item.name || item.description || '';
+                const price = item.pricing?.price ?? 0;
+                const originalPrice = item.pricing?.beforePrice ?? item.pricing?.price ?? 0;
+                const formattedPrice = item.pricing?.formattedPrices?.price || null;
+                const formattedOriginal = item.pricing?.formattedPrices?.originalPrice || null;
+                let discount = 0;
+                let campaignTag = '';
 
-                if (type === 'multi-buy' || type === 'free_item') {
-                  const m = tag.match(/(\d+)\s*x\s*(\d+)/);
-                  if (m) {
-                    const pay = parseInt(m[2]);
-                    const get = parseInt(m[1]);
-                    effectiveDiscount = Math.round(((get - pay) / get) * 100);
+                if (item.campaigns && item.campaigns.length > 0) {
+                  for (const c of item.campaigns) {
+                    const val = c.configuration?.value || 0;
+                    const tag = (c.tag || '').toLowerCase();
+                    const type = c.type || '';
+                    let effectiveDiscount = val;
+
+                    if (type === 'multi-buy' || type === 'free_item') {
+                      const m = tag.match(/(\d+)\s*x\s*(\d+)/);
+                      if (m) {
+                        const pay = parseInt(m[2]);
+                        const get = parseInt(m[1]);
+                        effectiveDiscount = Math.round(((get - pay) / get) * 100);
+                      }
+                    }
+
+                    if (/1\s*ud\.?\s*al\s*\d+%|2da\.?\s*ud|segunda\s*unidad|dto\.?\s*en\s*2da/.test(tag)) {
+                      effectiveDiscount = Math.round(val / 2);
+                    }
+
+                    if (effectiveDiscount > discount) {
+                      discount = effectiveDiscount;
+                      campaignTag = c.tag || '';
+                    }
                   }
                 }
 
-                if (/1\s*ud\.?\s*al\s*\d+%|2da\.?\s*ud|segunda\s*unidad|dto\.?\s*en\s*2da/.test(tag)) {
-                  effectiveDiscount = Math.round(val / 2);
+                if (discount > 0 && name) {
+                  discountedItems.push({ name, discount, campaignTag, price, originalPrice, formattedPrice, formattedOriginal });
                 }
 
-                if (effectiveDiscount > discount) {
-                  discount = effectiveDiscount;
-                  campaignTag = c.tag || '';
+                if (price > 0 && name && price < maxPriceCheap) {
+                  const isAlwaysCheap = /jugo.*(polvo|concentrado|instantáneo)|en\s*polvo|clight|jugoi|tang(?!\s)|drew|frutigran|naranjú|saborizante|caramelo|masticable|turr[oó]n|oblea|alfajor|chupet|mentita|menta|cabezal|pastilla|golosina|chocolate.*\d+\s*g|galleta.*\d+\s*g|palito|surtido|bocadito|codito|lamparita|mini\s|bollar|buyla|bajonero/i.test(name);
+                  if (!isAlwaysCheap) {
+                    cheapItems.push({ name, price });
+                  }
                 }
               }
-            }
 
-            if (discount > 0 && name) {
-              discountedItems.push({ name, discount, campaignTag, price, originalPrice, formattedPrice, formattedOriginal });
-            }
-
-            if (price > 0 && name && price < maxPriceCheap) {
-              const isAlwaysCheap = /jugo.*(polvo|concentrado|instantáneo)|en\s*polvo|clight|jugoi|tang(?!\s)|drew|frutigran|naranjú|saborizante|caramelo|masticable|turr[oó]n|oblea|alfajor|chupet|mentita|menta|cabezal|pastilla|golosina|chocolate.*\d+\s*g|galleta.*\d+\s*g|palito|surtido|bocadito|codito|lamparita|mini\s|bollar|buyla|bajonero/i.test(name);
-              if (!isAlwaysCheap) {
-                cheapItems.push({ name, price });
-              }
+              hasMore = items.length >= PAGE_LIMIT;
+              offset += items.length;
+            } catch {
+              break;
             }
           }
+          catsScanned++;
         }
 
         if (i + BATCH < allCatIds.length) await sleep(150);
