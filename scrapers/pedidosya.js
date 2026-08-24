@@ -74,7 +74,7 @@ async function fetchStoreData(page, vendorId, maxPriceCheap) {
         if (rateLimited) break;
         const batch = allCatIds.slice(i, i + BATCH);
         const results = await Promise.all(batch.map(catId =>
-          fetch(`/groceries/web/v1/vendors/${vendorId}/products?categoryId=${catId}&limit=50`, { credentials: 'include' })
+          fetch(`/groceries/web/v1/vendors/${vendorId}/products?categoryId=${catId}&limit=100`, { credentials: 'include' })
             .then(r => {
               if (r.status === 429) { rateLimited = true; return null; }
               return r.status === 200 ? r.json() : null;
