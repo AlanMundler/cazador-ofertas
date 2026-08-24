@@ -1,7 +1,7 @@
 const CITY = process.env.CITY || 'Córdoba';
 const COUNTRY = process.env.COUNTRY || 'Argentina';
-const LAT = process.env.LATITUDE || '-31.4201';
-const LNG = process.env.LONGITUDE || '-64.1888';
+const LAT = process.env.LATITUDE || '-31.412943';
+const LNG = process.env.LONGITUDE || '-64.1966036';
 
 const config = {
   city: CITY,
@@ -16,7 +16,7 @@ const config = {
 
   discounts: {
     super: parseInt(process.env.MIN_DISCOUNT_SUPER || '51'),
-    restaurant: parseInt(process.env.MIN_DISCOUNT || '60'),
+    restaurant: parseInt(process.env.MIN_DISCOUNT || '50'),
     flashThreshold: parseInt(process.env.FLASH_THRESHOLD || '75'),
   },
 

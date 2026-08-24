@@ -48,9 +48,9 @@ jobs:
           BOT_USERNAME: ${{ secrets.BOT_USERNAME }}
           CITY: ${{ secrets.CITY || 'Córdoba' }}
           COUNTRY: ${{ secrets.COUNTRY || 'Argentina' }}
-          LATITUDE: ${{ secrets.LATITUDE || '-31.4201' }}
-          LONGITUDE: ${{ secrets.LONGITUDE || '-64.1888' }}
-          MIN_DISCOUNT: '60'
+          LATITUDE: ${{ secrets.LATITUDE || '-31.412943' }}
+          LONGITUDE: ${{ secrets.LONGITUDE || '-64.1966036' }}
+          MIN_DISCOUNT: '50'
           MIN_DISCOUNT_SUPER: '51'
           FLASH_THRESHOLD: '75'
           MAX_PRICE_CHEAP: '500'
