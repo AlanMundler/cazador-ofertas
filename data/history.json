@@ -1,7 +1,7 @@
 {
   "Rappi:Mcdonald's Desayuno & Merienda:68:68% OFF": {
-    "lastSeen": 1787601027047,
-    "count": 21
+    "lastSeen": 1787604775216,
+    "count": 22
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Chocolate Milka Oreo 100 g": {
     "lastSeen": 1787602499324,
@@ -96,40 +96,40 @@
     "count": 40
   },
   "PedidosYa:Jumbo Córdoba:60:60% OFF 60% - Queso Crema Cusine & Co Clásico 226 g": {
-    "lastSeen": 1787601027047,
-    "count": 30
+    "lastSeen": 1787604775216,
+    "count": 31
   },
   "PedidosYa:Jumbo Córdoba:53:53% OFF 53% - Tallarines Cuisine & Co 500 g": {
-    "lastSeen": 1787601027047,
-    "count": 30
+    "lastSeen": 1787604775216,
+    "count": 31
   },
   "PedidosYa:Jumbo Córdoba:64:64% OFF 64% - Quilt Krea Clásico Ecru 1.5 Plazas": {
-    "lastSeen": 1787601027047,
-    "count": 30
+    "lastSeen": 1787604775216,
+    "count": 31
   },
   "PedidosYa:Jumbo Córdoba:69:69% OFF 69% - Repuesto Club Maxx Cuadricualdo Escolares De 480 Hojas": {
-    "lastSeen": 1787601027047,
-    "count": 30
+    "lastSeen": 1787604775216,
+    "count": 31
   },
   "PedidosYa:Jumbo Córdoba:58:58% OFF 58% - Audífonos Nex In Ear Con Micrófono Tipo C 1 Unidad": {
     "lastSeen": 1787577072443,
     "count": 22
   },
   "PedidosYa:La Anónima Jacinto Ríos:56:56% OFF 56% - Choclo La Anónima En Grano Amarillo 340 g": {
-    "lastSeen": 1787601027047,
-    "count": 20
+    "lastSeen": 1787604775216,
+    "count": 21
   },
   "PedidosYa:La Anónima Jacinto Ríos:51:51% OFF 51% - Agua Saborizada H2OH Sin Gas Pomelo 2 L": {
-    "lastSeen": 1787601027047,
-    "count": 25
+    "lastSeen": 1787604775216,
+    "count": 26
   },
   "PedidosYa:La Anónima Jacinto Ríos:51:51% OFF 51% - Agua Saborizada H2OH Sin Gas Manzanella 2 L": {
-    "lastSeen": 1787601027047,
-    "count": 25
+    "lastSeen": 1787604775216,
+    "count": 26
   },
   "PedidosYa:La Anónima Jacinto Ríos:51:51% OFF 51% - Agua Saborizada H2OH! Sin Gas Limoneto 2 L": {
-    "lastSeen": 1787601027047,
-    "count": 25
+    "lastSeen": 1787604775216,
+    "count": 26
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:cheap:$100:$100 - Bolsa Pequeña Natura & Co 1 Unidad": {
     "lastSeen": 1787602499325,
@@ -144,12 +144,12 @@
     "count": 26
   },
   "PedidosYa:Carrefour Express:cheap:$473:$473 - Mostaza Dánica 60 g": {
-    "lastSeen": 1787601027048,
-    "count": 32
+    "lastSeen": 1787604775217,
+    "count": 33
   },
   "PedidosYa:Carrefour Express:cheap:$298:$298 - Acondicionador Sedal Ceramidas 10 ml": {
-    "lastSeen": 1787601027048,
-    "count": 32
+    "lastSeen": 1787604775217,
+    "count": 33
   },
   "Rappi:McCafé:60:60% OFF": {
     "lastSeen": 1787571654279,
@@ -172,8 +172,8 @@
     "count": 2
   },
   "PedidosYa:Jumbo Córdoba:57:57% OFF 57% - Pelador De Ristras Krea": {
-    "lastSeen": 1787601027047,
-    "count": 25
+    "lastSeen": 1787604775216,
+    "count": 26
   },
   "Rappi:Mundo Vegano Palermo:price": {
     "lastSeen": 1787545640443,
@@ -282,9 +282,17 @@
     "count": 1
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:price": {
-    "lastSeen": 1787577072445,
-    "price": "$ 275,25",
+    "lastSeen": 1787604775217,
+    "price": "$ 627,75",
     "discount": 85,
-    "count": 3
+    "count": 5
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:85:85% OFF 85% - Jamón Cocido Bocatti Natural Feteado 130 g": {
+    "lastSeen": 1787604775216,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:85:85% OFF 85% - Pan Bimbo Para Hamburguesa Con Sésamo (210 g) 4 Unidades": {
+    "lastSeen": 1787604775216,
+    "count": 1
   }
 }
