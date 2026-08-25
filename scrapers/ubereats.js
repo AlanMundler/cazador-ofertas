@@ -67,7 +67,7 @@ export async function scrapeUberEats() {
       let picked = false;
       for (const s of suggestions) {
         const text = await s.textContent();
-        if (text && /córdoba.*argentina|argentina.*córdoba/i.test(text)) {
+        if (text && /c[oó]rdoba.*(?:argentina|AR\b)/i.test(text)) {
           await s.click();
           picked = true;
           console.log(`[UberEats] Selected: ${text.trim().substring(0, 80)}`);
