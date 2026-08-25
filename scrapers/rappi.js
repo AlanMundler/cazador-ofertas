@@ -19,9 +19,28 @@ export async function scrapeRappi() {
     context = await chromium.launchPersistentContext('', {
       headless: false,
       viewport: { width: 1366, height: 768 },
+      geolocation: { latitude: parseFloat(config.lat), longitude: parseFloat(config.lng) },
+      permissions: ['geolocation'],
     });
 
     const page = context.pages()[0] || await context.newPage();
+
+    console.log('[Rappi] Setting location to Córdoba...');
+    await page.goto('https://www.rappi.com.ar/', { waitUntil: 'domcontentloaded', timeout: 20000 });
+    await page.waitForTimeout(3000);
+
+    try {
+      await page.evaluate(({ lat, lng }) => {
+        localStorage.setItem('lat', lat);
+        localStorage.setItem('lng', lng);
+        localStorage.setItem('address', 'San José de Calasanz 50');
+        localStorage.setItem('city', 'Córdoba');
+        document.cookie = `lat=${lat}; path=/`;
+        document.cookie = `lng=${lng}; path=/`;
+      }, { lat: config.lat, lng: config.lng });
+    } catch {}
+
+    await page.waitForTimeout(1000);
 
     console.log('[Rappi] Scrapeando restaurantes...');
     await page.goto(config.rappi.restaurantsUrl, {

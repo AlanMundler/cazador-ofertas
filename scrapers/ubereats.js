@@ -4,11 +4,11 @@ const MIN_RESTAURANT = config.discounts.restaurant;
 const CONCURRENCY = config.ubereats.concurrency;
 
 const LOC_COOKIE = encodeURIComponent(JSON.stringify({
-  address: { title: `${config.city}, ${config.country}` },
+  address: 'San José de Calasanz 50',
+  reference: '',
+  referenceType: 'google_places',
   latitude: parseFloat(config.lat),
   longitude: parseFloat(config.lng),
-  type: "google_places",
-  source: "manual_auto_complete",
 }));
 
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
@@ -189,7 +189,10 @@ export async function scrapeUberEats() {
         });
 
         const feedData = await feedRes.json();
-        if (feedData.status !== 'success') break;
+        if (feedData.status !== 'success') {
+          console.log(`[UberEats] Feed status: ${feedData.status}`);
+          break;
+        }
 
         const feedItems = feedData.data?.feedItems || [];
         const meta = feedData.data?.meta || {};
@@ -229,6 +232,7 @@ export async function scrapeUberEats() {
       }
 
       console.log(`[UberEats] Feed: ${seen.size} stores, ${offers.length} from signposts, ${needStoreV1.length} need getStoreV1`);
+      console.log(`[UberEats] Feed items total: ${feedItems.length}, offset: ${offset}`);
 
       if (needStoreV1.length > 0) {
         const results = await batchMap(needStoreV1, async (uuid) => {
