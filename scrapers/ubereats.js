@@ -1,15 +1,13 @@
 import config from '../config.js';
 import { chromium } from 'patchright';
+import { mkdtempSync } from 'fs';
+import { join } from 'path';
+import { tmpdir } from 'os';
 
 const MIN_RESTAURANT = config.discounts.restaurant;
 
-const LOC_COOKIE = encodeURIComponent(JSON.stringify({
-  address: 'San José de Calasanz 50',
-  reference: '',
-  referenceType: 'google_places',
-  latitude: parseFloat(config.lat),
-  longitude: parseFloat(config.lng),
-}));
+const LAT = parseFloat(config.lat);
+const LNG = parseFloat(config.lng);
 
 function parseDiscount(text) {
   if (!text) return 0;
@@ -31,19 +29,41 @@ async function autoScroll(page, times, distance, delay) {
 export async function scrapeUberEats() {
   const offers = [];
   let context;
+  let tmpDir;
 
   try {
-    context = await chromium.launchPersistentContext('', {
+    tmpDir = mkdtempSync(join(tmpdir(), 'ue-'));
+    context = await chromium.launchPersistentContext(tmpDir, {
       headless: false,
       viewport: { width: 1366, height: 768 },
+      geolocation: { latitude: LAT, longitude: LNG },
+      permissions: ['geolocation'],
     });
 
     const page = context.pages()[0] || await context.newPage();
-    const feedUrl = `${config.ubereats.baseUrl}/ar/feed?pl=${LOC_COOKIE}`;
+
+    const feedUrl = `https://www.ubereats.com/ar/feed?diningMode=DELIVERY&pl=${encodeURIComponent(JSON.stringify({
+      address: 'San José de Calasanz 50, Córdoba, Argentina',
+      reference: '',
+      referenceType: 'google_places',
+      latitude: LAT,
+      longitude: LNG,
+    }))}`;
+
+    await page.context().addCookies([
+      { name: 'uev2.loc', value: JSON.stringify({
+        address: 'San José de Calasanz 50',
+        latitude: LAT,
+        longitude: LNG,
+      }), domain: '.ubereats.com', path: '/' },
+      { name: 'ut', value: JSON.stringify({
+        AEdFmxr: { locationOverride: { latitude: LAT, longitude: LNG } },
+      }), domain: '.ubereats.com', path: '/' },
+    ]);
 
     console.log('[UberEats] Loading feed...');
-    await page.goto(feedUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
-    await page.waitForTimeout(5000);
+    await page.goto(feedUrl, { waitUntil: 'networkidle', timeout: 45000 });
+    await page.waitForTimeout(3000);
 
     let title = await page.title();
     if (title.includes('momento') || title.includes('Momento')) {
@@ -59,26 +79,42 @@ export async function scrapeUberEats() {
 
     console.log(`[UberEats] CF passed, title: ${title.substring(0, 60)}`);
 
-    await autoScroll(page, 15, 600, 500);
-
-    const debugInfo = await page.evaluate(() => {
-      return {
-        allLinks: document.querySelectorAll('a').length,
-        storeLinks: document.querySelectorAll('a[href*="/store/"]').length,
-        bodyText: document.body.innerText.substring(0, 500),
-      };
+    await page.evaluate(() => {
+      const btns = [...document.querySelectorAll('button')];
+      const closeBtn = btns.find(b =>
+        b.textContent?.includes('Cerrar') || b.textContent?.includes('X') ||
+        b.getAttribute('aria-label')?.includes('close') || b.getAttribute('aria-label')?.includes('Close')
+      );
+      if (closeBtn) closeBtn.click();
+      const overlayBtn = btns.find(b => b.textContent?.includes('No, gracias'));
+      if (overlayBtn) overlayBtn.click();
     });
-    console.log(`[UberEats] DOM: ${debugInfo.allLinks} links, ${debugInfo.storeLinks} store links`);
-    console.log(`[UberEats] Body preview: ${debugInfo.bodyText.substring(0, 200)}`);
+    await page.waitForTimeout(1000);
+
+    await autoScroll(page, 12, 600, 400);
+
+    const debugInfo = await page.evaluate(() => ({
+      allLinks: document.querySelectorAll('a').length,
+      storeLinks: document.querySelectorAll('a[href*="/store/"]').length,
+      allText: document.body.innerText.length,
+      firstText: document.body.innerText.substring(0, 300),
+    }));
+    console.log(`[UberEats] DOM: ${debugInfo.allLinks} links, ${debugInfo.storeLinks} stores, ${debugInfo.allText} chars`);
+    if (debugInfo.storeLinks === 0) {
+      console.log(`[UberEats] Body: ${debugInfo.firstText}`);
+    }
 
     const restaurants = await page.evaluate(() => {
       const results = [];
       const links = document.querySelectorAll('a[href*="/store/"]');
-      console.log(`[UberEats-DOM] Found ${links.length} store links`);
 
       for (const link of links) {
-        const container = link.closest('[data-testid]') || link.parentElement?.parentElement?.parentElement;
-        if (!container) continue;
+        let container = link;
+        for (let i = 0; i < 6; i++) {
+          if (!container.parentElement) break;
+          container = container.parentElement;
+          if (container.offsetHeight > 100) break;
+        }
 
         const text = container.innerText || '';
         const lines = text.split('\n').map(l => l.trim()).filter(l => l);
@@ -108,11 +144,12 @@ export async function scrapeUberEats() {
         }
         if (!name) {
           for (const line of lines) {
-            if (line.length > 3 && line.length < 60 &&
+            if (line.length > 3 && line.length < 80 &&
                 !line.match(/^\$/) && !line.match(/^\d+%/) &&
                 !line.match(/^\d+\s*min/) && !line.match(/^·$/) &&
                 !line.match(/^Envío/) && !line.match(/^Ver/) &&
-                !line.match(/^Abierto/) && !line.match(/^Cerrado/)) {
+                !line.match(/^Abierto/) && !line.match(/^Cerrado/) &&
+                !line.match(/^El costo/) && !line.match(/^Costo/)) {
               name = line;
               break;
             }
