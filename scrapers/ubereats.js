@@ -56,7 +56,7 @@ export async function scrapeUberEats() {
     if (addressInput) {
       await addressInput.click();
       await page.waitForTimeout(500);
-      await addressInput.fill('Buenos Aires 500, Córdoba, Argentina');
+      await addressInput.fill('San José de Calasanz 50, X5000LHB Córdoba');
       await page.waitForTimeout(3000);
 
       const suggestions = await page.$$('[data-testid="address-option"], [role="option"], li[id*="result"]');
