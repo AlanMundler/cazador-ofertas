@@ -530,20 +530,20 @@
     "count": 1
   },
   "UberEats:Wingstop:50": {
-    "lastSeen": 1787694455221,
-    "count": 3
+    "lastSeen": 1787698134723,
+    "count": 4
   },
   "UberEats:Shake Shack:50": {
-    "lastSeen": 1787692437288,
-    "count": 2
+    "lastSeen": 1787698134723,
+    "count": 3
   },
   "UberEats:Burger King:50": {
     "lastSeen": 1787695454891,
     "count": 3
   },
   "UberEats:KFC:50": {
-    "lastSeen": 1787694455221,
-    "count": 3
+    "lastSeen": 1787698134723,
+    "count": 4
   },
   "UberEats:Tacos Number Juan:50": {
     "lastSeen": 1787687619062,
@@ -574,8 +574,8 @@
     "count": 1
   },
   "UberEats:Pizza Hut:50": {
-    "lastSeen": 1787694455221,
-    "count": 3
+    "lastSeen": 1787698134723,
+    "count": 4
   },
   "UberEats:Hibachi & Company:50": {
     "lastSeen": 1787687619062,
@@ -710,8 +710,8 @@
     "count": 1
   },
   "UberEats:Papa Johns Pizza:50": {
-    "lastSeen": 1787694455221,
-    "count": 2
+    "lastSeen": 1787698134723,
+    "count": 3
   },
   "UberEats:Applebee's:50": {
     "lastSeen": 1787694455221,
@@ -742,8 +742,8 @@
     "count": 1
   },
   "UberEats:Carl's Jr.:50": {
-    "lastSeen": 1787692437288,
-    "count": 1
+    "lastSeen": 1787698134723,
+    "count": 2
   },
   "UberEats:Makoto Sushi:50": {
     "lastSeen": 1787692437288,
@@ -758,8 +758,8 @@
     "count": 1
   },
   "UberEats:IHOP:50": {
-    "lastSeen": 1787692437288,
-    "count": 1
+    "lastSeen": 1787698134723,
+    "count": 2
   },
   "UberEats:Bahama Buck's:50": {
     "lastSeen": 1787692437288,
@@ -790,8 +790,8 @@
     "count": 1
   },
   "UberEats:Tokyo Joe's:50": {
-    "lastSeen": 1787694455221,
-    "count": 1
+    "lastSeen": 1787698134723,
+    "count": 2
   },
   "UberEats:Buca Di Beppo:50": {
     "lastSeen": 1787694455221,
@@ -814,8 +814,8 @@
     "count": 1
   },
   "UberEats:MAD Greens:50": {
-    "lastSeen": 1787694455221,
-    "count": 1
+    "lastSeen": 1787698134723,
+    "count": 2
   },
   "UberEats:Wetzel's Pretzels:50": {
     "lastSeen": 1787694455221,
@@ -827,6 +827,38 @@
   },
   "UberEats:Papa Johns:50": {
     "lastSeen": 1787695454891,
+    "count": 1
+  },
+  "UberEats:Brothers BBQ:50": {
+    "lastSeen": 1787698134723,
+    "count": 1
+  },
+  "UberEats:Teriyaki Madness:50": {
+    "lastSeen": 1787698134723,
+    "count": 1
+  },
+  "UberEats:Noco Hibachi & Wings:50": {
+    "lastSeen": 1787698134723,
+    "count": 1
+  },
+  "UberEats:Simply Thai:50": {
+    "lastSeen": 1787698134723,
+    "count": 1
+  },
+  "UberEats:Crisp & Green:50": {
+    "lastSeen": 1787698134723,
+    "count": 1
+  },
+  "UberEats:YOLO Pizza & Cafe:50": {
+    "lastSeen": 1787698134723,
+    "count": 1
+  },
+  "UberEats:Dickey's Barbecue Pit:50": {
+    "lastSeen": 1787698134723,
+    "count": 1
+  },
+  "UberEats:Sherpa Grill 2 Indian Nepali Restaurant:50": {
+    "lastSeen": 1787698134723,
     "count": 1
   }
 }
