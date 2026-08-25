@@ -1,22 +1,22 @@
-name: Cazador de Ofertas
+name: PedidosYa
 
 on:
   schedule:
-    - cron: '*/10 * * * *'
+    - cron: '0,30 * * * *'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: scrape
+  group: scrape-py
   cancel-in-progress: false
 
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-    name: Buscar ofertas
+    timeout-minutes: 8
+    name: PY Market + Restaurantes
     steps:
       - uses: actions/checkout@v4
 
@@ -49,7 +49,7 @@ jobs:
           key: dedup-history-${{ github.run_id }}
           restore-keys: dedup-history-
 
-      - name: Run all scrapers in parallel
+      - name: Scrape PedidosYa
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           BOT_USERNAME: ${{ secrets.BOT_USERNAME }}
@@ -63,11 +63,7 @@ jobs:
           MAX_PRICE_CHEAP: '500'
         run: |
           mkdir -p data
-          xvfb-run --auto-servernum node index.js --target=pedidosya &
-          xvfb-run --auto-servernum node index.js --target=rappi &
-          xvfb-run --auto-servernum node index.js --target=ubereats &
-          wait
-          echo "All scrapers finished"
+          xvfb-run --auto-servernum node index.js --target=pedidosya
 
       - name: Save dedup history
         if: always()
@@ -76,7 +72,7 @@ jobs:
           path: data
           key: dedup-history-${{ github.run_id }}
 
-      - name: Commit history data
+      - name: Commit history
         if: always()
         run: |
           git config --global user.name "cazador-bot"
