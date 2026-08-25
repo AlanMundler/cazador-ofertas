@@ -56,10 +56,14 @@ export async function scrapeUberEats() {
     if (addressInput) {
       await addressInput.click();
       await page.waitForTimeout(500);
-      await addressInput.fill('San José de Calasanz 50, Nueva Córdoba, Córdoba, Argentina');
+      await addressInput.fill('Buenos Aires 500, Córdoba, Argentina');
       await page.waitForTimeout(3000);
 
       const suggestions = await page.$$('[data-testid="address-option"], [role="option"], li[id*="result"]');
+      for (const s of suggestions) {
+        const text = await s.textContent();
+        console.log(`[UberEats] Suggestion: ${text?.trim().substring(0, 80)}`);
+      }
       let picked = false;
       for (const s of suggestions) {
         const text = await s.textContent();
