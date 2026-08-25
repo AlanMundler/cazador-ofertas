@@ -1,4 +1,5 @@
 import config from '../config.js';
+import { chromium } from 'patchright';
 
 const MIN_RESTAURANT = config.discounts.restaurant;
 const CONCURRENCY = config.ubereats.concurrency;
@@ -14,14 +15,35 @@ const LOC_COOKIE = encodeURIComponent(JSON.stringify({
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 
 async function fetchSession() {
-  const res = await fetch(`${config.ubereats.baseUrl}/ar`, {
-    headers: { 'User-Agent': UA, 'Accept': 'text/html,application/xhtml+xml' },
-    redirect: 'follow',
+  const feedUrl = `${config.ubereats.baseUrl}/ar/feed?pl=${LOC_COOKIE}`;
+  const ctx = await chromium.launchPersistentContext('', {
+    headless: false,
+    viewport: { width: 1366, height: 768 },
   });
-  if (!res.ok) throw new Error(`session fetch failed: ${res.status}`);
-  const setCookies = res.headers.getSetCookie?.() || [];
-  const cookies = setCookies.map(c => c.split(';')[0]).join('; ');
-  return `${cookies}; uev2.loc=${LOC_COOKIE}`;
+  try {
+    const page = ctx.pages()[0] || await ctx.newPage();
+    await page.goto(feedUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await page.waitForTimeout(3000);
+
+    let title = await page.title();
+    if (title.includes('momento') || title.includes('Momento')) {
+      console.log('[UberEats] Waiting for Cloudflare...');
+      await page.waitForTimeout(15000);
+      title = await page.title();
+    }
+
+    if (title.includes('momento') || title.includes('denegado')) {
+      throw new Error('Cloudflare blocked');
+    }
+
+    console.log(`[UberEats] CF passed, title: ${title.substring(0, 60)}`);
+
+    const cookies = await ctx.cookies();
+    const cookieStr = cookies.map(c => `${c.name}=${c.value}`).join('; ');
+    return cookieStr;
+  } finally {
+    await ctx.close().catch(() => {});
+  }
 }
 
 function parseDiscount(text) {
