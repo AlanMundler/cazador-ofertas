@@ -61,9 +61,20 @@ export async function scrapeUberEats() {
 
     await autoScroll(page, 15, 600, 500);
 
+    const debugInfo = await page.evaluate(() => {
+      return {
+        allLinks: document.querySelectorAll('a').length,
+        storeLinks: document.querySelectorAll('a[href*="/store/"]').length,
+        bodyText: document.body.innerText.substring(0, 500),
+      };
+    });
+    console.log(`[UberEats] DOM: ${debugInfo.allLinks} links, ${debugInfo.storeLinks} store links`);
+    console.log(`[UberEats] Body preview: ${debugInfo.bodyText.substring(0, 200)}`);
+
     const restaurants = await page.evaluate(() => {
       const results = [];
       const links = document.querySelectorAll('a[href*="/store/"]');
+      console.log(`[UberEats-DOM] Found ${links.length} store links`);
 
       for (const link of links) {
         const container = link.closest('[data-testid]') || link.parentElement?.parentElement?.parentElement;
