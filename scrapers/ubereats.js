@@ -71,6 +71,15 @@ export async function scrapeUberEats() {
     await page.goto(feedUrl, { waitUntil: 'networkidle', timeout: 45000 });
     await page.waitForTimeout(5000);
 
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(1000);
+    await page.evaluate(() => {
+      const overlays = document.querySelectorAll('[role="dialog"], [data-testid="modal"], [class*="overlay"], [class*="Overlay"], [class*="modal"], [class*="Modal"]');
+      overlays.forEach(el => el.remove());
+      document.body.style.overflow = 'auto';
+    });
+    await page.waitForTimeout(1000);
+
     await page.evaluate(() => {
       const btns = [...document.querySelectorAll('button')];
       const closeBtn = btns.find(b =>
