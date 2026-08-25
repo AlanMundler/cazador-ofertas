@@ -56,19 +56,29 @@ export async function scrapeUberEats() {
     if (addressInput) {
       await addressInput.click();
       await page.waitForTimeout(500);
-      await addressInput.fill('San José de Calasanz 50, Córdoba, Argentina');
-      await page.waitForTimeout(2000);
+      await addressInput.fill('San José de Calasanz 50, Nueva Córdoba, Córdoba, Argentina');
+      await page.waitForTimeout(3000);
 
-      const suggestion = await page.$('[data-testid="address-option"], [role="option"], li[id*="result"]');
-      if (suggestion) {
-        await suggestion.click();
-        await page.waitForTimeout(3000);
-        console.log('[UberEats] Address selected from suggestions');
-      } else {
-        await page.keyboard.press('Enter');
-        await page.waitForTimeout(3000);
-        console.log('[UberEats] Address entered, pressed Enter');
+      const suggestions = await page.$$('[data-testid="address-option"], [role="option"], li[id*="result"]');
+      let picked = false;
+      for (const s of suggestions) {
+        const text = await s.textContent();
+        if (text && /córdoba.*argentina|argentina.*córdoba/i.test(text)) {
+          await s.click();
+          picked = true;
+          console.log(`[UberEats] Selected: ${text.trim().substring(0, 80)}`);
+          break;
+        }
       }
+      if (!picked && suggestions.length > 0) {
+        await suggestions[0].click();
+        const text = await suggestions[0].textContent();
+        console.log(`[UberEats] Picked first: ${text?.trim().substring(0, 80)}`);
+      } else if (!picked) {
+        await page.keyboard.press('Enter');
+        console.log('[UberEats] No suggestions, pressed Enter');
+      }
+      await page.waitForTimeout(3000);
     } else {
       console.log('[UberEats] No address input found, trying search icon...');
       const searchBtn = await page.$('[data-testid="header-search-bar"], button[aria-label*="Search"], button[aria-label*="Buscar"]');
