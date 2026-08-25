@@ -530,8 +530,8 @@
     "count": 1
   },
   "UberEats:Wingstop:50": {
-    "lastSeen": 1787690998315,
-    "count": 2
+    "lastSeen": 1787694455221,
+    "count": 3
   },
   "UberEats:Shake Shack:50": {
     "lastSeen": 1787692437288,
@@ -542,8 +542,8 @@
     "count": 2
   },
   "UberEats:KFC:50": {
-    "lastSeen": 1787690998315,
-    "count": 2
+    "lastSeen": 1787694455221,
+    "count": 3
   },
   "UberEats:Tacos Number Juan:50": {
     "lastSeen": 1787687619062,
@@ -574,8 +574,8 @@
     "count": 1
   },
   "UberEats:Pizza Hut:50": {
-    "lastSeen": 1787690998315,
-    "count": 2
+    "lastSeen": 1787694455221,
+    "count": 3
   },
   "UberEats:Hibachi & Company:50": {
     "lastSeen": 1787687619062,
@@ -710,12 +710,12 @@
     "count": 1
   },
   "UberEats:Papa Johns Pizza:50": {
-    "lastSeen": 1787690998315,
-    "count": 1
+    "lastSeen": 1787694455221,
+    "count": 2
   },
   "UberEats:Applebee's:50": {
-    "lastSeen": 1787690998315,
-    "count": 1
+    "lastSeen": 1787694455221,
+    "count": 2
   },
   "UberEats:Popeyes Louisiana Chicken:50": {
     "lastSeen": 1787690998315,
@@ -771,6 +771,58 @@
   },
   "UberEats:Streets of New York:50": {
     "lastSeen": 1787692437288,
+    "count": 1
+  },
+  "UberEats:India Oven:50": {
+    "lastSeen": 1787694455221,
+    "count": 1
+  },
+  "UberEats:Habit Burger & Grill:50": {
+    "lastSeen": 1787694455221,
+    "count": 1
+  },
+  "UberEats:Ume Tea:50": {
+    "lastSeen": 1787694455221,
+    "count": 1
+  },
+  "UberEats:Ta Lew Thai Bistro:50": {
+    "lastSeen": 1787694455221,
+    "count": 1
+  },
+  "UberEats:Tokyo Joe's:50": {
+    "lastSeen": 1787694455221,
+    "count": 1
+  },
+  "UberEats:Buca Di Beppo:50": {
+    "lastSeen": 1787694455221,
+    "count": 1
+  },
+  "UberEats:Nishikawa Ramen:50": {
+    "lastSeen": 1787694455221,
+    "count": 1
+  },
+  "UberEats:Arizona Rebel Republic:50": {
+    "lastSeen": 1787694455221,
+    "count": 1
+  },
+  "UberEats:Hanami Sushi & Grill:50": {
+    "lastSeen": 1787694455221,
+    "count": 1
+  },
+  "UberEats:Tikka Shack Indian Grub:50": {
+    "lastSeen": 1787694455221,
+    "count": 1
+  },
+  "UberEats:MAD Greens:50": {
+    "lastSeen": 1787694455221,
+    "count": 1
+  },
+  "UberEats:Wetzel's Pretzels:50": {
+    "lastSeen": 1787694455221,
+    "count": 1
+  },
+  "UberEats:Koibito Poke:50": {
+    "lastSeen": 1787694455221,
     "count": 1
   }
 }
