@@ -7,6 +7,7 @@ import { sendMessage, pollUpdates } from './notifier/telegram.js';
 import { filterNewOffers, deduplicateOffers, detectFlashDeals } from './utils/filter.js';
 
 const TIMEOUT_MS = 8 * 60 * 1000;
+const target = process.argv.find(a => a.startsWith('--target='))?.split('=')[1] || 'all';
 
 let timedOut = false;
 
@@ -19,7 +20,7 @@ async function main() {
 
   console.log(`\n${'='.repeat(50)}`);
   console.log(`CAZADOR DE OFERTAS - ${new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' })}`);
-  console.log(`${config.city}, ${config.country}`);
+  console.log(`${config.city}, ${config.country} | target: ${target}`);
   console.log(`${'='.repeat(50)}\n`);
 
   const { token } = config.telegram;
@@ -28,11 +29,33 @@ async function main() {
     console.log(`[Telegram] Suscriptores activos: ${subs.length}`);
   }
 
-  const [rappiOffers, pedidosYaOffers, uberEatsOffers] = await Promise.all([
-    scrapeRappi().catch(e => { console.error('[Rappi] Error:', e.message); return []; }),
-    scrapePedidosYa().catch(e => { console.error('[PedidosYa] Error:', e.message); return []; }),
-    scrapeUberEats().catch(e => { console.error('[UberEats] Error:', e.message); return []; }),
-  ]);
+  const scrapers = [];
+
+  if (target === 'all' || target === 'rappi') {
+    scrapers.push(
+      scrapeRappi().catch(e => { console.error('[Rappi] Error:', e.message); return []; })
+    );
+  } else {
+    scrapers.push(Promise.resolve([]));
+  }
+
+  if (target === 'all' || target === 'pedidosya') {
+    scrapers.push(
+      scrapePedidosYa().catch(e => { console.error('[PedidosYa] Error:', e.message); return []; })
+    );
+  } else {
+    scrapers.push(Promise.resolve([]));
+  }
+
+  if (target === 'all' || target === 'ubereats') {
+    scrapers.push(
+      scrapeUberEats().catch(e => { console.error('[UberEats] Error:', e.message); return []; })
+    );
+  } else {
+    scrapers.push(Promise.resolve([]));
+  }
+
+  const [rappiOffers, pedidosYaOffers, uberEatsOffers] = await Promise.all(scrapers);
 
   if (timedOut) {
     clearTimeout(timer);

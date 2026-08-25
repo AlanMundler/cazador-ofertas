@@ -42,7 +42,14 @@ jobs:
       - name: Install Patchright browser
         run: npx patchright install chromium --with-deps
 
-      - name: Run offer hunter
+      - name: Restore dedup history
+        uses: actions/cache@v4
+        with:
+          path: data
+          key: dedup-history-${{ github.run_id }}
+          restore-keys: dedup-history-
+
+      - name: Run all scrapers in parallel
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           BOT_USERNAME: ${{ secrets.BOT_USERNAME }}
@@ -54,7 +61,20 @@ jobs:
           MIN_DISCOUNT_SUPER: '51'
           FLASH_THRESHOLD: '75'
           MAX_PRICE_CHEAP: '500'
-        run: xvfb-run --auto-servernum node index.js
+        run: |
+          mkdir -p data
+          xvfb-run --auto-servernum node index.js --target=pedidosya &
+          xvfb-run --auto-servernum node index.js --target=rappi &
+          xvfb-run --auto-servernum node index.js --target=ubereats &
+          wait
+          echo "All scrapers finished"
+
+      - name: Save dedup history
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: data
+          key: dedup-history-${{ github.run_id }}
 
       - name: Commit history data
         if: always()
