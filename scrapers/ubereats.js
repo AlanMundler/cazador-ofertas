@@ -153,7 +153,7 @@ export async function scrapeUberEats() {
         const feedData = await page.evaluate(async ({ endpoint, body }) => {
           const res = await fetch(endpoint, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'x-csrf-token': 'x' },
             body: JSON.stringify(body),
           });
           return res.json();
@@ -211,7 +211,7 @@ export async function scrapeUberEats() {
           const data = await page.evaluate(async ({ endpoint, uuid }) => {
             const res = await fetch(endpoint, {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              headers: { 'Content-Type': 'application/json', 'x-csrf-token': 'x' },
               body: JSON.stringify({
                 storeUuid: uuid,
                 diningMode: 'DELIVERY',
