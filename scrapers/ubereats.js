@@ -145,9 +145,12 @@ export async function scrapeUberEats() {
 
       console.log(`[UberEats] CF passed, title: ${title.substring(0, 60)}`);
 
-      await page.evaluate((loc) => {
-        document.cookie = `uev2.loc=${loc}; path=/; domain=.ubereats.com`;
-      }, LOC_COOKIE);
+      await context.addCookies([{
+        name: 'uev2.loc',
+        value: LOC_COOKIE,
+        domain: '.ubereats.com',
+        path: '/',
+      }]);
 
       const seen = new Set();
       let offset = 0;
