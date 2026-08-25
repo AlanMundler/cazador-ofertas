@@ -538,20 +538,20 @@
     "count": 1
   },
   "UberEats:Wingstop:50": {
-    "lastSeen": 1787687619062,
-    "count": 1
+    "lastSeen": 1787690998315,
+    "count": 2
   },
   "UberEats:Shake Shack:50": {
     "lastSeen": 1787687619062,
     "count": 1
   },
   "UberEats:Burger King:50": {
-    "lastSeen": 1787687619062,
-    "count": 1
+    "lastSeen": 1787690998315,
+    "count": 2
   },
   "UberEats:KFC:50": {
-    "lastSeen": 1787687619062,
-    "count": 1
+    "lastSeen": 1787690998315,
+    "count": 2
   },
   "UberEats:Tacos Number Juan:50": {
     "lastSeen": 1787687619062,
@@ -582,8 +582,8 @@
     "count": 1
   },
   "UberEats:Pizza Hut:50": {
-    "lastSeen": 1787687619062,
-    "count": 1
+    "lastSeen": 1787690998315,
+    "count": 2
   },
   "UberEats:Hibachi & Company:50": {
     "lastSeen": 1787687619062,
@@ -715,6 +715,38 @@
   },
   "UberEats:Little Miner Taco at Haymaker:50": {
     "lastSeen": 1787688782321,
+    "count": 1
+  },
+  "UberEats:Papa Johns Pizza:50": {
+    "lastSeen": 1787690998315,
+    "count": 1
+  },
+  "UberEats:Applebee's:50": {
+    "lastSeen": 1787690998315,
+    "count": 1
+  },
+  "UberEats:Popeyes Louisiana Chicken:50": {
+    "lastSeen": 1787690998315,
+    "count": 1
+  },
+  "UberEats:Hooters:50": {
+    "lastSeen": 1787690998315,
+    "count": 1
+  },
+  "UberEats:Charleys Cheesesteaks and Wings:50": {
+    "lastSeen": 1787690998315,
+    "count": 1
+  },
+  "UberEats:Pa's Chicken Express:50": {
+    "lastSeen": 1787690998315,
+    "count": 1
+  },
+  "UberEats:Baja Restaurant:50": {
+    "lastSeen": 1787690998315,
+    "count": 1
+  },
+  "UberEats:Boba Heaven:50": {
+    "lastSeen": 1787690998315,
     "count": 1
   }
 }
