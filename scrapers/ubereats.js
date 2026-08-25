@@ -13,10 +13,11 @@ const LOC_COOKIE = encodeURIComponent(JSON.stringify({
 
 function parseDiscount(text) {
   if (!text) return 0;
-  const m = text.match(/(\d+)%\s*(off|dto|descuento)/i);
+  const m = text.match(/(\d+)%\s*(off|dto|descuento|en\s+artículos?\s+seleccionados)/i);
   if (m) return parseInt(m[1], 10);
   if (/buy\s*1.*get\s*1|2x1|2da\s*unidad/i.test(text)) return 50;
-  if (/hasta\s+(\d+)%/i.test(text)) return parseInt(text.match(/hasta\s+(\d+)%/i)[1], 10);
+  const h = text.match(/hasta\s+(\d+)%/i);
+  if (h) return parseInt(h[1], 10);
   return 0;
 }
 
@@ -78,7 +79,7 @@ export async function scrapeUberEats() {
         let rating = '';
 
         for (const line of lines) {
-          const dm = line.match(/(\d+)%\s*(off|dto|descuento)/i) || line.match(/hasta\s+(\d+)%/i);
+          const dm = line.match(/(\d+)%\s*(off|dto|descuento|en\s+artículos?\s+seleccionados)/i) || line.match(/hasta\s+(\d+)%/i);
           if (dm) {
             const d = parseInt(dm[1], 10);
             if (d > discount) { discount = d; promoText = line; }
