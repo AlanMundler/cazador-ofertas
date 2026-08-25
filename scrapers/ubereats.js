@@ -4,7 +4,7 @@ import { mkdtempSync } from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
 
-const MIN_RESTAURANT = config.discounts.restaurant;
+const MIN_RESTAURANT = config.discounts.uberEats;
 const LAT = parseFloat(config.lat);
 const LNG = parseFloat(config.lng);
 
