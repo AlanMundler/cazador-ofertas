@@ -42,27 +42,8 @@ export async function scrapeUberEats() {
 
     const page = context.pages()[0] || await context.newPage();
 
-    const feedUrl = `https://www.ubereats.com/ar/feed?diningMode=DELIVERY&pl=${encodeURIComponent(JSON.stringify({
-      address: 'San José de Calasanz 50, Córdoba, Argentina',
-      reference: '',
-      referenceType: 'google_places',
-      latitude: LAT,
-      longitude: LNG,
-    }))}`;
-
-    await page.context().addCookies([
-      { name: 'uev2.loc', value: JSON.stringify({
-        address: 'San José de Calasanz 50',
-        latitude: LAT,
-        longitude: LNG,
-      }), domain: '.ubereats.com', path: '/' },
-      { name: 'ut', value: JSON.stringify({
-        AEdFmxr: { locationOverride: { latitude: LAT, longitude: LNG } },
-      }), domain: '.ubereats.com', path: '/' },
-    ]);
-
-    console.log('[UberEats] Loading feed...');
-    await page.goto(feedUrl, { waitUntil: 'networkidle', timeout: 45000 });
+    console.log('[UberEats] Loading homepage first...');
+    await page.goto('https://www.ubereats.com/ar', { waitUntil: 'networkidle', timeout: 45000 });
     await page.waitForTimeout(3000);
 
     let title = await page.title();
@@ -76,8 +57,19 @@ export async function scrapeUberEats() {
       console.log('[UberEats] Blocked by Cloudflare');
       return offers;
     }
+    console.log(`[UberEats] CF passed on homepage, title: ${title.substring(0, 60)}`);
 
-    console.log(`[UberEats] CF passed, title: ${title.substring(0, 60)}`);
+    const feedUrl = `https://www.ubereats.com/ar/feed?diningMode=DELIVERY&pl=${encodeURIComponent(JSON.stringify({
+      address: 'San José de Calasanz 50, Córdoba, Argentina',
+      reference: '',
+      referenceType: 'google_places',
+      latitude: LAT,
+      longitude: LNG,
+    }))}`;
+
+    console.log('[UberEats] Navigating to feed...');
+    await page.goto(feedUrl, { waitUntil: 'networkidle', timeout: 45000 });
+    await page.waitForTimeout(5000);
 
     await page.evaluate(() => {
       const btns = [...document.querySelectorAll('button')];
@@ -100,9 +92,7 @@ export async function scrapeUberEats() {
       firstText: document.body.innerText.substring(0, 300),
     }));
     console.log(`[UberEats] DOM: ${debugInfo.allLinks} links, ${debugInfo.storeLinks} stores, ${debugInfo.allText} chars`);
-    if (debugInfo.storeLinks === 0) {
-      console.log(`[UberEats] Body: ${debugInfo.firstText}`);
-    }
+    console.log(`[UberEats] Body: ${debugInfo.firstText}`);
 
     const restaurants = await page.evaluate(() => {
       const results = [];
