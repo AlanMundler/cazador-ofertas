@@ -17,7 +17,7 @@ const config = {
   discounts: {
     super: parseInt(process.env.MIN_DISCOUNT_SUPER || '51'),
     restaurant: parseInt(process.env.MIN_DISCOUNT || '50'),
-    uberEats: parseInt(process.env.MIN_DISCOUNT_UE || '60'),
+    uberEats: parseInt(process.env.MIN_DISCOUNT_UE || '50'),
     flashThreshold: parseInt(process.env.FLASH_THRESHOLD || '75'),
   },
 
