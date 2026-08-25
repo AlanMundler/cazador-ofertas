@@ -534,8 +534,8 @@
     "count": 2
   },
   "UberEats:Shake Shack:50": {
-    "lastSeen": 1787687619062,
-    "count": 1
+    "lastSeen": 1787692437288,
+    "count": 2
   },
   "UberEats:Burger King:50": {
     "lastSeen": 1787690998315,
@@ -582,8 +582,8 @@
     "count": 1
   },
   "UberEats:Five Guys:50": {
-    "lastSeen": 1787688782321,
-    "count": 1
+    "lastSeen": 1787692437288,
+    "count": 2
   },
   "UberEats:Holy Cow Burger:50": {
     "lastSeen": 1787688782321,
@@ -739,6 +739,38 @@
   },
   "UberEats:Boba Heaven:50": {
     "lastSeen": 1787690998315,
+    "count": 1
+  },
+  "UberEats:Carl's Jr.:50": {
+    "lastSeen": 1787692437288,
+    "count": 1
+  },
+  "UberEats:Makoto Sushi:50": {
+    "lastSeen": 1787692437288,
+    "count": 1
+  },
+  "UberEats:Pier 88 Boiling Seafood & Bar Mesa:50": {
+    "lastSeen": 1787692437288,
+    "count": 1
+  },
+  "UberEats:Cupbop_(1222 Mesa):50": {
+    "lastSeen": 1787692437288,
+    "count": 1
+  },
+  "UberEats:IHOP:50": {
+    "lastSeen": 1787692437288,
+    "count": 1
+  },
+  "UberEats:Bahama Buck's:50": {
+    "lastSeen": 1787692437288,
+    "count": 1
+  },
+  "UberEats:El Pollo Loco:50": {
+    "lastSeen": 1787692437288,
+    "count": 1
+  },
+  "UberEats:Streets of New York:50": {
+    "lastSeen": 1787692437288,
     "count": 1
   }
 }
