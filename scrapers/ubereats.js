@@ -5,7 +5,6 @@ import { join } from 'path';
 import { tmpdir } from 'os';
 
 const MIN_RESTAURANT = config.discounts.restaurant;
-
 const LAT = parseFloat(config.lat);
 const LNG = parseFloat(config.lng);
 
@@ -17,13 +16,6 @@ function parseDiscount(text) {
   const h = text.match(/hasta\s+(\d+)%/i);
   if (h) return parseInt(h[1], 10);
   return 0;
-}
-
-async function autoScroll(page, times, distance, delay) {
-  for (let i = 0; i < times; i++) {
-    await page.evaluate(d => window.scrollBy(0, d), distance);
-    await page.waitForTimeout(delay);
-  }
 }
 
 export async function scrapeUberEats() {
@@ -42,6 +34,21 @@ export async function scrapeUberEats() {
 
     const page = context.pages()[0] || await context.newPage();
 
+    const feedData = [];
+
+    page.on('response', async (response) => {
+      const url = response.url();
+      if (url.includes('getFeedV1') || url.includes('feed') && url.includes('api')) {
+        try {
+          const json = await response.json();
+          if (json?.data?.feedItems?.length) {
+            feedData.push(...json.data.feedItems);
+            console.log(`[UberEats] Intercepted ${json.data.feedItems.length} feed items from API`);
+          }
+        } catch {}
+      }
+    });
+
     console.log('[UberEats] Loading homepage first...');
     await page.goto('https://www.ubereats.com/ar', { waitUntil: 'networkidle', timeout: 45000 });
     await page.waitForTimeout(3000);
@@ -57,7 +64,7 @@ export async function scrapeUberEats() {
       console.log('[UberEats] Blocked by Cloudflare');
       return offers;
     }
-    console.log(`[UberEats] CF passed on homepage, title: ${title.substring(0, 60)}`);
+    console.log(`[UberEats] CF passed, title: ${title.substring(0, 60)}`);
 
     const feedUrl = `https://www.ubereats.com/ar/feed?diningMode=DELIVERY&pl=${encodeURIComponent(JSON.stringify({
       address: 'San José de Calasanz 50, Córdoba, Argentina',
@@ -71,110 +78,122 @@ export async function scrapeUberEats() {
     await page.goto(feedUrl, { waitUntil: 'networkidle', timeout: 45000 });
     await page.waitForTimeout(5000);
 
-    await page.keyboard.press('Escape');
-    await page.waitForTimeout(1000);
-    await page.evaluate(() => {
-      const overlays = document.querySelectorAll('[role="dialog"], [data-testid="modal"], [class*="overlay"], [class*="Overlay"], [class*="modal"], [class*="Modal"]');
-      overlays.forEach(el => el.remove());
-      document.body.style.overflow = 'auto';
-    });
-    await page.waitForTimeout(1000);
+    console.log(`[UberEats] Intercepted ${feedData.length} feed items from API`);
 
-    await page.evaluate(() => {
-      const btns = [...document.querySelectorAll('button')];
-      const closeBtn = btns.find(b =>
-        b.textContent?.includes('Cerrar') || b.textContent?.includes('X') ||
-        b.getAttribute('aria-label')?.includes('close') || b.getAttribute('aria-label')?.includes('Close')
-      );
-      if (closeBtn) closeBtn.click();
-      const overlayBtn = btns.find(b => b.textContent?.includes('No, gracias'));
-      if (overlayBtn) overlayBtn.click();
-    });
-    await page.waitForTimeout(1000);
+    if (feedData.length > 0) {
+      for (const item of feedData) {
+        try {
+          const storeName = item.title || item.store?.title || '';
+          const promoText = item.subtitle || item.promoMessage?.text || item.store?.heroGuideDescription || '';
+          const discount = parseDiscount(promoText) || parseDiscount(storeName);
 
-    await autoScroll(page, 12, 600, 400);
+          const eta = item.store?.etaRange?.text || '';
+          const rating = item.store?.rating?.ratingValue?.toString() || '';
+          const storeUrl = item.store?.uuid
+            ? `https://www.ubereats.com/ar/store/${item.store.uuid}`
+            : `https://www.ubereats.com/ar/feed`;
 
-    const debugInfo = await page.evaluate(() => ({
-      allLinks: document.querySelectorAll('a').length,
-      storeLinks: document.querySelectorAll('a[href*="/store/"]').length,
-      allText: document.body.innerText.length,
-      firstText: document.body.innerText.substring(0, 300),
-    }));
-    console.log(`[UberEats] DOM: ${debugInfo.allLinks} links, ${debugInfo.storeLinks} stores, ${debugInfo.allText} chars`);
-    console.log(`[UberEats] Body: ${debugInfo.firstText}`);
-
-    const restaurants = await page.evaluate(() => {
-      const results = [];
-      const links = document.querySelectorAll('a[href*="/store/"]');
-
-      for (const link of links) {
-        let container = link;
-        for (let i = 0; i < 6; i++) {
-          if (!container.parentElement) break;
-          container = container.parentElement;
-          if (container.offsetHeight > 100) break;
-        }
-
-        const text = container.innerText || '';
-        const lines = text.split('\n').map(l => l.trim()).filter(l => l);
-
-        let name = '';
-        let discount = 0;
-        let promoText = '';
-        let eta = '';
-        let rating = '';
-
-        for (const line of lines) {
-          const dm = line.match(/(\d+)%\s*(off|dto|descuento|en\s+artículos?\s+seleccionados)/i) || line.match(/hasta\s+(\d+)%/i);
-          if (dm) {
-            const d = parseInt(dm[1], 10);
-            if (d > discount) { discount = d; promoText = line; }
+          if (storeName && discount >= MIN_RESTAURANT) {
+            offers.push({
+              platform: 'UberEats', category: 'restaurante',
+              restaurant: storeName, slug: item.store?.uuid || '', discount,
+              description: promoText || `${discount}% OFF`,
+              originalPrice: null, currentPrice: null,
+              url: storeUrl, deliveryTime: eta, rating, imageUrl: '',
+            });
           }
-          if (/buy\s*1.*get\s*1|2x1|2da\s*unidad/i.test(line)) {
-            if (50 > discount) { discount = 50; promoText = line; }
-          }
-          if (line.match(/\d+\s*min/) && !eta) eta = line;
-          if (line.match(/^\d\.\d$/) && !rating) rating = line;
-        }
+        } catch {}
+      }
+    }
 
-        if (!name) {
-          const nameEl = container.querySelector('h3, [data-testid="store-title"]');
-          name = nameEl?.textContent?.trim() || '';
-        }
-        if (!name) {
-          for (const line of lines) {
-            if (line.length > 3 && line.length < 80 &&
-                !line.match(/^\$/) && !line.match(/^\d+%/) &&
-                !line.match(/^\d+\s*min/) && !line.match(/^·$/) &&
-                !line.match(/^Envío/) && !line.match(/^Ver/) &&
-                !line.match(/^Abierto/) && !line.match(/^Cerrado/) &&
-                !line.match(/^El costo/) && !line.match(/^Costo/)) {
-              name = line;
-              break;
-            }
-          }
-        }
+    if (offers.length === 0) {
+      console.log('[UberEats] API interception returned 0, falling back to DOM...');
+      await page.keyboard.press('Escape');
+      await page.waitForTimeout(1000);
+      await page.evaluate(() => {
+        document.querySelectorAll('[role="dialog"], [data-testid="modal"], [class*="overlay"], [class*="Overlay"], [class*="modal"], [class*="Modal"]').forEach(el => el.remove());
+        document.body.style.overflow = 'auto';
+      });
+      await page.waitForTimeout(1000);
 
-        const href = link.getAttribute('href') || '';
-        const url = href.startsWith('http') ? href : `https://www.ubereats.com${href}`;
-
-        if (name && discount > 0) {
-          results.push({ name, discount, promoText, eta, rating, url });
-        }
+      for (let i = 0; i < 12; i++) {
+        await page.evaluate(d => window.scrollBy(0, 600), null);
+        await page.waitForTimeout(400);
       }
 
-      return results;
-    });
+      const restaurants = await page.evaluate(() => {
+        const results = [];
+        const links = document.querySelectorAll('a[href*="/store/"]');
 
-    for (const r of restaurants) {
-      if (r.discount >= MIN_RESTAURANT) {
-        offers.push({
-          platform: 'UberEats', category: 'restaurante',
-          restaurant: r.name, slug: '', discount: r.discount,
-          description: r.promoText || `${r.discount}% OFF`,
-          originalPrice: null, currentPrice: null,
-          url: r.url || feedUrl, deliveryTime: r.eta, rating: r.rating, imageUrl: '',
-        });
+        for (const link of links) {
+          let container = link;
+          for (let i = 0; i < 6; i++) {
+            if (!container.parentElement) break;
+            container = container.parentElement;
+            if (container.offsetHeight > 100) break;
+          }
+
+          const text = container.innerText || '';
+          const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+
+          let name = '';
+          let discount = 0;
+          let promoText = '';
+          let eta = '';
+          let rating = '';
+
+          for (const line of lines) {
+            const dm = line.match(/(\d+)%\s*(off|dto|descuento|en\s+artículos?\s+seleccionados)/i) || line.match(/hasta\s+(\d+)%/i);
+            if (dm) {
+              const d = parseInt(dm[1], 10);
+              if (d > discount) { discount = d; promoText = line; }
+            }
+            if (/buy\s*1.*get\s*1|2x1|2da\s*unidad/i.test(line)) {
+              if (50 > discount) { discount = 50; promoText = line; }
+            }
+            if (line.match(/\d+\s*min/) && !eta) eta = line;
+            if (line.match(/^\d\.\d$/) && !rating) rating = line;
+          }
+
+          if (!name) {
+            const nameEl = container.querySelector('h3, [data-testid="store-title"]');
+            name = nameEl?.textContent?.trim() || '';
+          }
+          if (!name) {
+            for (const line of lines) {
+              if (line.length > 3 && line.length < 80 &&
+                  !line.match(/^\$/) && !line.match(/^\d+%/) &&
+                  !line.match(/^\d+\s*min/) && !line.match(/^·$/) &&
+                  !line.match(/^Envío/) && !line.match(/^Ver/) &&
+                  !line.match(/^Abierto/) && !line.match(/^Cerrado/) &&
+                  !line.match(/^El costo/) && !line.match(/^Costo/)) {
+                name = line;
+                break;
+              }
+            }
+          }
+
+          const href = link.getAttribute('href') || '';
+          const url = href.startsWith('http') ? href : `https://www.ubereats.com${href}`;
+
+          if (name && discount > 0) {
+            results.push({ name, discount, promoText, eta, rating, url });
+          }
+        }
+
+        return results;
+      });
+
+      for (const r of restaurants) {
+        if (r.discount >= MIN_RESTAURANT) {
+          offers.push({
+            platform: 'UberEats', category: 'restaurante',
+            restaurant: r.name, slug: '', discount: r.discount,
+            description: r.promoText || `${r.discount}% OFF`,
+            originalPrice: null, currentPrice: null,
+            url: r.url || feedUrl, deliveryTime: r.eta, rating: r.rating, imageUrl: '',
+          });
+        }
       }
     }
 
