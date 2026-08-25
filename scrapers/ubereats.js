@@ -2,7 +2,6 @@ import config from '../config.js';
 import { chromium } from 'patchright';
 
 const MIN_RESTAURANT = config.discounts.restaurant;
-const CONCURRENCY = config.ubereats.concurrency;
 
 const LOC_COOKIE = encodeURIComponent(JSON.stringify({
   address: 'San José de Calasanz 50',
@@ -11,40 +10,6 @@ const LOC_COOKIE = encodeURIComponent(JSON.stringify({
   latitude: parseFloat(config.lat),
   longitude: parseFloat(config.lng),
 }));
-
-const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
-
-async function fetchSession() {
-  const feedUrl = `${config.ubereats.baseUrl}/ar/feed?pl=${LOC_COOKIE}`;
-  const ctx = await chromium.launchPersistentContext('', {
-    headless: false,
-    viewport: { width: 1366, height: 768 },
-  });
-  try {
-    const page = ctx.pages()[0] || await ctx.newPage();
-    await page.goto(feedUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
-    await page.waitForTimeout(3000);
-
-    let title = await page.title();
-    if (title.includes('momento') || title.includes('Momento')) {
-      console.log('[UberEats] Waiting for Cloudflare...');
-      await page.waitForTimeout(15000);
-      title = await page.title();
-    }
-
-    if (title.includes('momento') || title.includes('denegado')) {
-      throw new Error('Cloudflare blocked');
-    }
-
-    console.log(`[UberEats] CF passed, title: ${title.substring(0, 60)}`);
-
-    const cookies = await ctx.cookies();
-    const cookieStr = cookies.map(c => `${c.name}=${c.value}`).join('; ');
-    return cookieStr;
-  } finally {
-    await ctx.close().catch(() => {});
-  }
-}
 
 function parseDiscount(text) {
   if (!text) return 0;
@@ -146,71 +111,57 @@ function extractFromFeed(item) {
   };
 }
 
-async function fetchStoreV1(cookies, uuid) {
-  const res = await fetch(`${config.ubereats.storeEndpoint}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept-Language': 'es-AR,es;q=0.9',
-      'x-csrf-token': 'x',
-      'User-Agent': UA,
-      'Origin': config.ubereats.baseUrl,
-      'Referer': `${config.ubereats.baseUrl}/ar/feed`,
-      'Cookie': cookies,
-    },
-    body: JSON.stringify({
-      storeUuid: uuid,
-      diningMode: 'DELIVERY',
-      time: { asap: true },
-      cbType: 'EATER_ENDORSED',
-    }),
-  });
-  const json = await res.json();
-  return json.status === 'success' ? json.data : null;
-}
-
-async function batchMap(items, fn, concurrency) {
-  const results = [];
-  for (let i = 0; i < items.length; i += concurrency) {
-    const batch = items.slice(i, i + concurrency);
-    const batchResults = await Promise.all(batch.map(fn));
-    results.push(...batchResults);
-    if (i + concurrency < items.length) await new Promise(r => setTimeout(r, 200));
-  }
-  return results;
-}
-
 export async function scrapeUberEats() {
   const offers = [];
-  const seen = new Set();
-  const needStoreV1 = [];
+  const needStoreV1Uuids = [];
+  let context;
 
   for (let attempt = 1; attempt <= 2; attempt++) {
     try {
-      const cookies = await fetchSession();
+      context = await chromium.launchPersistentContext('', {
+        headless: false,
+        viewport: { width: 1366, height: 768 },
+      });
+
+      const page = context.pages()[0] || await context.newPage();
+      const feedUrl = `${config.ubereats.baseUrl}/ar/feed?pl=${LOC_COOKIE}`;
+      await page.goto(feedUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
+      await page.waitForTimeout(3000);
+
+      let title = await page.title();
+      if (title.includes('momento') || title.includes('Momento')) {
+        console.log('[UberEats] Waiting for Cloudflare...');
+        await page.waitForTimeout(15000);
+        title = await page.title();
+      }
+
+      if (title.includes('momento') || title.includes('denegado')) {
+        console.log('[UberEats] Cloudflare blocked, retrying...');
+        await context.close().catch(() => {});
+        context = null;
+        if (attempt < 2) await new Promise(r => setTimeout(r, 3000));
+        continue;
+      }
+
+      console.log(`[UberEats] CF passed, title: ${title.substring(0, 60)}`);
+
+      const seen = new Set();
       let offset = 0;
       let hasMore = true;
 
       while (hasMore) {
-        const body = offset > 0
-          ? { pageInfo: { offset, pageSize: 80 } }
-          : {};
-
-        const feedRes = await fetch(config.ubereats.feedEndpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept-Language': 'es-AR,es;q=0.9',
-            'x-csrf-token': 'x',
-            'User-Agent': UA,
-            'Origin': config.ubereats.baseUrl,
-            'Referer': `${config.ubereats.baseUrl}/ar/feed`,
-            'Cookie': cookies,
-          },
-          body: JSON.stringify(body),
+        const feedData = await page.evaluate(async ({ endpoint, body }) => {
+          const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          });
+          return res.json();
+        }, {
+          endpoint: config.ubereats.feedEndpoint,
+          body: offset > 0 ? { pageInfo: { offset, pageSize: 80 } } : {},
         });
 
-        const feedData = await feedRes.json();
         if (feedData.status !== 'success') {
           console.log(`[UberEats] Feed status: ${feedData.status}`);
           break;
@@ -230,7 +181,7 @@ export async function scrapeUberEats() {
               seen.add(uuid);
               const offer = extractFromFeed({ store });
               if (offer) offers.push(offer);
-              else needStoreV1.push(uuid);
+              else needStoreV1Uuids.push(uuid);
             }
             continue;
           }
@@ -245,7 +196,7 @@ export async function scrapeUberEats() {
           if (feedOffer) {
             offers.push(feedOffer);
           } else {
-            needStoreV1.push(uuid);
+            needStoreV1Uuids.push(uuid);
           }
         }
 
@@ -253,30 +204,39 @@ export async function scrapeUberEats() {
         if (offset >= 500) break;
       }
 
-      console.log(`[UberEats] Feed: ${seen.size} stores, ${offers.length} from signposts, ${needStoreV1.length} need getStoreV1`);
-      console.log(`[UberEats] Feed items total: ${feedItems.length}, offset: ${offset}`);
+      console.log(`[UberEats] Feed: ${seen.size} stores, ${offers.length} from signposts, ${needStoreV1Uuids.length} need getStoreV1`);
 
-      if (needStoreV1.length > 0) {
-        const results = await batchMap(needStoreV1, async (uuid) => {
-          try {
-            const data = await fetchStoreV1(cookies, uuid);
-            return data ? extractFromStoreV1(data, uuid) : null;
-          } catch {
-            return null;
+      for (const uuid of needStoreV1Uuids) {
+        try {
+          const data = await page.evaluate(async ({ endpoint, uuid }) => {
+            const res = await fetch(endpoint, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                storeUuid: uuid,
+                diningMode: 'DELIVERY',
+                time: { asap: true },
+                cbType: 'EATER_ENDORSED',
+              }),
+            });
+            const json = await res.json();
+            return json.status === 'success' ? json.data : null;
+          }, { endpoint: config.ubereats.storeEndpoint, uuid });
+
+          if (data) {
+            const offer = extractFromStoreV1(data, uuid);
+            if (offer) offers.push(offer);
           }
-        }, CONCURRENCY);
-
-        for (const offer of results) {
-          if (offer) offers.push(offer);
-        }
-        console.log(`[UberEats] getStoreV1: ${results.filter(Boolean).length} offers from ${needStoreV1.length} stores`);
+        } catch {}
       }
 
       console.log(`[UberEats] Total: ${offers.length} offers >${MIN_RESTAURANT}%`);
-      return offers;
+      break;
     } catch (err) {
       console.error(`[UberEats] Attempt ${attempt} error: ${err.message}`);
       if (attempt < 2) await new Promise(r => setTimeout(r, 2000));
+    } finally {
+      if (context) { await context.close().catch(() => {}); context = null; }
     }
   }
 
