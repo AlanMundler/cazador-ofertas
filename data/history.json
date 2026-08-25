@@ -538,8 +538,8 @@
     "count": 3
   },
   "UberEats:Burger King:50": {
-    "lastSeen": 1787695454891,
-    "count": 3
+    "lastSeen": 1787699563644,
+    "count": 4
   },
   "UberEats:KFC:50": {
     "lastSeen": 1787698134723,
@@ -558,8 +558,8 @@
     "count": 1
   },
   "UberEats:Zaxbys:50": {
-    "lastSeen": 1787687619062,
-    "count": 1
+    "lastSeen": 1787699563644,
+    "count": 2
   },
   "UberEats:China Wok:50": {
     "lastSeen": 1787687619062,
@@ -859,6 +859,14 @@
   },
   "UberEats:Sherpa Grill 2 Indian Nepali Restaurant:50": {
     "lastSeen": 1787698134723,
+    "count": 1
+  },
+  "UberEats:Slim Chickens:50": {
+    "lastSeen": 1787699563644,
+    "count": 1
+  },
+  "UberEats:Lin's Garden:50": {
+    "lastSeen": 1787699563644,
     "count": 1
   }
 }
