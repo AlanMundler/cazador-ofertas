@@ -722,8 +722,8 @@
     "count": 1
   },
   "UberEats:Carl's Jr.:50": {
-    "lastSeen": 1787741678956,
-    "count": 3
+    "lastSeen": 1787746851554,
+    "count": 4
   },
   "UberEats:Makoto Sushi:50": {
     "lastSeen": 1787692437288,
@@ -919,6 +919,10 @@
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:75:75% OFF 75% - Preservativos Control Finissimo Xlube 12 Unid": {
     "lastSeen": 1787745378593,
+    "count": 1
+  },
+  "UberEats:Main St Bagel:50": {
+    "lastSeen": 1787746851554,
     "count": 1
   }
 }
