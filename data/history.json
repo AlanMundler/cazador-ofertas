@@ -88,12 +88,12 @@
     "count": 49
   },
   "Rappi:McCafé:60:60% OFF": {
-    "lastSeen": 1787718098672,
-    "count": 34
+    "lastSeen": 1787720988876,
+    "count": 35
   },
   "Rappi:Postres Mcdonald's:60:60% OFF": {
-    "lastSeen": 1787718098672,
-    "count": 25
+    "lastSeen": 1787720988876,
+    "count": 26
   },
   "Rappi:Mundo Vegano Palermo:75:75% OFF": {
     "lastSeen": 1787718098672,
@@ -130,8 +130,8 @@
     "count": 4
   },
   "Rappi:Burger King Desayunos del Rey:55:Hasta 55% Off": {
-    "lastSeen": 1787718098672,
-    "count": 12
+    "lastSeen": 1787720988876,
+    "count": 13
   },
   "Rappi:Wok de Flores:50:Hasta 50% Off": {
     "lastSeen": 1787718098672,
@@ -146,8 +146,8 @@
     "count": 3
   },
   "Rappi:Burger King Reino Vegetal:50:Hasta 50% Off": {
-    "lastSeen": 1787718098672,
-    "count": 11
+    "lastSeen": 1787720988876,
+    "count": 12
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Lápiz De Grafito Bic Evolution Hb N°2 4 Unidades": {
     "lastSeen": 1787718863248,
@@ -919,6 +919,10 @@
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Cerveza Andes Origen Roja 473 ml": {
     "lastSeen": 1787718863248,
+    "count": 1
+  },
+  "Rappi:Nawebona:50:Hasta 50% Off": {
+    "lastSeen": 1787720988876,
     "count": 1
   }
 }
