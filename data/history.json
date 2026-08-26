@@ -454,20 +454,20 @@
     "count": 1
   },
   "UberEats:Wingstop:50": {
-    "lastSeen": 1787701341987,
-    "count": 5
+    "lastSeen": 1787766758978,
+    "count": 6
   },
   "UberEats:Shake Shack:50": {
-    "lastSeen": 1787698134723,
-    "count": 3
-  },
-  "UberEats:Burger King:50": {
-    "lastSeen": 1787699563644,
+    "lastSeen": 1787766758978,
     "count": 4
   },
-  "UberEats:KFC:50": {
-    "lastSeen": 1787701341987,
+  "UberEats:Burger King:50": {
+    "lastSeen": 1787766758978,
     "count": 5
+  },
+  "UberEats:KFC:50": {
+    "lastSeen": 1787766758978,
+    "count": 6
   },
   "UberEats:Tacos Number Juan:50": {
     "lastSeen": 1787687619062,
@@ -498,8 +498,8 @@
     "count": 1
   },
   "UberEats:Pizza Hut:50": {
-    "lastSeen": 1787701456627,
-    "count": 5
+    "lastSeen": 1787766758978,
+    "count": 6
   },
   "UberEats:Hibachi & Company:50": {
     "lastSeen": 1787687619062,
@@ -634,8 +634,8 @@
     "count": 1
   },
   "UberEats:Papa Johns Pizza:50": {
-    "lastSeen": 1787701341987,
-    "count": 4
+    "lastSeen": 1787766758978,
+    "count": 5
   },
   "UberEats:Applebee's:50": {
     "lastSeen": 1787701341987,
@@ -666,8 +666,8 @@
     "count": 1
   },
   "UberEats:Carl's Jr.:50": {
-    "lastSeen": 1787746851554,
-    "count": 4
+    "lastSeen": 1787766758978,
+    "count": 5
   },
   "UberEats:Makoto Sushi:50": {
     "lastSeen": 1787692437288,
@@ -702,8 +702,8 @@
     "count": 1
   },
   "UberEats:Habit Burger & Grill:50": {
-    "lastSeen": 1787694455221,
-    "count": 1
+    "lastSeen": 1787766758978,
+    "count": 2
   },
   "UberEats:Ume Tea:50": {
     "lastSeen": 1787694455221,
@@ -758,8 +758,8 @@
     "count": 1
   },
   "UberEats:Teriyaki Madness:50": {
-    "lastSeen": 1787701341987,
-    "count": 2
+    "lastSeen": 1787766758978,
+    "count": 3
   },
   "UberEats:Noco Hibachi & Wings:50": {
     "lastSeen": 1787698134723,
@@ -866,8 +866,8 @@
     "count": 5
   },
   "UberEats:Main St Bagel:50": {
-    "lastSeen": 1787746851554,
-    "count": 1
+    "lastSeen": 1787766758978,
+    "count": 2
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:85:85% OFF 85% - Marcador Permanente Maped PUnidadesta Fina 12 Unidades": {
     "lastSeen": 1787755203135,
@@ -900,5 +900,53 @@
   "PedidosYa:PedidosYa Market 25 de Mayo:75:75% OFF 75% - Preservativo Nature 12 Unidades Control 49 Gr": {
     "lastSeen": 1787761001168,
     "count": 3
+  },
+  "UberEats:Taqueria el Jalisquillo:50": {
+    "lastSeen": 1787766758978,
+    "count": 1
+  },
+  "UberEats:Happy Sushi:50": {
+    "lastSeen": 1787766758978,
+    "count": 1
+  },
+  "UberEats:Orange Square:50": {
+    "lastSeen": 1787766758978,
+    "count": 1
+  },
+  "UberEats:KoJa Kitchen:50": {
+    "lastSeen": 1787766758978,
+    "count": 1
+  },
+  "UberEats:El Torito:50": {
+    "lastSeen": 1787766758978,
+    "count": 1
+  },
+  "UberEats:Lopez Taqueria 6:50": {
+    "lastSeen": 1787766758978,
+    "count": 1
+  },
+  "UberEats:Sazon Cocina Latina:50": {
+    "lastSeen": 1787766758978,
+    "count": 1
+  },
+  "UberEats:Lopez Taqueria 2:50": {
+    "lastSeen": 1787766758978,
+    "count": 1
+  },
+  "UberEats:Mar Y Sol Taqueria:50": {
+    "lastSeen": 1787766758978,
+    "count": 1
+  },
+  "UberEats:Charleys Cheesesteaks  and Wings:50": {
+    "lastSeen": 1787766758978,
+    "count": 1
+  },
+  "UberEats:Buca di Beppo:50": {
+    "lastSeen": 1787766758978,
+    "count": 1
+  },
+  "UberEats:Gengis Khan:50": {
+    "lastSeen": 1787766758978,
+    "count": 1
   }
 }
