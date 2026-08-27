@@ -88,12 +88,12 @@
     "count": 59
   },
   "Rappi:McCafé:60:60% OFF": {
-    "lastSeen": 1787744426683,
-    "count": 41
+    "lastSeen": 1787801601482,
+    "count": 42
   },
   "Rappi:Postres Mcdonald's:60:60% OFF": {
-    "lastSeen": 1787738077354,
-    "count": 30
+    "lastSeen": 1787801601482,
+    "count": 31
   },
   "Rappi:Mundo Vegano Palermo:75:75% OFF": {
     "lastSeen": 1787718098672,
@@ -110,28 +110,28 @@
     "count": 4
   },
   "Rappi:El Palacio del Oriente:50:50% OFF": {
-    "lastSeen": 1787718098672,
-    "count": 8
+    "lastSeen": 1787801601482,
+    "count": 9
   },
   "Rappi:Gourmet de Shangai:50:50% OFF": {
-    "lastSeen": 1787718098672,
-    "count": 6
+    "lastSeen": 1787801601482,
+    "count": 7
   },
   "Rappi:Tigger Asia:50:50% OFF": {
-    "lastSeen": 1787718098672,
-    "count": 5
-  },
-  "Rappi:Cultura China:50:Hasta 50% Off": {
-    "lastSeen": 1787718098672,
+    "lastSeen": 1787801601482,
     "count": 6
   },
+  "Rappi:Cultura China:50:Hasta 50% Off": {
+    "lastSeen": 1787801601482,
+    "count": 7
+  },
   "Rappi:Long Hu:50:50% OFF": {
-    "lastSeen": 1787718098672,
-    "count": 4
+    "lastSeen": 1787801601482,
+    "count": 5
   },
   "Rappi:Burger King Desayunos del Rey:55:Hasta 55% Off": {
-    "lastSeen": 1787738077354,
-    "count": 14
+    "lastSeen": 1787801601482,
+    "count": 15
   },
   "Rappi:Wok de Flores:50:Hasta 50% Off": {
     "lastSeen": 1787718098672,
@@ -421,10 +421,6 @@
     "lastSeen": 1787768166593,
     "count": 24
   },
-  "PedidosYa:PedidosYa Market Crisol:55:55% OFF 55% - Saborizador Knorr Barbacoa (24 g) 4 Unidades": {
-    "lastSeen": 1787705814419,
-    "count": 11
-  },
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 50% - Agua Saborizada H2Oh! Limón 500 ml": {
     "lastSeen": 1787788826423,
     "count": 26
@@ -485,10 +481,6 @@
     "lastSeen": 1787760433670,
     "count": 2
   },
-  "UberEats:Pizza de Autore  [SMB Parent]:50": {
-    "lastSeen": 1787709734483,
-    "count": 2
-  },
   "UberEats:Bester Koch:50": {
     "lastSeen": 1787783535204,
     "count": 5
@@ -501,17 +493,9 @@
     "lastSeen": 1787760433670,
     "count": 3
   },
-  "UberEats:Pachata  Manso Sabor.:50": {
-    "lastSeen": 1787702569234,
-    "count": 1
-  },
   "UberEats:Humberto:50": {
     "lastSeen": 1787772187117,
     "count": 12
-  },
-  "UberEats:Él aventurero Pizzeria:50": {
-    "lastSeen": 1787709734483,
-    "count": 2
   },
   "UberEats:Pachata Sur:50": {
     "lastSeen": 1787783535204,
