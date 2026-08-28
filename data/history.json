@@ -80,36 +80,8 @@
     "count": 63
   },
   "Rappi:McCafé:60:60% OFF": {
-    "lastSeen": 1787801601482,
-    "count": 42
-  },
-  "Rappi:Postres Mcdonald's:60:60% OFF": {
-    "lastSeen": 1787801601482,
-    "count": 31
-  },
-  "Rappi:El Palacio del Oriente:50:50% OFF": {
-    "lastSeen": 1787801601482,
-    "count": 9
-  },
-  "Rappi:Gourmet de Shangai:50:50% OFF": {
-    "lastSeen": 1787801601482,
-    "count": 7
-  },
-  "Rappi:Tigger Asia:50:50% OFF": {
-    "lastSeen": 1787801601482,
-    "count": 6
-  },
-  "Rappi:Cultura China:50:Hasta 50% Off": {
-    "lastSeen": 1787801601482,
-    "count": 7
-  },
-  "Rappi:Long Hu:50:50% OFF": {
-    "lastSeen": 1787801601482,
-    "count": 5
-  },
-  "Rappi:Burger King Desayunos del Rey:55:Hasta 55% Off": {
-    "lastSeen": 1787801601482,
-    "count": 15
+    "lastSeen": 1787915844415,
+    "count": 43
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Lápiz De Grafito Bic Evolution Hb N°2 4 Unidades": {
     "lastSeen": 1787882584785,
@@ -395,22 +367,6 @@
     "lastSeen": 1787882584785,
     "count": 11
   },
-  "PedidosYa:PedidosYa Market 25 de Mayo:100:100% OFF 100% - Dr. Lemon Green Apple 5% 473 ml": {
-    "lastSeen": 1787812200822,
-    "count": 1
-  },
-  "PedidosYa:PedidosYa Market 25 de Mayo:100:100% OFF 100% - Dr. Lemon Red Berries 5% 473 ml": {
-    "lastSeen": 1787812200822,
-    "count": 1
-  },
-  "PedidosYa:PedidosYa Market 25 de Mayo:cheap:$1:$1 - Dr. Lemon Green Apple 5% 473 ml": {
-    "lastSeen": 1787812200823,
-    "count": 1
-  },
-  "PedidosYa:PedidosYa Market 25 de Mayo:cheap:$1:$1 - Dr. Lemon Red Berries 5% 473 ml": {
-    "lastSeen": 1787812200823,
-    "count": 1
-  },
   "PedidosYa:PedidosYa Market 25 de Mayo:60:60% OFF 60% - Bombón Escocés Bon o Bon 6 Unidades": {
     "lastSeen": 1787882584785,
     "count": 5
@@ -497,6 +453,14 @@
   },
   "UberEats:Él aventurero Pizzeria:50": {
     "lastSeen": 1787876877293,
+    "count": 1
+  },
+  "Rappi:Mcdonald's Desayuno & Merienda:68:68% OFF": {
+    "lastSeen": 1787915844415,
+    "count": 1
+  },
+  "Rappi:Jumbo:53:53% OFF - Cuisine & Co Salchichas Cocidas sin Piel": {
+    "lastSeen": 1787915844415,
     "count": 1
   }
 }
