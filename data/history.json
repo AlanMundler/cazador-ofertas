@@ -242,10 +242,10 @@
     "count": 44
   },
   "PedidosYa:PedidosYa Market Crisol:price": {
-    "lastSeen": 1787956546495,
+    "lastSeen": 1787958172737,
     "price": "$ 3.100",
     "discount": 75,
-    "count": 130
+    "count": 131
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Chocolate Milka Relleno de Avellanas Enteras 95 g": {
     "lastSeen": 1787956546493,
@@ -689,6 +689,10 @@
   },
   "UberEats:Chaat Bhavan:50": {
     "lastSeen": 1787957488812,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Palito de Crema Palitos de la Selva 40g": {
+    "lastSeen": 1787958172735,
     "count": 1
   }
 }
