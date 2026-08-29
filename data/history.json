@@ -760,8 +760,8 @@
     "count": 1
   },
   "Rappi:Burger King Desayunos del Rey:55:Hasta 55% Off": {
-    "lastSeen": 1787978507010,
-    "count": 1
+    "lastSeen": 1787982100796,
+    "count": 2
   },
   "UberEats:Panadería Villa Palmeras:50": {
     "lastSeen": 1787979084207,
@@ -777,6 +777,10 @@
   },
   "Rappi:Helados Kronch Full:53:53% OFF": {
     "lastSeen": 1787980313504,
+    "count": 1
+  },
+  "Rappi:Nawebona:50:Hasta 50% Off": {
+    "lastSeen": 1787982100796,
     "count": 1
   }
 }
