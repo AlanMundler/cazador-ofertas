@@ -1,15 +1,15 @@
 {
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Chocolate Milka Oreo 100 g": {
-    "lastSeen": 1788031993292,
-    "count": 121
+    "lastSeen": 1788035559929,
+    "count": 122
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Chocolate KitKat 41.5 g": {
-    "lastSeen": 1788031993292,
-    "count": 117
+    "lastSeen": 1788035559929,
+    "count": 118
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Chocolate Kit Kat White 4 Fingers 41.5 g": {
-    "lastSeen": 1788031993292,
-    "count": 108
+    "lastSeen": 1788035559929,
+    "count": 109
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:55:55% OFF 55% - Marcadores Permanentes Sharpie Punta Fina Glam Pop 5 Unidades": {
     "lastSeen": 1788033801215,
@@ -20,8 +20,8 @@
     "count": 110
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Chocolate Kit Kat Dark Semiamargo 41.5 g": {
-    "lastSeen": 1788031993292,
-    "count": 104
+    "lastSeen": 1788035559929,
+    "count": 105
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Gel Lubricante Maxx Clásico 50 g": {
     "lastSeen": 1788033801215,
@@ -108,10 +108,10 @@
     "count": 69
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:price": {
-    "lastSeen": 1788033801217,
+    "lastSeen": 1788035559931,
     "price": "$ 3.200",
     "discount": 75,
-    "count": 89
+    "count": 91
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Tinte T1 Negro Altamoda 150 Gr": {
     "lastSeen": 1788033801215,
@@ -240,8 +240,8 @@
     "count": 162
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Chocolate Milka Relleno de Avellanas Enteras 95 g": {
-    "lastSeen": 1788031993292,
-    "count": 65
+    "lastSeen": 1788035559929,
+    "count": 66
   },
   "PedidosYa:Jumbo Córdoba:60:60% OFF 60% - Queso Cuisine & Co Crema Light 227 g": {
     "lastSeen": 1788030467513,
@@ -768,8 +768,8 @@
     "count": 1
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Chocolate Milka Oreo Con Leche 37 g": {
-    "lastSeen": 1788031993292,
-    "count": 3
+    "lastSeen": 1788035559929,
+    "count": 4
   },
   "UberEats:Masala Dosa:50": {
     "lastSeen": 1788029494525,
@@ -801,6 +801,18 @@
   },
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 50% - Kit Kat Triple Chocolate 41 g": {
     "lastSeen": 1788033801215,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:80:80% OFF 80% - Leche Primeros Años Las Tres Niñas 200 ml": {
+    "lastSeen": 1788035559929,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Nestle Chocolate con leche y almendras 25g": {
+    "lastSeen": 1788035559929,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:cheap:$255.8:$255.8 - Leche Primeros Años Las Tres Niñas 200 ml": {
+    "lastSeen": 1788035559930,
     "count": 1
   }
 }
