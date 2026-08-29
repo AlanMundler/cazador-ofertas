@@ -740,8 +740,8 @@
     "count": 2
   },
   "Rappi:Gourmet de Shangai:50:50% OFF": {
-    "lastSeen": 1787974902207,
-    "count": 1
+    "lastSeen": 1787978507010,
+    "count": 2
   },
   "Rappi:Tigger Asia:50:50% OFF": {
     "lastSeen": 1787976709669,
@@ -753,6 +753,14 @@
   },
   "Rappi:Postres Mcdonald's:60:60% OFF": {
     "lastSeen": 1787976709669,
+    "count": 1
+  },
+  "Rappi:Long Hu:50:50% OFF": {
+    "lastSeen": 1787978507010,
+    "count": 1
+  },
+  "Rappi:Burger King Desayunos del Rey:55:Hasta 55% Off": {
+    "lastSeen": 1787978507010,
     "count": 1
   }
 }
