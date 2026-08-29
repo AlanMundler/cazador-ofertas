@@ -672,8 +672,8 @@
     "count": 2
   },
   "UberEats:La Resistencia:50": {
-    "lastSeen": 1787975487884,
-    "count": 4
+    "lastSeen": 1787979084207,
+    "count": 5
   },
   "UberEats:Ciudad  China:50": {
     "lastSeen": 1787968279522,
@@ -761,6 +761,14 @@
   },
   "Rappi:Burger King Desayunos del Rey:55:Hasta 55% Off": {
     "lastSeen": 1787978507010,
+    "count": 1
+  },
+  "UberEats:Panadería Villa Palmeras:50": {
+    "lastSeen": 1787979084207,
+    "count": 1
+  },
+  "UberEats:Monchies De Media Noche PR:50": {
+    "lastSeen": 1787979084207,
     "count": 1
   }
 }
