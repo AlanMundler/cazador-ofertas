@@ -424,12 +424,12 @@
     "count": 19
   },
   "UberEats:Marco's Pizza:50": {
-    "lastSeen": 1788016908542,
-    "count": 7
+    "lastSeen": 1788022283741,
+    "count": 8
   },
   "UberEats:Custom burger & smash:50": {
-    "lastSeen": 1787966478488,
-    "count": 4
+    "lastSeen": 1788022283741,
+    "count": 5
   },
   "UberEats:Metro China Restaurant:50": {
     "lastSeen": 1788018679172,
@@ -484,8 +484,8 @@
     "count": 1
   },
   "UberEats:Burrito Fueguito en la Ave. Roosevelt:50": {
-    "lastSeen": 1787962890679,
-    "count": 2
+    "lastSeen": 1788022283741,
+    "count": 3
   },
   "UberEats:Shu Shia 树夏:50": {
     "lastSeen": 1787970087282,
@@ -772,8 +772,8 @@
     "count": 3
   },
   "UberEats:Red Mango Cafe:50": {
-    "lastSeen": 1788016908542,
-    "count": 2
+    "lastSeen": 1788022283741,
+    "count": 3
   },
   "UberEats:Keke's Breakfast Cafe:50": {
     "lastSeen": 1788020488912,
@@ -785,6 +785,10 @@
   },
   "UberEats:Gio Cha Ngon:50": {
     "lastSeen": 1788020488912,
+    "count": 1
+  },
+  "UberEats:Majadito GRILL & Restaurant:50": {
+    "lastSeen": 1788022283741,
     "count": 1
   }
 }
