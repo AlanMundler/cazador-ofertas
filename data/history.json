@@ -576,8 +576,8 @@
     "count": 1
   },
   "UberEats:Burger King:50": {
-    "lastSeen": 1787970087282,
-    "count": 3
+    "lastSeen": 1788020488912,
+    "count": 4
   },
   "UberEats:Hyderabad Dum Biryani:50": {
     "lastSeen": 1787970087282,
@@ -600,8 +600,8 @@
     "count": 1
   },
   "UberEats:Carl's Jr.:50": {
-    "lastSeen": 1788004289357,
-    "count": 4
+    "lastSeen": 1788020488912,
+    "count": 5
   },
   "UberEats:Chaat Bhavan:50": {
     "lastSeen": 1787957488812,
@@ -680,8 +680,8 @@
     "count": 1
   },
   "UberEats:Taqueria el Jalisquillo:50": {
-    "lastSeen": 1787970087282,
-    "count": 1
+    "lastSeen": 1788020488912,
+    "count": 2
   },
   "UberEats:Tai Er Sichuan Cuisine  太二川菜:50": {
     "lastSeen": 1787970087282,
@@ -692,8 +692,8 @@
     "count": 1
   },
   "UberEats:Lopez Taqueria 2:50": {
-    "lastSeen": 1787970087282,
-    "count": 1
+    "lastSeen": 1788020488912,
+    "count": 2
   },
   "UberEats:Punjab Cafe:50": {
     "lastSeen": 1787970087282,
@@ -756,8 +756,8 @@
     "count": 5
   },
   "UberEats:Main St Bagel:50": {
-    "lastSeen": 1788004289357,
-    "count": 1
+    "lastSeen": 1788020488912,
+    "count": 2
   },
   "UberEats:Bruncheame:50": {
     "lastSeen": 1788016908542,
@@ -774,5 +774,17 @@
   "UberEats:Red Mango Cafe:50": {
     "lastSeen": 1788016908542,
     "count": 2
+  },
+  "UberEats:Keke's Breakfast Cafe:50": {
+    "lastSeen": 1788020488912,
+    "count": 1
+  },
+  "UberEats:SOL Mexican Bowls(San Jose):50": {
+    "lastSeen": 1788020488912,
+    "count": 1
+  },
+  "UberEats:Gio Cha Ngon:50": {
+    "lastSeen": 1788020488912,
+    "count": 1
   }
 }
