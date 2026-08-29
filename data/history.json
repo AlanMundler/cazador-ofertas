@@ -628,8 +628,8 @@
     "count": 1
   },
   "UberEats:Carl's Jr.:50": {
-    "lastSeen": 1787970087282,
-    "count": 3
+    "lastSeen": 1788004289357,
+    "count": 4
   },
   "UberEats:Chaat Bhavan:50": {
     "lastSeen": 1787957488812,
@@ -781,6 +781,10 @@
   },
   "UberEats:Panadería Laguna Gardens:50": {
     "lastSeen": 1788001802092,
+    "count": 1
+  },
+  "UberEats:Main St Bagel:50": {
+    "lastSeen": 1788004289357,
     "count": 1
   }
 }
