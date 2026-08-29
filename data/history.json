@@ -80,8 +80,8 @@
     "count": 72
   },
   "Rappi:McCafé:60:60% OFF": {
-    "lastSeen": 1787915844415,
-    "count": 43
+    "lastSeen": 1787973103807,
+    "count": 44
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Lápiz De Grafito Bic Evolution Hb N°2 4 Unidades": {
     "lastSeen": 1787970713141,
@@ -733,6 +733,10 @@
   },
   "UberEats:Dawaat Indian Cuisine:50": {
     "lastSeen": 1787970087282,
+    "count": 1
+  },
+  "Rappi:El Palacio del Oriente:50:50% OFF": {
+    "lastSeen": 1787973103807,
     "count": 1
   }
 }
