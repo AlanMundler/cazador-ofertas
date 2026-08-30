@@ -376,20 +376,20 @@
     "count": 6
   },
   "UberEats:Shake Shack:50": {
-    "lastSeen": 1788060091843,
-    "count": 8
+    "lastSeen": 1788063685021,
+    "count": 9
   },
   "UberEats:KFC:50": {
-    "lastSeen": 1788060091843,
-    "count": 8
+    "lastSeen": 1788063685021,
+    "count": 9
   },
   "UberEats:Wingstop:50": {
-    "lastSeen": 1788060091843,
-    "count": 8
+    "lastSeen": 1788063685021,
+    "count": 9
   },
   "UberEats:Papa Johns Pizza:50": {
-    "lastSeen": 1788060091843,
-    "count": 8
+    "lastSeen": 1788063685021,
+    "count": 9
   },
   "UberEats:Teriyaki Madness:50": {
     "lastSeen": 1788060091843,
@@ -400,20 +400,20 @@
     "count": 5
   },
   "UberEats:Chikin Drip:50": {
-    "lastSeen": 1788060091843,
-    "count": 8
+    "lastSeen": 1788063685021,
+    "count": 9
   },
   "UberEats:THRIVE Protein Bowls:50": {
-    "lastSeen": 1788060091843,
-    "count": 7
+    "lastSeen": 1788063685021,
+    "count": 8
   },
   "UberEats:酸小七酸汤鱼 Seven Fish Cuisine:50": {
     "lastSeen": 1788061888615,
     "count": 6
   },
   "UberEats:Nick The Greek:50": {
-    "lastSeen": 1788060091843,
-    "count": 8
+    "lastSeen": 1788063685021,
+    "count": 9
   },
   "UberEats:Gyu-Kaku Japanese BBQ:50": {
     "lastSeen": 1788056484637,
@@ -428,8 +428,8 @@
     "count": 4
   },
   "UberEats:Veggie Grill by Next Level:50": {
-    "lastSeen": 1788060091843,
-    "count": 7
+    "lastSeen": 1788063685021,
+    "count": 8
   },
   "UberEats:PhoEver:50": {
     "lastSeen": 1788060091843,
@@ -444,8 +444,8 @@
     "count": 5
   },
   "UberEats:Burger King:50": {
-    "lastSeen": 1788060091843,
-    "count": 9
+    "lastSeen": 1788063685021,
+    "count": 10
   },
   "UberEats:Hyderabad Dum Biryani:50": {
     "lastSeen": 1788061888615,
@@ -456,20 +456,20 @@
     "count": 2
   },
   "UberEats:Carl's Jr.:50": {
-    "lastSeen": 1788060091843,
-    "count": 9
+    "lastSeen": 1788063685021,
+    "count": 10
   },
   "UberEats:Yoshi Sushi:50": {
-    "lastSeen": 1788060091843,
-    "count": 4
-  },
-  "UberEats:Happy Sushi:50": {
-    "lastSeen": 1788060091843,
+    "lastSeen": 1788063685021,
     "count": 5
   },
-  "UberEats:Bacio di Latte:50": {
-    "lastSeen": 1788060091843,
+  "UberEats:Happy Sushi:50": {
+    "lastSeen": 1788063685021,
     "count": 6
+  },
+  "UberEats:Bacio di Latte:50": {
+    "lastSeen": 1788063685021,
+    "count": 7
   },
   "UberEats:TeaZenTea:50": {
     "lastSeen": 1788051087824,
@@ -508,8 +508,8 @@
     "count": 4
   },
   "UberEats:Taqueria el Jalisquillo:50": {
-    "lastSeen": 1788060091843,
-    "count": 6
+    "lastSeen": 1788063685021,
+    "count": 7
   },
   "UberEats:Tai Er Sichuan Cuisine  太二川菜:50": {
     "lastSeen": 1788061888615,
@@ -520,8 +520,8 @@
     "count": 5
   },
   "UberEats:Lopez Taqueria 2:50": {
-    "lastSeen": 1788060091843,
-    "count": 6
+    "lastSeen": 1788063685021,
+    "count": 7
   },
   "UberEats:Punjab Cafe:50": {
     "lastSeen": 1788061888615,
@@ -775,6 +775,14 @@
   },
   "UberEats:Fiery Chickz:50": {
     "lastSeen": 1788061888615,
+    "count": 1
+  },
+  "UberEats:Ethio-LunchBox:50": {
+    "lastSeen": 1788063685021,
+    "count": 1
+  },
+  "UberEats:Lopez Taqueria 6:50": {
+    "lastSeen": 1788063685021,
     "count": 1
   }
 }
