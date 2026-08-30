@@ -7,6 +7,8 @@ import { tmpdir } from 'os';
 const MIN_RESTAURANT = config.discounts.uberEats;
 const LAT = parseFloat(config.lat);
 const LNG = parseFloat(config.lng);
+const ADDRESS = 'San José de Calasanz 50, X5000LHB Córdoba';
+const CITY_RE = /c[oó]rdoba[^,]*,\s*(?:c[oó]rdoba|argentina)(?:,\s*AR)?\b|cordoba\s*,\s*cordoba\s*,\s*ar\b/i;
 
 function parseDiscount(text) {
   if (!text) return 0;
@@ -56,33 +58,33 @@ export async function scrapeUberEats() {
     if (addressInput) {
       await addressInput.click();
       await page.waitForTimeout(500);
-      await addressInput.fill('San José de Calasanz 50, X5000LHB Córdoba');
+      await addressInput.fill(ADDRESS);
       await page.waitForTimeout(3000);
 
       const suggestions = await page.$$('[data-testid="address-option"], [role="option"], li[id*="result"]');
-      for (const s of suggestions) {
-        const text = await s.textContent();
-        console.log(`[UberEats] Suggestion: ${text?.trim().substring(0, 80)}`);
-      }
       let picked = false;
       for (const s of suggestions) {
-        const text = await s.textContent();
-        if (text && /c[oó]rdoba.*(?:argentina|AR\b)/i.test(text)) {
+        const text = (await s.textContent()) || '';
+        console.log(`[UberEats] Suggestion: ${text.trim().substring(0, 80)}`);
+      }
+      for (const s of suggestions) {
+        const text = (await s.textContent()) || '';
+        if (CITY_RE.test(text)) {
           await s.click();
           picked = true;
-          console.log(`[UberEats] Selected: ${text.trim().substring(0, 80)}`);
+          console.log(`[UberEats] Selected Córdoba: ${text.trim().substring(0, 80)}`);
           break;
         }
       }
-      if (!picked && suggestions.length > 0) {
-        await suggestions[0].click();
-        const text = await suggestions[0].textContent();
-        console.log(`[UberEats] Picked first: ${text?.trim().substring(0, 80)}`);
-      } else if (!picked) {
-        await page.keyboard.press('Enter');
-        console.log('[UberEats] No suggestions, pressed Enter');
+
+      if (!picked) {
+        console.log('[UberEats] Córdoba AR no confirmada en sugerencias, abortando para no mandar otra ciudad');
+        return offers;
       }
       await page.waitForTimeout(3000);
+
+      const headerText = await page.evaluate(() => document.body.innerText.match(/dirección[^\n]{0,60}|entrega[^\n]{0,60}/i)?.[0] || '');
+      console.log(`[UberEats] Header address: ${headerText.trim().substring(0, 80)}`);
     } else {
       console.log('[UberEats] No address input found, trying search icon...');
       const searchBtn = await page.$('[data-testid="header-search-bar"], button[aria-label*="Search"], button[aria-label*="Buscar"]');
@@ -119,6 +121,20 @@ export async function scrapeUberEats() {
       firstText: document.body.innerText.substring(0, 500),
     }));
     console.log(`[UberEats] DOM: ${debugInfo.allLinks} links, ${debugInfo.storeLinks} stores, ${debugInfo.allText} chars`);
+
+    const cityCheck = await page.evaluate(() => {
+      const t = document.body.innerText;
+      const hasCordoba = /c[oó]rdoba/i.test(t);
+      const hasArgentina = /argentina/i.test(t);
+      const noForeign = !/(buenos aires|rosario|mendoza|santiago de chile|lima|mexico|ciudad de méxico|quilmes|la plata|mar del plata|salta|tucumán|montevideo|quito|bogotá|caracas)/i.test(t.substring(0, 2000));
+      return { hasCordoba, hasArgentina, noForeign };
+    });
+
+    if (!cityCheck.hasCordoba || !cityCheck.hasArgentina || !cityCheck.noForeign) {
+      console.log(`[UberEats] Ciudad NO confirmada como Córdoba (${JSON.stringify(cityCheck)}), abortando`);
+      return offers;
+    }
+    console.log('[UberEats] Ciudad confirmada: Córdoba, Argentina');
 
     const restaurants = await page.evaluate(() => {
       const results = [];

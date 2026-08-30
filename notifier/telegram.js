@@ -145,14 +145,17 @@ export async function sendMessage(offers, cheapProducts = [], flashDeals = []) {
 async function sendTelegramMessage(token, chatId, text) {
   const MAX = 3900;
   const chunks = [];
+  const lines = text.split('\n');
+  let current = '';
 
-  while (text.length > MAX) {
-    let splitAt = text.lastIndexOf('\n', MAX);
-    if (splitAt < MAX / 2) splitAt = MAX;
-    chunks.push(text.substring(0, splitAt));
-    text = text.substring(splitAt);
+  for (const line of lines) {
+    if (current.length + line.length + 1 > MAX && current.length > 0) {
+      chunks.push(current);
+      current = '';
+    }
+    current += (current ? '\n' : '') + line;
   }
-  chunks.push(text);
+  if (current.length > 0) chunks.push(current);
 
   const totalLen = chunks.reduce((a, c) => a + c.length, 0);
   console.log(`[Telegram] Chat ${chatId}: ${totalLen} chars, ${chunks.length} parte(s)`);
@@ -160,7 +163,7 @@ async function sendTelegramMessage(token, chatId, text) {
   try {
     const url = `${API_BASE}${token}/sendMessage`;
     for (let i = 0; i < chunks.length; i++) {
-      const part = i > 0 ? `📊 (parte ${i + 1})\n${chunks[i]}` : chunks[i];
+      const part = i > 0 ? `📌 \`(continúa — parte ${i + 1}/${chunks.length})\`\n${chunks[i]}` : chunks[i];
       const res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

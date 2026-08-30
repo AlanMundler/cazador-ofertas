@@ -31,12 +31,19 @@ export async function scrapeRappi() {
 
     try {
       await page.evaluate(({ lat, lng }) => {
+        localStorage.clear();
+        sessionStorage.clear();
+        for (const cookie of document.cookie.split(';')) {
+          const name = cookie.split('=')[0].trim();
+          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+        }
         localStorage.setItem('lat', lat);
         localStorage.setItem('lng', lng);
         localStorage.setItem('address', 'San José de Calasanz 50');
         localStorage.setItem('city', 'Córdoba');
         document.cookie = `lat=${lat}; path=/`;
         document.cookie = `lng=${lng}; path=/`;
+        document.cookie = `city=Córdoba; path=/`;
       }, { lat: config.lat, lng: config.lng });
     } catch {}
 
@@ -46,7 +53,15 @@ export async function scrapeRappi() {
     await page.goto(config.rappi.restaurantsUrl, {
       waitUntil: 'domcontentloaded', timeout: 20000,
     });
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(2500);
+
+    const resRegion = await page.evaluate(() => {
+      const t = document.body.innerText;
+      const m = t.match(/¿Llegamos a\s+([^\n?]+)\?|Estás en\s+([^\n]+)/i);
+      return m ? (m[1] || m[2]).trim() : '';
+    });
+    const isCordoba = !resRegion || /c[oó]rdoba/i.test(resRegion);
+    console.log(`[Rappi] Región: ${resRegion || '(no detectable)'} → ${isCordoba ? 'Córdoba OK' : 'OTRA CIUDAD'}`);
 
     try {
       const promoHandle = await page.evaluateHandle(() => {
@@ -104,16 +119,20 @@ export async function scrapeRappi() {
       return results;
     });
 
-    for (const r of restaurants) {
-      if (r.discount >= MIN_RESTAURANT) {
-        offers.push({
-          platform: 'Rappi', category: 'restaurante', restaurant: r.name,
-          slug: r.url, discount: r.discount, description: r.promoText,
-          originalPrice: null, currentPrice: null,
-          url: r.url || 'https://www.rappi.com.ar/restaurantes',
-          deliveryTime: r.deliveryTime, rating: r.rating, imageUrl: '',
-        });
+    if (isCordoba) {
+      for (const r of restaurants) {
+        if (r.discount >= MIN_RESTAURANT) {
+          offers.push({
+            platform: 'Rappi', category: 'restaurante', restaurant: r.name,
+            slug: r.url, discount: r.discount, description: r.promoText,
+            originalPrice: null, currentPrice: null,
+            url: r.url || 'https://www.rappi.com.ar/restaurantes',
+            deliveryTime: r.deliveryTime, rating: r.rating, imageUrl: '',
+          });
+        }
       }
+    } else {
+      console.log('[Rappi] Restaurantes omitidos (región no es Córdoba)');
     }
     console.log(`[Rappi Restaurantes] ${offers.filter(o => o.category === 'restaurante').length} ofertas >${MIN_RESTAURANT}%`);
 
