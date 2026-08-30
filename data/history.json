@@ -814,8 +814,8 @@
     "count": 2
   },
   "UberEats:Naan N Masala Sunnyvale:50": {
-    "lastSeen": 1788067283310,
-    "count": 1
+    "lastSeen": 1788074485752,
+    "count": 2
   },
   "UberEats:Ruben's Cafe:50": {
     "lastSeen": 1788070901816,
@@ -831,6 +831,14 @@
   },
   "UberEats:Midnight College Eats:50": {
     "lastSeen": 1788072685152,
+    "count": 1
+  },
+  "UberEats:Falafel Fremont:50": {
+    "lastSeen": 1788074485752,
+    "count": 1
+  },
+  "UberEats:Breaded Wings Co.:50": {
+    "lastSeen": 1788074485752,
     "count": 1
   }
 }
