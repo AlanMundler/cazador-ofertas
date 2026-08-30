@@ -52,32 +52,32 @@
     "count": 82
   },
   "PedidosYa:La Anónima Jacinto Ríos:56:56% OFF 56% - Choclo La Anónima En Grano Amarillo 340 g": {
-    "lastSeen": 1788055594314,
-    "count": 66
+    "lastSeen": 1788080691482,
+    "count": 67
   },
   "PedidosYa:La Anónima Jacinto Ríos:51:51% OFF 51% - Agua Saborizada H2OH Sin Gas Pomelo 2 L": {
-    "lastSeen": 1788055594314,
-    "count": 71
+    "lastSeen": 1788080691482,
+    "count": 72
   },
   "PedidosYa:La Anónima Jacinto Ríos:51:51% OFF 51% - Agua Saborizada H2OH Sin Gas Manzanella 2 L": {
-    "lastSeen": 1788055594314,
-    "count": 71
+    "lastSeen": 1788080691482,
+    "count": 72
   },
   "PedidosYa:La Anónima Jacinto Ríos:51:51% OFF 51% - Agua Saborizada H2OH! Sin Gas Limoneto 2 L": {
-    "lastSeen": 1788055594314,
-    "count": 71
+    "lastSeen": 1788080691482,
+    "count": 72
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:cheap:$100:$100 - Bolsa Pequeña Natura & Co 1 Unidad": {
     "lastSeen": 1788078759567,
     "count": 133
   },
   "PedidosYa:Carrefour Express:cheap:$473:$473 - Mostaza Dánica 60 g": {
-    "lastSeen": 1788075373675,
-    "count": 91
+    "lastSeen": 1788080691483,
+    "count": 92
   },
   "PedidosYa:Carrefour Express:cheap:$298:$298 - Acondicionador Sedal Ceramidas 10 ml": {
-    "lastSeen": 1788075373675,
-    "count": 91
+    "lastSeen": 1788080691483,
+    "count": 92
   },
   "Rappi:McCafé:60:60% OFF": {
     "lastSeen": 1788077511247,
@@ -104,10 +104,10 @@
     "count": 81
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:price": {
-    "lastSeen": 1788078759568,
+    "lastSeen": 1788080691484,
     "price": "$ 3.200",
     "discount": 75,
-    "count": 166
+    "count": 169
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Tinte T1 Negro Altamoda 150 Gr": {
     "lastSeen": 1788078759566,
@@ -226,10 +226,10 @@
     "count": 74
   },
   "PedidosYa:PedidosYa Market Crisol:price": {
-    "lastSeen": 1788078759568,
+    "lastSeen": 1788080691484,
     "price": "$ 3.200",
     "discount": 75,
-    "count": 189
+    "count": 190
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Chocolate Milka Relleno de Avellanas Enteras 95 g": {
     "lastSeen": 1788078759566,
@@ -284,12 +284,12 @@
     "count": 30
   },
   "PedidosYa:Carrefour Express:cheap:$375:$375 - Kétchup Danica 50 g": {
-    "lastSeen": 1788075373675,
-    "count": 32
+    "lastSeen": 1788080691483,
+    "count": 33
   },
   "PedidosYa:Jumbo Córdoba:cheap:$470:$470 - Flautita Congelada Cruda 1 Unidad": {
-    "lastSeen": 1788075373675,
-    "count": 33
+    "lastSeen": 1788080691483,
+    "count": 34
   },
   "Rappi:Mcdonald's Desayuno & Merienda:68:68% OFF": {
     "lastSeen": 1788077511247,
@@ -843,6 +843,10 @@
   },
   "UberEats:Gao's Crab & Kabob 老高烧烤:50": {
     "lastSeen": 1788076291562,
+    "count": 1
+  },
+  "PedidosYa:La Anónima Jacinto Ríos:53:53% OFF 53% - Salame Doina Fuet 150 g": {
+    "lastSeen": 1788080691482,
     "count": 1
   }
 }
