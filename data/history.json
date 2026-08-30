@@ -348,12 +348,12 @@
     "count": 27
   },
   "UberEats:Marco's Pizza:50": {
-    "lastSeen": 1788046760633,
-    "count": 15
+    "lastSeen": 1788054690887,
+    "count": 16
   },
   "UberEats:Custom burger & smash:50": {
-    "lastSeen": 1788046760633,
-    "count": 10
+    "lastSeen": 1788054690887,
+    "count": 11
   },
   "UberEats:Metro China Restaurant:50": {
     "lastSeen": 1788049277176,
@@ -484,20 +484,12 @@
     "count": 5
   },
   "UberEats:La Resistencia:50": {
-    "lastSeen": 1788047478508,
-    "count": 7
+    "lastSeen": 1788054690887,
+    "count": 8
   },
   "UberEats:Ciudad  China:50": {
     "lastSeen": 1788049277176,
     "count": 4
-  },
-  "UberEats:Dulce Promesa:50": {
-    "lastSeen": 1787968279522,
-    "count": 1
-  },
-  "UberEats:Bahama Buck's:50": {
-    "lastSeen": 1787968279522,
-    "count": 1
   },
   "UberEats:Wood Doughnuts Central:50": {
     "lastSeen": 1787971878493,
@@ -616,8 +608,8 @@
     "count": 9
   },
   "UberEats:Red Mango Cafe:50": {
-    "lastSeen": 1788046760633,
-    "count": 10
+    "lastSeen": 1788054690887,
+    "count": 11
   },
   "UberEats:Keke's Breakfast Cafe:50": {
     "lastSeen": 1788020488912,
@@ -761,6 +753,10 @@
   },
   "UberEats:Hey Chicken:50": {
     "lastSeen": 1788054362834,
+    "count": 1
+  },
+  "UberEats:Taco Maker:50": {
+    "lastSeen": 1788054690887,
     "count": 1
   }
 }
