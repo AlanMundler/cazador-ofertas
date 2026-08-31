@@ -260,8 +260,8 @@
     "count": 48
   },
   "Rappi:Mcdonald's Desayuno & Merienda:68:68% OFF": {
-    "lastSeen": 1788120717600,
-    "count": 22
+    "lastSeen": 1788147710104,
+    "count": 23
   },
   "PedidosYa:Jumbo Córdoba:cheap:$386.75:$386.75 - Sacapuntas Ezco Plástico 3 Unidades": {
     "lastSeen": 1788141964671,
@@ -476,12 +476,12 @@
     "count": 15
   },
   "Rappi:Long Hu:50:50% OFF": {
-    "lastSeen": 1788064904273,
-    "count": 2
+    "lastSeen": 1788147710104,
+    "count": 3
   },
   "Rappi:Burger King Desayunos del Rey:55:Hasta 55% Off": {
-    "lastSeen": 1788088317881,
-    "count": 13
+    "lastSeen": 1788147710104,
+    "count": 14
   },
   "UberEats:Panadería Villa Palmeras:50": {
     "lastSeen": 1788101479022,
@@ -773,6 +773,14 @@
   },
   "UberEats:Burma Bay Cafe:50": {
     "lastSeen": 1788130287622,
+    "count": 1
+  },
+  "Rappi:Wok de Flores:50:Hasta 50% Off": {
+    "lastSeen": 1788147710104,
+    "count": 1
+  },
+  "Rappi:Asian Vegan:50:50% OFF": {
+    "lastSeen": 1788147710104,
     "count": 1
   }
 }
