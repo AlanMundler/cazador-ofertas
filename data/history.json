@@ -92,10 +92,10 @@
     "count": 102
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:price": {
-    "lastSeen": 1788196507806,
+    "lastSeen": 1788197513969,
     "price": "$ 255,80",
     "discount": 80,
-    "count": 253
+    "count": 254
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Tinte T1 Negro Altamoda 150 Gr": {
     "lastSeen": 1788138180612,
@@ -511,10 +511,6 @@
     "lastSeen": 1788130147740,
     "count": 19
   },
-  "UberEats:Keke's Breakfast Cafe:50": {
-    "lastSeen": 1788110496002,
-    "count": 3
-  },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Chocolate Milka Oreo Con Leche 37 g": {
     "lastSeen": 1788192327793,
     "count": 47
@@ -536,16 +532,16 @@
     "count": 28
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:80:80% OFF 80% - Leche Primeros Años Las Tres Niñas 200 ml": {
-    "lastSeen": 1788193958191,
-    "count": 43
+    "lastSeen": 1788197513967,
+    "count": 44
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Nestle Chocolate con leche y almendras 25g": {
     "lastSeen": 1788138180612,
     "count": 29
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:cheap:$255.8:$255.8 - Leche Primeros Años Las Tres Niñas 200 ml": {
-    "lastSeen": 1788193958193,
-    "count": 43
+    "lastSeen": 1788197513968,
+    "count": 44
   },
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 50% - Aro Vibrador Maxx Play 1 Unidad": {
     "lastSeen": 1788138180612,
@@ -603,10 +599,6 @@
     "lastSeen": 1788130287622,
     "count": 2
   },
-  "UberEats:Lopez Taqueria 6:50": {
-    "lastSeen": 1788110496002,
-    "count": 3
-  },
   "UberEats:The Port of Peri Peri:50": {
     "lastSeen": 1788126685986,
     "count": 2
@@ -622,14 +614,6 @@
   "PedidosYa:Jumbo Córdoba:53:53% OFF 53% - Tallarines Cuisine & Co 500 g": {
     "lastSeen": 1788196507803,
     "count": 21
-  },
-  "UberEats:El Torito:50": {
-    "lastSeen": 1788110496002,
-    "count": 1
-  },
-  "UberEats:Mar Y Sol Taqueria:50": {
-    "lastSeen": 1788110496002,
-    "count": 1
   },
   "UberEats:Neeya Thai Kitchen:50": {
     "lastSeen": 1788120336978,
@@ -996,5 +980,9 @@
   "PedidosYa:Jumbo Córdoba:53:53% OFF 53% - Fusiles Cuisine And Co 500 g": {
     "lastSeen": 1788196507803,
     "count": 3
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Bombón Relleno Bananita Dolca 30 g": {
+    "lastSeen": 1788197513967,
+    "count": 1
   }
 }
