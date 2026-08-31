@@ -260,8 +260,8 @@
     "count": 49
   },
   "Rappi:Mcdonald's Desayuno & Merienda:68:68% OFF": {
-    "lastSeen": 1788147710104,
-    "count": 23
+    "lastSeen": 1788151302655,
+    "count": 24
   },
   "PedidosYa:Jumbo Córdoba:cheap:$386.75:$386.75 - Sacapuntas Ezco Plástico 3 Unidades": {
     "lastSeen": 1788150940368,
@@ -476,12 +476,12 @@
     "count": 16
   },
   "Rappi:Long Hu:50:50% OFF": {
-    "lastSeen": 1788147710104,
-    "count": 3
+    "lastSeen": 1788151302655,
+    "count": 4
   },
   "Rappi:Burger King Desayunos del Rey:55:Hasta 55% Off": {
-    "lastSeen": 1788147710104,
-    "count": 14
+    "lastSeen": 1788151302655,
+    "count": 15
   },
   "UberEats:Panadería Villa Palmeras:50": {
     "lastSeen": 1788101479022,
@@ -496,8 +496,8 @@
     "count": 12
   },
   "Rappi:Helados Kronch Full:53:53% OFF": {
-    "lastSeen": 1788066727439,
-    "count": 2
+    "lastSeen": 1788151302655,
+    "count": 3
   },
   "Rappi:Nawebona:50:Hasta 50% Off": {
     "lastSeen": 1788068511688,
@@ -772,12 +772,12 @@
     "count": 1
   },
   "Rappi:Wok de Flores:50:Hasta 50% Off": {
-    "lastSeen": 1788147710104,
-    "count": 1
+    "lastSeen": 1788151302655,
+    "count": 2
   },
   "Rappi:Asian Vegan:50:50% OFF": {
-    "lastSeen": 1788147710104,
-    "count": 1
+    "lastSeen": 1788151302655,
+    "count": 2
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:60:60% OFF 60% - Chocolate Cofler Dubai 43 g": {
     "lastSeen": 1788148955923,
@@ -980,9 +980,13 @@
     "count": 1
   },
   "Rappi:Mundo Vegano Palermo:price": {
-    "lastSeen": 1788149522534,
+    "lastSeen": 1788151302657,
     "price": "",
     "discount": 75,
+    "count": 2
+  },
+  "Rappi:Pizzeria Alpaca:53:Hasta 53% Off": {
+    "lastSeen": 1788151302655,
     "count": 1
   }
 }
