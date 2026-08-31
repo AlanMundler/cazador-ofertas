@@ -68,8 +68,8 @@
     "count": 106
   },
   "Rappi:McCafé:60:60% OFF": {
-    "lastSeen": 1788145910800,
-    "count": 64
+    "lastSeen": 1788149522532,
+    "count": 65
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Lápiz De Grafito Bic Evolution Hb N°2 4 Unidades": {
     "lastSeen": 1788140002696,
@@ -456,24 +456,24 @@
     "count": 6
   },
   "Rappi:El Palacio del Oriente:50:50% OFF": {
-    "lastSeen": 1788145910800,
-    "count": 5
+    "lastSeen": 1788149522532,
+    "count": 6
   },
   "Rappi:Gourmet de Shangai:50:50% OFF": {
-    "lastSeen": 1788145910800,
-    "count": 5
+    "lastSeen": 1788149522532,
+    "count": 6
   },
   "Rappi:Tigger Asia:50:50% OFF": {
-    "lastSeen": 1788145910800,
-    "count": 3
-  },
-  "Rappi:Cultura China:50:Hasta 50% Off": {
-    "lastSeen": 1788145910800,
+    "lastSeen": 1788149522532,
     "count": 4
   },
+  "Rappi:Cultura China:50:Hasta 50% Off": {
+    "lastSeen": 1788149522532,
+    "count": 5
+  },
   "Rappi:Postres Mcdonald's:60:60% OFF": {
-    "lastSeen": 1788145910800,
-    "count": 15
+    "lastSeen": 1788149522532,
+    "count": 16
   },
   "Rappi:Long Hu:50:50% OFF": {
     "lastSeen": 1788147710104,
@@ -492,8 +492,8 @@
     "count": 4
   },
   "Rappi:Burger King Reino Vegetal:50:Hasta 50% Off": {
-    "lastSeen": 1788084728773,
-    "count": 11
+    "lastSeen": 1788149522532,
+    "count": 12
   },
   "Rappi:Helados Kronch Full:53:53% OFF": {
     "lastSeen": 1788066727439,
@@ -973,6 +973,20 @@
   },
   "PedidosYa:PedidosYa Market Crisol:cheap:$446.25:$446.25 - Limpiador Ecovita Smart Concentrado Para Piso Lavanda Sachet 27 ml": {
     "lastSeen": 1788148955924,
+    "count": 1
+  },
+  "Rappi:Mundo Vegano Palermo:75:75% OFF": {
+    "lastSeen": 1788149522532,
+    "count": 1
+  },
+  "Rappi:Bambu Wok:50:50% OFF": {
+    "lastSeen": 1788149522532,
+    "count": 1
+  },
+  "Rappi:Mundo Vegano Palermo:price": {
+    "lastSeen": 1788149522534,
+    "price": "",
+    "discount": 75,
     "count": 1
   }
 }
