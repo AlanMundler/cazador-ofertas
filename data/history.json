@@ -92,10 +92,10 @@
     "count": 97
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:price": {
-    "lastSeen": 1788174291566,
+    "lastSeen": 1788175996058,
     "price": "$ 255,80",
     "discount": 80,
-    "count": 239
+    "count": 240
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Tinte T1 Negro Altamoda 150 Gr": {
     "lastSeen": 1788138180612,
@@ -915,6 +915,18 @@
   },
   "Rappi:Pizzeria Alpaca:53:Hasta 53% Off": {
     "lastSeen": 1788151302655,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Cerveza Patagonia 24.7 Session Ipa 730 mL": {
+    "lastSeen": 1788175996056,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Cerveza Patagonia Vera Ipa 730 ml": {
+    "lastSeen": 1788175996056,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Cerveza Patagonia Roja Amber Lager 730 ml": {
+    "lastSeen": 1788175996056,
     "count": 1
   }
 }
