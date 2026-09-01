@@ -156,20 +156,20 @@
     "count": 70
   },
   "Rappi:El Palacio del Oriente:50:50% OFF": {
-    "lastSeen": 1788232316461,
-    "count": 7
+    "lastSeen": 1788235912077,
+    "count": 8
   },
   "Rappi:Gourmet de Shangai:50:50% OFF": {
-    "lastSeen": 1788232316461,
-    "count": 7
+    "lastSeen": 1788235912077,
+    "count": 8
   },
   "Rappi:Tigger Asia:50:50% OFF": {
     "lastSeen": 1788149522532,
     "count": 4
   },
   "Rappi:Cultura China:50:Hasta 50% Off": {
-    "lastSeen": 1788232316461,
-    "count": 6
+    "lastSeen": 1788235912077,
+    "count": 7
   },
   "Rappi:Postres Mcdonald's:60:60% OFF": {
     "lastSeen": 1788234113864,
@@ -220,12 +220,12 @@
     "count": 28
   },
   "Rappi:Wok de Flores:50:Hasta 50% Off": {
-    "lastSeen": 1788151302655,
-    "count": 2
+    "lastSeen": 1788235912077,
+    "count": 3
   },
   "Rappi:Asian Vegan:50:50% OFF": {
-    "lastSeen": 1788151302655,
-    "count": 2
+    "lastSeen": 1788235912077,
+    "count": 3
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:60:60% OFF 60% - Chocolate Cofler Dubai 43 g": {
     "lastSeen": 1788233553052,
@@ -578,28 +578,28 @@
     "count": 6
   },
   "Rappi:Mcdonald's:96:96% OFF": {
-    "lastSeen": 1788232316461,
-    "count": 1
+    "lastSeen": 1788235912077,
+    "count": 2
   },
   "Rappi:McCafé:96:96% OFF": {
-    "lastSeen": 1788232316461,
-    "count": 1
+    "lastSeen": 1788235912077,
+    "count": 2
   },
   "Rappi:Helados L'sucre:50:50% OFF": {
     "lastSeen": 1788232316461,
     "count": 1
   },
   "Rappi:Mcdonald's:price": {
-    "lastSeen": 1788234113867,
+    "lastSeen": 1788235912079,
     "price": "",
     "discount": 96,
-    "count": 2
+    "count": 3
   },
   "Rappi:McCafé:price": {
-    "lastSeen": 1788234113867,
+    "lastSeen": 1788235912079,
     "price": "",
     "discount": 96,
-    "count": 2
+    "count": 3
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Preservativos Maxx Superfinos 3 Unidades": {
     "lastSeen": 1788235493241,
@@ -627,6 +627,10 @@
   },
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 2 x 1 - Preservativos Maxx Super Lubricados 12 Unidades": {
     "lastSeen": 1788235493241,
+    "count": 1
+  },
+  "Rappi:Dragon Chinnese Food:50:50% OFF": {
+    "lastSeen": 1788235912077,
     "count": 1
   }
 }
