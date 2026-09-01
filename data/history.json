@@ -156,20 +156,20 @@
     "count": 70
   },
   "Rappi:El Palacio del Oriente:50:50% OFF": {
-    "lastSeen": 1788149522532,
-    "count": 6
+    "lastSeen": 1788232316461,
+    "count": 7
   },
   "Rappi:Gourmet de Shangai:50:50% OFF": {
-    "lastSeen": 1788149522532,
-    "count": 6
+    "lastSeen": 1788232316461,
+    "count": 7
   },
   "Rappi:Tigger Asia:50:50% OFF": {
     "lastSeen": 1788149522532,
     "count": 4
   },
   "Rappi:Cultura China:50:Hasta 50% Off": {
-    "lastSeen": 1788149522532,
-    "count": 5
+    "lastSeen": 1788232316461,
+    "count": 6
   },
   "Rappi:Postres Mcdonald's:60:60% OFF": {
     "lastSeen": 1788171106576,
@@ -576,5 +576,29 @@
   "PedidosYa:PedidosYa Market Crisol:80:80% OFF 80% - Preservativos Control Finissimo Xlube 12 Unid": {
     "lastSeen": 1788231948181,
     "count": 5
+  },
+  "Rappi:Mcdonald's:96:96% OFF": {
+    "lastSeen": 1788232316461,
+    "count": 1
+  },
+  "Rappi:McCafé:96:96% OFF": {
+    "lastSeen": 1788232316461,
+    "count": 1
+  },
+  "Rappi:Helados L'sucre:50:50% OFF": {
+    "lastSeen": 1788232316461,
+    "count": 1
+  },
+  "Rappi:Mcdonald's:price": {
+    "lastSeen": 1788232316462,
+    "price": "",
+    "discount": 96,
+    "count": 1
+  },
+  "Rappi:McCafé:price": {
+    "lastSeen": 1788232316462,
+    "price": "",
+    "discount": 96,
+    "count": 1
   }
 }
