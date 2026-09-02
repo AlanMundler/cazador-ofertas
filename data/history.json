@@ -24,10 +24,10 @@
     "count": 154
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:price": {
-    "lastSeen": 1788354378300,
-    "price": "$ 255,80",
+    "lastSeen": 1788355985018,
+    "price": "$ 2.480",
     "discount": 80,
-    "count": 307
+    "count": 310
   },
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 2 x 1 - Chocolate Milka Oreo 100 g": {
     "lastSeen": 1788354378298,
@@ -70,14 +70,14 @@
     "count": 144
   },
   "PedidosYa:PedidosYa Market Crisol:price": {
-    "lastSeen": 1788354378300,
+    "lastSeen": 1788355985018,
     "price": "$ 2.560",
     "discount": 80,
-    "count": 429
+    "count": 431
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Chocolate Milka Relleno de Avellanas Enteras 95 g": {
-    "lastSeen": 1788352404673,
-    "count": 134
+    "lastSeen": 1788355985017,
+    "count": 135
   },
   "PedidosYa:Jumbo Córdoba:53:53% OFF 53% - Espátula Krea St Antiadherente (32 Cm) 1 Unidad": {
     "lastSeen": 1788354378298,
@@ -468,12 +468,12 @@
     "count": 21
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:85:85% OFF 85% - Huevos Carnave Blancos 6 Unidades": {
-    "lastSeen": 1788292971147,
-    "count": 1
+    "lastSeen": 1788355985017,
+    "count": 2
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:cheap:$322.5:$322.5 - Huevos Carnave Blancos 6 Unidades": {
-    "lastSeen": 1788292971148,
-    "count": 1
+    "lastSeen": 1788355985018,
+    "count": 2
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Chocolate Milka Oreo Con Leche 37 g": {
     "lastSeen": 1788354378298,
@@ -573,6 +573,14 @@
   },
   "UberEats:Guchy´s:50": {
     "lastSeen": 1788353488190,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Gel Lubricante Maxx Clásico 50 g": {
+    "lastSeen": 1788355985017,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:80:80% OFF 80% - Preservativo Nature 12 Unidades Control 49 Gr": {
+    "lastSeen": 1788355985017,
     "count": 1
   }
 }
