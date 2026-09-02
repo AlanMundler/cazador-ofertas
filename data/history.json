@@ -70,14 +70,14 @@
     "count": 151
   },
   "PedidosYa:PedidosYa Market Crisol:price": {
-    "lastSeen": 1788370447506,
-    "price": "$ 2.560",
-    "discount": 80,
-    "count": 447
+    "lastSeen": 1788381209008,
+    "price": "$ 825",
+    "discount": 85,
+    "count": 448
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Chocolate Milka Relleno de Avellanas Enteras 95 g": {
-    "lastSeen": 1788377608457,
-    "count": 141
+    "lastSeen": 1788381209006,
+    "count": 142
   },
   "PedidosYa:Jumbo Córdoba:53:53% OFF 53% - Espátula Krea St Antiadherente (32 Cm) 1 Unidad": {
     "lastSeen": 1788379595474,
@@ -526,5 +526,9 @@
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 2 x 1 - Galletitas Oreo Golden Vainilla 118 g": {
     "lastSeen": 1788379595474,
     "count": 2
+  },
+  "PedidosYa:PedidosYa Market Crisol:85:85% OFF 85% - Gaseosa Sprite Lima Limón 2.25 L": {
+    "lastSeen": 1788381209006,
+    "count": 1
   }
 }
