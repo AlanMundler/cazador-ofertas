@@ -24,10 +24,10 @@
     "count": 153
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:price": {
-    "lastSeen": 1788350711857,
-    "price": "$ 255,80",
-    "discount": 80,
-    "count": 302
+    "lastSeen": 1788351248133,
+    "price": "$ 583,50",
+    "discount": 85,
+    "count": 304
   },
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 2 x 1 - Chocolate Milka Oreo 100 g": {
     "lastSeen": 1788350711855,
@@ -70,10 +70,10 @@
     "count": 143
   },
   "PedidosYa:PedidosYa Market Crisol:price": {
-    "lastSeen": 1788350711857,
-    "price": "$ 2.560",
-    "discount": 80,
-    "count": 417
+    "lastSeen": 1788351248133,
+    "price": "$ 350,85",
+    "discount": 85,
+    "count": 423
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Chocolate Milka Relleno de Avellanas Enteras 95 g": {
     "lastSeen": 1788348750085,
@@ -533,6 +533,58 @@
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Salsa De Soja La Parmesana 300 ml": {
     "lastSeen": 1788350711855,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:85:85% OFF 85% - Mix Saladito 150 g": {
+    "lastSeen": 1788351248132,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Alfajor Terrabusi Triple Blanco Con Dulce De Leche 70 g": {
+    "lastSeen": 1788351248132,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Crema Dermaglos Nutritiva Noche Reafirmante Piel Normal 70 g": {
+    "lastSeen": 1788351248132,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Discos De Algodon Q Soft Desmaquillante 70 Unidades": {
+    "lastSeen": 1788351248132,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market Crisol:55:55% OFF 55% - Gaseosa Sprite Lima Limón 2.25 L": {
+    "lastSeen": 1788351248132,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market Crisol:85:85% OFF 85% - Salchichas Estilo Gourmet Cortas Union Gandera (230 g) 6 Unidades": {
+    "lastSeen": 1788351248132,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market Crisol:50:50% OFF 50% - Pan Para Hamburguesa Bimbo Papa Tipo Artesano (240 g) 4 Unidades": {
+    "lastSeen": 1788351248132,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market Crisol:85:85% OFF 85% - Pan Oroweat Multicereal Masa Madre 600 g": {
+    "lastSeen": 1788351248132,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market Crisol:85:85% OFF 85% - Yogur Tregar Frutas Descremado Durazno 150 g": {
+    "lastSeen": 1788351248132,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market Crisol:85:85% OFF 85% - Yogur Tregar Frutas Entero Durazno 150 g": {
+    "lastSeen": 1788351248132,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:cheap:$437.5:$437.5 - Levadura Calsa Fresca Familiar 50 g": {
+    "lastSeen": 1788351248132,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market Crisol:cheap:$350.85:$350.85 - Yogur Tregar Frutas Descremado Durazno 150 g": {
+    "lastSeen": 1788351248132,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market Crisol:cheap:$350.85:$350.85 - Yogur Tregar Frutas Entero Durazno 150 g": {
+    "lastSeen": 1788351248132,
     "count": 1
   }
 }
