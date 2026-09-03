@@ -66,14 +66,14 @@
     "count": 173
   },
   "PedidosYa:PedidosYa Market Crisol:price": {
-    "lastSeen": 1788466018788,
+    "lastSeen": 1788467570968,
     "price": "$ 2.560",
     "discount": 80,
-    "count": 483
+    "count": 485
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Chocolate Milka Relleno de Avellanas Enteras 95 g": {
-    "lastSeen": 1788463913890,
-    "count": 165
+    "lastSeen": 1788467570966,
+    "count": 166
   },
   "PedidosYa:Jumbo Córdoba:53:53% OFF 53% - Espátula Krea St Antiadherente (32 Cm) 1 Unidad": {
     "lastSeen": 1788466018786,
@@ -481,6 +481,10 @@
   },
   "PedidosYa:PedidosYa Market Crisol:cheap:$255.8:$255.8 - Leche Primeros Años Las Tres Niñas 200 ml": {
     "lastSeen": 1788460415296,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Papel Higiénico Higienol Plus Doble Hoja (20 m) 4 Unidades": {
+    "lastSeen": 1788467570966,
     "count": 1
   }
 }
