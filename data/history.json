@@ -1,7 +1,7 @@
 {
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Chocolate Milka Oreo 100 g": {
-    "lastSeen": 1788444205197,
-    "count": 233
+    "lastSeen": 1788447803962,
+    "count": 234
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Preservativo Maxx Texturado 6 Unidades": {
     "lastSeen": 1788446166148,
@@ -12,8 +12,8 @@
     "count": 161
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:cheap:$100:$100 - Bolsa Pequeña Natura & Co 1 Unidad": {
-    "lastSeen": 1788444205198,
-    "count": 233
+    "lastSeen": 1788447803963,
+    "count": 234
   },
   "PedidosYa:Carrefour Express:cheap:$473:$473 - Mostaza Dánica 60 g": {
     "lastSeen": 1788446166148,
@@ -24,10 +24,10 @@
     "count": 175
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:price": {
-    "lastSeen": 1788446166149,
+    "lastSeen": 1788447803963,
     "price": "$ 110,85",
     "discount": 85,
-    "count": 333
+    "count": 334
   },
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 2 x 1 - Chocolate Milka Oreo 100 g": {
     "lastSeen": 1788446166148,
@@ -66,10 +66,10 @@
     "count": 168
   },
   "PedidosYa:PedidosYa Market Crisol:price": {
-    "lastSeen": 1788446166149,
+    "lastSeen": 1788447803963,
     "price": "$ 666,75",
     "discount": 85,
-    "count": 459
+    "count": 461
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Chocolate Milka Relleno de Avellanas Enteras 95 g": {
     "lastSeen": 1788446166148,
@@ -136,12 +136,12 @@
     "count": 67
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Cereal Nesquik 210 g": {
-    "lastSeen": 1788444205197,
-    "count": 62
+    "lastSeen": 1788447803962,
+    "count": 63
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Yerba Mate Cruz De Malta Tradicional 500 g": {
-    "lastSeen": 1788444205197,
-    "count": 82
+    "lastSeen": 1788447803962,
+    "count": 83
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Galletitas Chocolinas 250 g": {
     "lastSeen": 1788375960320,
@@ -256,8 +256,8 @@
     "count": 58
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Bombón Relleno Bananita Dolca 30 g": {
-    "lastSeen": 1788444205197,
-    "count": 69
+    "lastSeen": 1788447803962,
+    "count": 70
   },
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 50% - Bombón Relleno Bananita Dolca 30 g": {
     "lastSeen": 1788446166148,
@@ -312,8 +312,8 @@
     "count": 28
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:60:60% OFF 60% - Bombón Escocés Bon o Bon 6 Unidades": {
-    "lastSeen": 1788444205197,
-    "count": 52
+    "lastSeen": 1788447803962,
+    "count": 53
   },
   "PedidosYa:PedidosYa Market Crisol:60:60% OFF 60% - Bombón Escocés Bon o Bon 6 Unidades": {
     "lastSeen": 1788446166148,
@@ -336,8 +336,8 @@
     "count": 45
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Chocolate Milka Oreo Con Leche 37 g": {
-    "lastSeen": 1788444205197,
-    "count": 42
+    "lastSeen": 1788447803962,
+    "count": 43
   },
   "PedidosYa:Jumbo Córdoba:72:72% OFF 72% - Chaleco Reflectivo Iael Amarillo 1 Unidad": {
     "lastSeen": 1788446166148,
@@ -477,6 +477,14 @@
   },
   "PedidosYa:PedidosYa Market Crisol:cheap:$408.75:$408.75 - Pan Campero Kansas 2 Unidades": {
     "lastSeen": 1788438959812,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Palito de Crema Palitos de la Selva 40g": {
+    "lastSeen": 1788447803962,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market Crisol:50:50% OFF 50% - Jamón Cocido Cagnoli Feteado 200 g": {
+    "lastSeen": 1788447803962,
     "count": 1
   }
 }
