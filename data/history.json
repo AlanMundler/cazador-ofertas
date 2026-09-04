@@ -16,12 +16,12 @@
     "count": 257
   },
   "PedidosYa:Carrefour Express:cheap:$473:$473 - Mostaza Dánica 60 g": {
-    "lastSeen": 1788536186263,
-    "count": 194
+    "lastSeen": 1788541556758,
+    "count": 195
   },
   "PedidosYa:Carrefour Express:cheap:$298:$298 - Acondicionador Sedal Ceramidas 10 ml": {
-    "lastSeen": 1788536186263,
-    "count": 194
+    "lastSeen": 1788541556758,
+    "count": 195
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:price": {
     "lastSeen": 1788528770423,
@@ -66,10 +66,10 @@
     "count": 191
   },
   "PedidosYa:PedidosYa Market Crisol:price": {
-    "lastSeen": 1788539582518,
+    "lastSeen": 1788541556759,
     "price": "$ 2.480",
     "discount": 80,
-    "count": 527
+    "count": 528
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Chocolate Milka Relleno de Avellanas Enteras 95 g": {
     "lastSeen": 1788539582516,
@@ -92,8 +92,8 @@
     "count": 138
   },
   "PedidosYa:Jumbo Córdoba:cheap:$470:$470 - Flautita Congelada Cruda 1 Unidad": {
-    "lastSeen": 1788536186263,
-    "count": 136
+    "lastSeen": 1788541556758,
+    "count": 137
   },
   "PedidosYa:Jumbo Córdoba:cheap:$386.75:$386.75 - Sacapuntas Ezco Plástico 3 Unidades": {
     "lastSeen": 1788489494535,
@@ -268,8 +268,8 @@
     "count": 6
   },
   "PedidosYa:La Anónima Jacinto Ríos:54:54% OFF 54% - Alfajor Mini Fantoche Blanco 6 Unidades 150 g": {
-    "lastSeen": 1788536186262,
-    "count": 52
+    "lastSeen": 1788541556758,
+    "count": 53
   },
   "PedidosYa:La Anónima Jacinto Ríos:52:52% OFF 52% - Queso La Paulina Cremoso Fraccionado 1 kg": {
     "lastSeen": 1788532530685,
@@ -304,12 +304,12 @@
     "count": 38
   },
   "PedidosYa:Jumbo Córdoba:60:60% OFF 60% - Queso Crema Cusine & Co Clásico 226 g": {
-    "lastSeen": 1788536186262,
-    "count": 46
+    "lastSeen": 1788541556758,
+    "count": 47
   },
   "PedidosYa:Jumbo Córdoba:60:60% OFF 60% - Queso Cuisine & Co Crema Light 227 g": {
-    "lastSeen": 1788536186262,
-    "count": 46
+    "lastSeen": 1788541556758,
+    "count": 47
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Alfajor Terrabusi Triple Blanco Con Dulce De Leche 70 g": {
     "lastSeen": 1788476878151,
@@ -328,8 +328,8 @@
     "count": 3
   },
   "PedidosYa:La Anónima Jacinto Ríos:53:53% OFF 53% - Agua Mineralizada Celier Favaloro Con Gas 2 L": {
-    "lastSeen": 1788536186262,
-    "count": 21
+    "lastSeen": 1788541556758,
+    "count": 22
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Antitranspirante En Gel Gillette Specialized Cool Wave 45 g": {
     "lastSeen": 1788539582516,
@@ -452,8 +452,8 @@
     "count": 1
   },
   "PedidosYa:Jumbo Córdoba:60:60% OFF 60% - Pochoclera Nex Pcm6000R 1 Unidad": {
-    "lastSeen": 1788536186262,
-    "count": 8
+    "lastSeen": 1788541556758,
+    "count": 9
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:85:85% OFF 85% - Sandwich Pan Nube Lomito & Queso Cañón 1 Unidad": {
     "lastSeen": 1788528770422,
@@ -465,6 +465,10 @@
   },
   "UberEats:Humberto:50": {
     "lastSeen": 1788526282170,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Salsa De Soja La Parmesana 300 ml": {
+    "lastSeen": 1788541556758,
     "count": 1
   }
 }
