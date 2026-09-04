@@ -16,18 +16,18 @@
     "count": 247
   },
   "PedidosYa:Carrefour Express:cheap:$473:$473 - Mostaza Dánica 60 g": {
-    "lastSeen": 1788493025174,
-    "count": 186
+    "lastSeen": 1788498492319,
+    "count": 187
   },
   "PedidosYa:Carrefour Express:cheap:$298:$298 - Acondicionador Sedal Ceramidas 10 ml": {
-    "lastSeen": 1788493025174,
-    "count": 186
+    "lastSeen": 1788498492319,
+    "count": 187
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:price": {
-    "lastSeen": 1788496423927,
+    "lastSeen": 1788498492337,
     "price": "$ 2.560",
     "discount": 80,
-    "count": 356
+    "count": 357
   },
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 2 x 1 - Chocolate Milka Oreo 100 g": {
     "lastSeen": 1788496423926,
@@ -66,10 +66,10 @@
     "count": 181
   },
   "PedidosYa:PedidosYa Market Crisol:price": {
-    "lastSeen": 1788496423927,
+    "lastSeen": 1788498492337,
     "price": "$ 2.480",
     "discount": 80,
-    "count": 510
+    "count": 511
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Chocolate Milka Relleno de Avellanas Enteras 95 g": {
     "lastSeen": 1788496423926,
@@ -92,8 +92,8 @@
     "count": 138
   },
   "PedidosYa:Jumbo Córdoba:cheap:$470:$470 - Flautita Congelada Cruda 1 Unidad": {
-    "lastSeen": 1788493025174,
-    "count": 128
+    "lastSeen": 1788498492319,
+    "count": 129
   },
   "PedidosYa:Jumbo Córdoba:cheap:$386.75:$386.75 - Sacapuntas Ezco Plástico 3 Unidades": {
     "lastSeen": 1788489494535,
@@ -304,12 +304,12 @@
     "count": 38
   },
   "PedidosYa:Jumbo Córdoba:60:60% OFF 60% - Queso Crema Cusine & Co Clásico 226 g": {
-    "lastSeen": 1788489494534,
-    "count": 38
+    "lastSeen": 1788498492318,
+    "count": 39
   },
   "PedidosYa:Jumbo Córdoba:60:60% OFF 60% - Queso Cuisine & Co Crema Light 227 g": {
-    "lastSeen": 1788489494534,
-    "count": 38
+    "lastSeen": 1788498492318,
+    "count": 39
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Alfajor Terrabusi Triple Blanco Con Dulce De Leche 70 g": {
     "lastSeen": 1788476878151,
@@ -485,6 +485,10 @@
   },
   "UberEats:Él aventurero Pizzeria:50": {
     "lastSeen": 1788481444177,
+    "count": 1
+  },
+  "PedidosYa:Jumbo Córdoba:60:60% OFF 60% - Pochoclera Nex Pcm6000R 1 Unidad": {
+    "lastSeen": 1788498492318,
     "count": 1
   }
 }
