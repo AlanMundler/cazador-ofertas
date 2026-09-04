@@ -24,10 +24,10 @@
     "count": 197
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:price": {
-    "lastSeen": 1788528770423,
-    "price": "$ 2.560",
+    "lastSeen": 1788550411695,
+    "price": "$ 255,80",
     "discount": 80,
-    "count": 370
+    "count": 371
   },
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 2 x 1 - Chocolate Milka Oreo 100 g": {
     "lastSeen": 1788548815458,
@@ -66,10 +66,10 @@
     "count": 194
   },
   "PedidosYa:PedidosYa Market Crisol:price": {
-    "lastSeen": 1788548815459,
+    "lastSeen": 1788550411695,
     "price": "$ 2.480",
     "discount": 80,
-    "count": 534
+    "count": 536
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Chocolate Milka Relleno de Avellanas Enteras 95 g": {
     "lastSeen": 1788548815458,
@@ -244,8 +244,8 @@
     "count": 83
   },
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 2 x 1 - Preservativos Maxx Superfinos 3 Unidades": {
-    "lastSeen": 1788489494534,
-    "count": 68
+    "lastSeen": 1788550411693,
+    "count": 69
   },
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 2 x 1 - Preservativo Maxx Con L-Arginina 3 Unidades": {
     "lastSeen": 1788548815458,
@@ -465,6 +465,14 @@
   },
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 2 x 1 - Galletitas Oreo Golden Vainilla 118 g": {
     "lastSeen": 1788548815458,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:80:80% OFF 80% - Leche Primeros Años Las Tres Niñas 200 ml": {
+    "lastSeen": 1788550411693,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:cheap:$255.8:$255.8 - Leche Primeros Años Las Tres Niñas 200 ml": {
+    "lastSeen": 1788550411694,
     "count": 1
   }
 }
