@@ -46,10 +46,10 @@
     "count": 208
   },
   "PedidosYa:PedidosYa Market Crisol:price": {
-    "lastSeen": 1788600992523,
+    "lastSeen": 1788602585069,
     "price": "$ 2.480",
     "discount": 80,
-    "count": 608
+    "count": 611
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Chocolate Milka Relleno de Avellanas Enteras 95 g": {
     "lastSeen": 1788600992521,
@@ -409,6 +409,10 @@
   },
   "Rappi:Helados Kronch Full:53:53% OFF": {
     "lastSeen": 1788585118404,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Alfajor Terrabusi Simple Glaseado Blanco 38 g": {
+    "lastSeen": 1788602585068,
     "count": 1
   }
 }
