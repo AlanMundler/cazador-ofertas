@@ -46,10 +46,10 @@
     "count": 217
   },
   "PedidosYa:PedidosYa Market Crisol:price": {
-    "lastSeen": 1788634025181,
+    "lastSeen": 1788634981969,
     "price": "$ 255,80",
     "discount": 80,
-    "count": 665
+    "count": 666
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Chocolate Milka Relleno de Avellanas Enteras 95 g": {
     "lastSeen": 1788633157895,
@@ -212,8 +212,8 @@
     "count": 99
   },
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 2 x 1 - Palito de Crema Palitos de la Selva 40g": {
-    "lastSeen": 1788631431062,
-    "count": 82
+    "lastSeen": 1788634981968,
+    "count": 83
   },
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 2 x 1 - Antitranspirante En Gel Gillette Specialized Cool Wave 45 g": {
     "lastSeen": 1788634025180,
@@ -248,8 +248,8 @@
     "count": 54
   },
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 50% - Jamón Cocido Cagnoli Feteado 200 g": {
-    "lastSeen": 1788631431062,
-    "count": 32
+    "lastSeen": 1788634981968,
+    "count": 33
   },
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 2 x 1 - Galletitas Terrabusi Boca De Dama 170 g": {
     "lastSeen": 1788625992394,
@@ -384,8 +384,8 @@
     "count": 1
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Alfajor Terrabusi Simple Glaseado Blanco 38 g": {
-    "lastSeen": 1788631431062,
-    "count": 9
+    "lastSeen": 1788634981968,
+    "count": 10
   },
   "PedidosYa:PedidosYa Market Crisol:85:85% OFF 85% - Pan Para Hamburguesa Bimbo Papa Tipo Artesano (240 g) 4 Unidades": {
     "lastSeen": 1788615182727,
@@ -413,6 +413,10 @@
   },
   "PedidosYa:PedidosYa Market Crisol:85:85% OFF 85% - Yogurt Bebible Ilolay Frutilla 1 kg": {
     "lastSeen": 1788624398430,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market Crisol:50:50% OFF 50% - Cereal Nesquik 210 g": {
+    "lastSeen": 1788634981968,
     "count": 1
   }
 }
