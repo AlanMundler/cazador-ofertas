@@ -60,16 +60,16 @@
     "count": 145
   },
   "Rappi:El Palacio del Oriente:50:50% OFF": {
-    "lastSeen": 1788577916681,
-    "count": 15
+    "lastSeen": 1788581522567,
+    "count": 16
   },
   "Rappi:Gourmet de Shangai:50:50% OFF": {
-    "lastSeen": 1788495367591,
-    "count": 14
+    "lastSeen": 1788581522567,
+    "count": 15
   },
   "Rappi:Cultura China:50:Hasta 50% Off": {
-    "lastSeen": 1788496977998,
-    "count": 13
+    "lastSeen": 1788581522567,
+    "count": 14
   },
   "Rappi:Nawebona:50:Hasta 50% Off": {
     "lastSeen": 1788502403234,
@@ -401,6 +401,10 @@
   },
   "PedidosYa:PedidosYa Market Crisol:80:80% OFF 80% - Torta Para Preparar Royal Sabor Chocolate 500 g": {
     "lastSeen": 1788581018446,
+    "count": 1
+  },
+  "Rappi:Long Hu:50:50% OFF": {
+    "lastSeen": 1788581522567,
     "count": 1
   }
 }
