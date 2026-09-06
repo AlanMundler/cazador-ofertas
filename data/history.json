@@ -20,10 +20,10 @@
     "count": 232
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:price": {
-    "lastSeen": 1788719590627,
+    "lastSeen": 1788719717575,
     "price": "$ 2.560",
     "discount": 80,
-    "count": 509
+    "count": 512
   },
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 2 x 1 - Chocolate Milka Oreo 100 g": {
     "lastSeen": 1788719590625,
@@ -46,10 +46,10 @@
     "count": 237
   },
   "PedidosYa:PedidosYa Market Crisol:price": {
-    "lastSeen": 1788719590627,
+    "lastSeen": 1788719717575,
     "price": "$ 255,80",
     "discount": 80,
-    "count": 731
+    "count": 732
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Chocolate Milka Relleno de Avellanas Enteras 95 g": {
     "lastSeen": 1788719590625,
@@ -365,6 +365,10 @@
   },
   "UberEats:CASA NEGRA:70": {
     "lastSeen": 1788715287832,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Café Suave Nescafé Dolca 160 g": {
+    "lastSeen": 1788719717568,
     "count": 1
   }
 }
