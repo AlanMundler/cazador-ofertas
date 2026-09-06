@@ -20,10 +20,10 @@
     "count": 232
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:price": {
-    "lastSeen": 1788719717575,
+    "lastSeen": 1788721381904,
     "price": "$ 2.560",
     "discount": 80,
-    "count": 512
+    "count": 515
   },
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 2 x 1 - Chocolate Milka Oreo 100 g": {
     "lastSeen": 1788719590625,
@@ -84,8 +84,8 @@
     "count": 147
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Desodorante Antitranspirante En Gel Powder Protect Cotton 45 g": {
-    "lastSeen": 1788717815642,
-    "count": 124
+    "lastSeen": 1788721381902,
+    "count": 125
   },
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 50% - Yerba Mate Cruz De Malta Tradicional 500 g": {
     "lastSeen": 1788719590625,
@@ -148,8 +148,8 @@
     "count": 146
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Bombón Relleno Bananita Dolca 30 g": {
-    "lastSeen": 1788717815642,
-    "count": 131
+    "lastSeen": 1788721381902,
+    "count": 132
   },
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 50% - Bombón Relleno Bananita Dolca 30 g": {
     "lastSeen": 1788719590625,
@@ -328,8 +328,8 @@
     "count": 7
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Galletitas Chocolinas 250 g": {
-    "lastSeen": 1788711875981,
-    "count": 7
+    "lastSeen": 1788721381902,
+    "count": 8
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Galletitas Terrabusi Dulces Con Chips De Chocolate 144 g": {
     "lastSeen": 1788719590625,
@@ -352,8 +352,8 @@
     "count": 2
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 4 x 2 - Caramelos Menthoplus Cherry 29 g": {
-    "lastSeen": 1788717815642,
-    "count": 5
+    "lastSeen": 1788721381902,
+    "count": 6
   },
   "UberEats:Mr. Tasty:60": {
     "lastSeen": 1788711692122,
@@ -369,6 +369,10 @@
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Café Suave Nescafé Dolca 160 g": {
     "lastSeen": 1788719717568,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Alfajor Terrabusi Triple Blanco Con Dulce De Leche 70 g": {
+    "lastSeen": 1788721381902,
     "count": 1
   }
 }
