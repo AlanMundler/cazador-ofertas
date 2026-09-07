@@ -12,18 +12,18 @@
     "count": 314
   },
   "PedidosYa:Carrefour Express:cheap:$473:$473 - Mostaza Dánica 60 g": {
-    "lastSeen": 1788741387112,
-    "count": 237
+    "lastSeen": 1788746797403,
+    "count": 238
   },
   "PedidosYa:Carrefour Express:cheap:$298:$298 - Acondicionador Sedal Ceramidas 10 ml": {
-    "lastSeen": 1788741387112,
-    "count": 237
+    "lastSeen": 1788746797403,
+    "count": 238
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:price": {
-    "lastSeen": 1788744785276,
+    "lastSeen": 1788746797404,
     "price": "$ 2.480",
     "discount": 80,
-    "count": 538
+    "count": 539
   },
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 2 x 1 - Chocolate Milka Oreo 100 g": {
     "lastSeen": 1788744785275,
@@ -184,8 +184,8 @@
     "count": 133
   },
   "PedidosYa:La Anónima Jacinto Ríos:54:54% OFF 54% - Alfajor Mini Fantoche Blanco 6 Unidades 150 g": {
-    "lastSeen": 1788741387111,
-    "count": 82
+    "lastSeen": 1788746797403,
+    "count": 83
   },
   "PedidosYa:La Anónima Jacinto Ríos:52:52% OFF 52% - Queso La Paulina Cremoso Fraccionado 1 kg": {
     "lastSeen": 1788705313723,
@@ -240,8 +240,8 @@
     "count": 50
   },
   "PedidosYa:Jumbo Córdoba:60:60% OFF 60% - Pochoclera Nex Pcm6000R 1 Unidad": {
-    "lastSeen": 1788741387111,
-    "count": 49
+    "lastSeen": 1788746797403,
+    "count": 50
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Desodorante Secret Gel Invisible Barra Lavanda Frasco 45 g": {
     "lastSeen": 1788744785275,
@@ -252,12 +252,12 @@
     "count": 50
   },
   "PedidosYa:Jumbo Córdoba:55:55% OFF 55% - Queso Crema Cusine & Co Clásico 226 g": {
-    "lastSeen": 1788741387111,
-    "count": 33
+    "lastSeen": 1788746797403,
+    "count": 34
   },
   "PedidosYa:Jumbo Córdoba:55:55% OFF 55% - Queso Cuisine & Co Crema Light 227 g": {
-    "lastSeen": 1788741387111,
-    "count": 33
+    "lastSeen": 1788746797403,
+    "count": 34
   },
   "Rappi:Helados Kronch Full:53:53% OFF": {
     "lastSeen": 1788671510585,
@@ -268,8 +268,8 @@
     "count": 17
   },
   "PedidosYa:Carrefour Express:cheap:$298:$298 - Shampoo Sedal Crema Balance 10 ml": {
-    "lastSeen": 1788741387112,
-    "count": 29
+    "lastSeen": 1788746797403,
+    "count": 30
   },
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 50% - Cereal Nesquik 210 g": {
     "lastSeen": 1788744785275,
@@ -308,8 +308,8 @@
     "count": 7
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Galletitas Chocolinas 250 g": {
-    "lastSeen": 1788742969182,
-    "count": 14
+    "lastSeen": 1788746797403,
+    "count": 15
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Galletitas Terrabusi Dulces Con Chips De Chocolate 144 g": {
     "lastSeen": 1788723388118,
@@ -362,5 +362,13 @@
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Chocolate Chocopause Milka 45 g": {
     "lastSeen": 1788742969182,
     "count": 6
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Chocolate Milka Relleno de Avellanas Enteras 95 g": {
+    "lastSeen": 1788746797403,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market Crisol:50:50% OFF 50% - Chocolate Milka Relleno de Avellanas Enteras 95 g": {
+    "lastSeen": 1788746797403,
+    "count": 1
   }
 }
