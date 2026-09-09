@@ -30,6 +30,9 @@ export async function scrapeUberEats() {
     context = await chromium.launchPersistentContext(tmpDir, {
       headless: false,
       viewport: { width: 1366, height: 768 },
+      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      locale: 'es-AR',
+      timezoneId: 'America/Argentina/Buenos_Aires',
       geolocation: { latitude: LAT, longitude: LNG },
       permissions: ['geolocation'],
     });
@@ -125,12 +128,12 @@ export async function scrapeUberEats() {
     const cityCheck = await page.evaluate(() => {
       const t = document.body.innerText;
       const hasCordoba = /c[oó]rdoba/i.test(t);
-      const hasArgentina = /argentina/i.test(t);
+      const hasArgentina = /argentina/i.test(t) || /\bAR\b/.test(t);
       const noForeign = !/(buenos aires|rosario|mendoza|santiago de chile|lima|mexico|ciudad de méxico|quilmes|la plata|mar del plata|salta|tucumán|montevideo|quito|bogotá|caracas)/i.test(t.substring(0, 2000));
       return { hasCordoba, hasArgentina, noForeign };
     });
 
-    if (!cityCheck.hasCordoba || !cityCheck.hasArgentina || !cityCheck.noForeign) {
+    if (!cityCheck.hasCordoba || !cityCheck.noForeign) {
       console.log(`[UberEats] Ciudad NO confirmada como Córdoba (${JSON.stringify(cityCheck)}), abortando`);
       return offers;
     }

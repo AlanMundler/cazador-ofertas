@@ -172,6 +172,9 @@ export async function scrapePedidosYa() {
     context = await chromium.launchPersistentContext('', {
       headless: false,
       viewport: { width: 1366, height: 768 },
+      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      locale: 'es-AR',
+      timezoneId: 'America/Argentina/Buenos_Aires',
     });
 
     const page = context.pages()[0] || await context.newPage();

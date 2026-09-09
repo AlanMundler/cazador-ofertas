@@ -19,6 +19,9 @@ export async function scrapeRappi() {
     context = await chromium.launchPersistentContext('', {
       headless: false,
       viewport: { width: 1366, height: 768 },
+      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      locale: 'es-AR',
+      timezoneId: 'America/Argentina/Buenos_Aires',
       geolocation: { latitude: parseFloat(config.lat), longitude: parseFloat(config.lng) },
       permissions: ['geolocation'],
     });
@@ -51,7 +54,7 @@ export async function scrapeRappi() {
 
     console.log('[Rappi] Scrapeando restaurantes...');
     await page.goto(config.rappi.restaurantsUrl, {
-      waitUntil: 'domcontentloaded', timeout: 20000,
+      waitUntil: 'domcontentloaded', timeout: 45000,
     });
     await page.waitForTimeout(2500);
 
