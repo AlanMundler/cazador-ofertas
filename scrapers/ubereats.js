@@ -8,7 +8,7 @@ const MIN_RESTAURANT = config.discounts.uberEats;
 const LAT = parseFloat(config.lat);
 const LNG = parseFloat(config.lng);
 const ADDRESS = 'San José de Calasanz 50, X5000LHB Córdoba';
-const CITY_RE = /c[oó]rdoba[^,]*,\s*(?:c[oó]rdoba|argentina)(?:,\s*AR)?\b|cordoba\s*,\s*cordoba\s*,\s*ar\b/i;
+const CITY_RE = /c[oó]rdoba/i;
 
 function parseDiscount(text) {
   if (!text) return 0;

@@ -172,9 +172,6 @@ export async function scrapePedidosYa() {
     context = await chromium.launchPersistentContext('', {
       headless: false,
       viewport: { width: 1366, height: 768 },
-      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-      locale: 'es-AR',
-      timezoneId: 'America/Argentina/Buenos_Aires',
     });
 
     const page = context.pages()[0] || await context.newPage();
@@ -203,22 +200,28 @@ export async function scrapePedidosYa() {
 
       let storeData = null;
 
-      for (let attempt = 1; attempt <= 2; attempt++) {
+      for (let attempt = 1; attempt <= 3; attempt++) {
         try {
           if (store.url) {
-            await page.goto(store.url, { waitUntil: 'domcontentloaded', timeout: 25000 });
-            await page.waitForTimeout(2000);
+            await page.goto(store.url, { waitUntil: 'domcontentloaded', timeout: 30000 });
+            await page.waitForTimeout(5000);
 
             title = await page.title();
             if (title.includes('momento') || title.includes('denegado')) {
-              if (attempt === 1) {
-                console.log(`  [${store.name}] Blocked, reloading home...`);
-                await page.goto('https://www.pedidosya.com.ar/', { waitUntil: 'domcontentloaded', timeout: 30000 });
-                await page.waitForTimeout(5000);
-                continue;
+              if (attempt < 3) {
+                console.log(`  [${store.name}] Blocked (attempt ${attempt}/3), waiting for Turnstile...`);
+                await page.waitForTimeout(15000);
+                title = await page.title();
+                if (title.includes('momento') || title.includes('denegado')) {
+                  console.log(`  [${store.name}] Still blocked, reloading home...`);
+                  await page.goto('https://www.pedidosya.com.ar/', { waitUntil: 'domcontentloaded', timeout: 30000 });
+                  await page.waitForTimeout(8000);
+                  continue;
+                }
+              } else {
+                console.log(`  [${store.name}] Blocked after ${attempt} attempts, skipping`);
+                break;
               }
-              console.log(`  [${store.name}] Blocked on retry, skipping`);
-              break;
             }
           }
 
