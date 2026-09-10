@@ -512,11 +512,39 @@
     "count": 1
   },
   "UberEats:CAMIÓN:50": {
-    "lastSeen": 1788990692775,
-    "count": 1
+    "lastSeen": 1789005100241,
+    "count": 2
   },
   "UberEats:LOMITO CBA:50": {
-    "lastSeen": 1788992494744,
+    "lastSeen": 1789005100241,
+    "count": 2
+  },
+  "UberEats:DeBarrrio:50": {
+    "lastSeen": 1789005100241,
+    "count": 1
+  },
+  "UberEats:Lomitos 2x1:65": {
+    "lastSeen": 1789005100241,
+    "count": 1
+  },
+  "UberEats:Pachata  Manso Sabor.:60": {
+    "lastSeen": 1789005100241,
+    "count": 1
+  },
+  "UberEats:Lomos La Catedral:50": {
+    "lastSeen": 1789005100241,
+    "count": 1
+  },
+  "UberEats:Salad Box:55": {
+    "lastSeen": 1789005100241,
+    "count": 1
+  },
+  "UberEats:Él aventurero Pizzeria:50": {
+    "lastSeen": 1789005100241,
+    "count": 1
+  },
+  "UberEats:Burgueses:50": {
+    "lastSeen": 1789005100241,
     "count": 1
   }
 }
