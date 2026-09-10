@@ -16,10 +16,10 @@
     "count": 302
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:price": {
-    "lastSeen": 1789036599481,
+    "lastSeen": 1789038181391,
     "price": "$ 2.480",
     "discount": 80,
-    "count": 824
+    "count": 832
   },
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 2 x 1 - Chocolate Milka Oreo 100 g": {
     "lastSeen": 1789036599478,
@@ -42,10 +42,10 @@
     "count": 321
   },
   "PedidosYa:PedidosYa Market Crisol:price": {
-    "lastSeen": 1789036599481,
+    "lastSeen": 1789038181391,
     "price": "$ 2.480",
     "discount": 80,
-    "count": 935
+    "count": 938
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Chocolate Milka Relleno de Avellanas Enteras 95 g": {
     "lastSeen": 1789036599478,
@@ -456,12 +456,12 @@
     "count": 14
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:100:100% OFF 100% - Galletitas Oreo Golden Vainilla 64.5 g": {
-    "lastSeen": 1788989800015,
-    "count": 1
+    "lastSeen": 1789038181389,
+    "count": 2
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:85:85% OFF 85% - Pan Lactal Noly De Mesa 360 g": {
-    "lastSeen": 1789034577768,
-    "count": 2
+    "lastSeen": 1789038181389,
+    "count": 3
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:85:85% OFF 85% - Pan Lacteado Noly Grande 600 g": {
     "lastSeen": 1789036599478,
@@ -484,8 +484,8 @@
     "count": 14
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:cheap:$1:$1 - Galletitas Oreo Golden Vainilla 64.5 g": {
-    "lastSeen": 1788989800016,
-    "count": 1
+    "lastSeen": 1789038181390,
+    "count": 2
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Preservativo Maxx Con L-Arginina 3 Unidades": {
     "lastSeen": 1789036599478,
@@ -593,6 +593,10 @@
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:cheap:$427.35:$427.35 - Pan Para Hamburguesas Noly (210 g) 4 Unidades": {
     "lastSeen": 1789036599480,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Crema Saborizada Las Tres Niñas Champignon 190 ml": {
+    "lastSeen": 1789038181389,
     "count": 1
   }
 }
