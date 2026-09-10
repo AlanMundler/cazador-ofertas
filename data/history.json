@@ -16,10 +16,10 @@
     "count": 305
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:price": {
-    "lastSeen": 1789049217345,
-    "price": "$ 2.480",
+    "lastSeen": 1789050848296,
+    "price": "$ 2.460",
     "discount": 80,
-    "count": 865
+    "count": 868
   },
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 2 x 1 - Chocolate Milka Oreo 100 g": {
     "lastSeen": 1789049217343,
@@ -42,10 +42,10 @@
     "count": 324
   },
   "PedidosYa:PedidosYa Market Crisol:price": {
-    "lastSeen": 1789049217345,
+    "lastSeen": 1789050848296,
     "price": "$ 2.480",
     "discount": 80,
-    "count": 953
+    "count": 956
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Chocolate Milka Relleno de Avellanas Enteras 95 g": {
     "lastSeen": 1789049217343,
@@ -86,10 +86,6 @@
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 2 x 1 - Preservativos Maxx Superfinos 3 Unidades": {
     "lastSeen": 1789049217343,
     "count": 199
-  },
-  "PedidosYa:PedidosYa Market Crisol:50:50% OFF 2 x 1 - Preservativos Maxx Super Lubricados 12 Unidades": {
-    "lastSeen": 1788964400443,
-    "count": 194
   },
   "PedidosYa:La Anónima Jacinto Ríos:52:52% OFF 52% - Queso La Paulina Cremoso Fraccionado 1 kg": {
     "lastSeen": 1789049217343,
@@ -614,5 +610,9 @@
   "PedidosYa:PedidosYa Market Crisol:60:60% OFF 60% - Pan Noly Con Salvado 600 g": {
     "lastSeen": 1789049217343,
     "count": 2
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Palito de Agua Flynn Paff 70g": {
+    "lastSeen": 1789050848294,
+    "count": 1
   }
 }
