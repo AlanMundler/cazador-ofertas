@@ -107,14 +107,6 @@
     "lastSeen": 1789006009913,
     "count": 98
   },
-  "PedidosYa:Jumbo Córdoba:55:55% OFF 55% - Queso Crema Cusine & Co Clásico 226 g": {
-    "lastSeen": 1788921393138,
-    "count": 68
-  },
-  "PedidosYa:Jumbo Córdoba:55:55% OFF 55% - Queso Cuisine & Co Crema Light 227 g": {
-    "lastSeen": 1788921393138,
-    "count": 68
-  },
   "PedidosYa:Carrefour Express:cheap:$298:$298 - Shampoo Sedal Crema Balance 10 ml": {
     "lastSeen": 1789006009914,
     "count": 87
@@ -545,6 +537,10 @@
   },
   "UberEats:Burgueses:50": {
     "lastSeen": 1789005100241,
+    "count": 1
+  },
+  "Rappi:The Wrapee Turbo:50:50% OFF": {
+    "lastSeen": 1789008113963,
     "count": 1
   }
 }
