@@ -518,5 +518,21 @@
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Jamón Cocido Cagnoli Feteado 200 g": {
     "lastSeen": 1789221792037,
     "count": 1
+  },
+  "UberEats:Burger King:50": {
+    "lastSeen": 1789222885769,
+    "count": 1
+  },
+  "UberEats:Domino's:50": {
+    "lastSeen": 1789222885769,
+    "count": 1
+  },
+  "UberEats:Telepizza:70": {
+    "lastSeen": 1789222885769,
+    "count": 1
+  },
+  "UberEats:McDonald's:50": {
+    "lastSeen": 1789222885769,
+    "count": 1
   }
 }
