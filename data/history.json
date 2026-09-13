@@ -408,8 +408,8 @@
     "count": 13
   },
   "UberEats:Humberto:50": {
-    "lastSeen": 1789314684997,
-    "count": 6
+    "lastSeen": 1789326009720,
+    "count": 7
   },
   "UberEats:Lomitos 2x1:50": {
     "lastSeen": 1789302116911,
@@ -444,11 +444,15 @@
     "count": 4
   },
   "UberEats:Mr. Tasty:50": {
-    "lastSeen": 1789314684997,
-    "count": 1
+    "lastSeen": 1789326009720,
+    "count": 2
   },
   "UberEats:CAMIÓN:50": {
-    "lastSeen": 1789314684997,
+    "lastSeen": 1789326009720,
+    "count": 2
+  },
+  "UberEats:CASA NEGRA:70": {
+    "lastSeen": 1789326009720,
     "count": 1
   }
 }
