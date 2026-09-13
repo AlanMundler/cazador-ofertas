@@ -8,18 +8,18 @@
     "count": 427
   },
   "PedidosYa:Carrefour Express:cheap:$473:$473 - Mostaza Dánica 60 g": {
-    "lastSeen": 1789294005541,
-    "count": 354
-  },
-  "PedidosYa:Carrefour Express:cheap:$298:$298 - Acondicionador Sedal Ceramidas 10 ml": {
-    "lastSeen": 1789294005541,
+    "lastSeen": 1789299314860,
     "count": 355
   },
+  "PedidosYa:Carrefour Express:cheap:$298:$298 - Acondicionador Sedal Ceramidas 10 ml": {
+    "lastSeen": 1789299314860,
+    "count": 356
+  },
   "PedidosYa:PedidosYa Market 25 de Mayo:price": {
-    "lastSeen": 1789297391051,
+    "lastSeen": 1789299314861,
     "price": "$ 2.560",
     "discount": 80,
-    "count": 985
+    "count": 988
   },
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 2 x 1 - Chocolate Milka Oreo 100 g": {
     "lastSeen": 1789297391049,
@@ -42,10 +42,10 @@
     "count": 387
   },
   "PedidosYa:PedidosYa Market Crisol:price": {
-    "lastSeen": 1789297391051,
+    "lastSeen": 1789299314861,
     "price": "$ 1",
     "discount": 100,
-    "count": 1143
+    "count": 1145
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Chocolate Milka Relleno de Avellanas Enteras 95 g": {
     "lastSeen": 1789297391049,
@@ -72,16 +72,16 @@
     "count": 296
   },
   "PedidosYa:La Anónima Jacinto Ríos:52:52% OFF 52% - Queso La Paulina Cremoso Fraccionado 1 kg": {
-    "lastSeen": 1789294005540,
-    "count": 107
+    "lastSeen": 1789299314859,
+    "count": 108
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Gel Lubricante Maxx Clásico 50 g": {
     "lastSeen": 1789297391049,
     "count": 243
   },
   "PedidosYa:Carrefour Express:cheap:$298:$298 - Shampoo Sedal Crema Balance 10 ml": {
-    "lastSeen": 1789294005541,
-    "count": 147
+    "lastSeen": 1789299314860,
+    "count": 148
   },
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 50% - Cereal Nesquik 210 g": {
     "lastSeen": 1789297391049,
@@ -160,8 +160,8 @@
     "count": 140
   },
   "PedidosYa:La Anónima Jacinto Ríos:cheap:$420:$420 - Mayonesa Menoyo 100 cm3": {
-    "lastSeen": 1789290336526,
-    "count": 57
+    "lastSeen": 1789299314860,
+    "count": 58
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:55:55% OFF 55% - Gin Bosque Nativo 500 ml": {
     "lastSeen": 1789297391049,
@@ -264,8 +264,8 @@
     "count": 54
   },
   "PedidosYa:Jumbo Córdoba:60:60% OFF 60% - Pochoclera Nex Pcm6000R 1 Unidad": {
-    "lastSeen": 1789294005540,
-    "count": 33
+    "lastSeen": 1789299314859,
+    "count": 34
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:60:60% OFF 60% - Levadura Fresca Calsa Amasa Fácil 50 g": {
     "lastSeen": 1789297391049,
@@ -332,12 +332,12 @@
     "count": 40
   },
   "PedidosYa:Jumbo Córdoba:70:70% OFF 70% - Queso Crema Cusine & Co Clásico 226 g": {
-    "lastSeen": 1789294005540,
-    "count": 18
+    "lastSeen": 1789299314859,
+    "count": 19
   },
   "PedidosYa:Jumbo Córdoba:70:70% OFF 70% - Queso Cuisine & Co Crema Light 227 g": {
-    "lastSeen": 1789294005540,
-    "count": 22
+    "lastSeen": 1789299314859,
+    "count": 23
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:60:60% OFF 60% - Fideos Don Vicente Tallarín 500 g": {
     "lastSeen": 1789258018406,
@@ -477,6 +477,10 @@
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:cheap:$1:$1 - Cerveza Stones Maracuyá 473 ml": {
     "lastSeen": 1789297391051,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Oblea Mini Rhodesia Clásicas 60 g": {
+    "lastSeen": 1789299314859,
     "count": 1
   }
 }
