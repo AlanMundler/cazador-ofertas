@@ -280,8 +280,8 @@
     "count": 20
   },
   "UberEats:CAMIÓN:50": {
-    "lastSeen": 1789422689580,
-    "count": 9
+    "lastSeen": 1789433484102,
+    "count": 10
   },
   "Rappi:The Wrapée:50:50% OFF": {
     "lastSeen": 1789353725839,
@@ -702,5 +702,29 @@
   "Rappi:Vea:73:73% OFF - Cuisine & Co Queso Crema Clásico": {
     "lastSeen": 1789431130063,
     "count": 3
+  },
+  "UberEats:Lomitos 2x1:65": {
+    "lastSeen": 1789433484102,
+    "count": 1
+  },
+  "UberEats:LOMITO CBA:50": {
+    "lastSeen": 1789433484102,
+    "count": 1
+  },
+  "UberEats:Pachata  Manso Sabor.:60": {
+    "lastSeen": 1789433484102,
+    "count": 1
+  },
+  "UberEats:Burgueses:50": {
+    "lastSeen": 1789433484102,
+    "count": 1
+  },
+  "UberEats:Abdonur:50": {
+    "lastSeen": 1789433484102,
+    "count": 1
+  },
+  "UberEats:Salad Box:55": {
+    "lastSeen": 1789433484102,
+    "count": 1
   }
 }
