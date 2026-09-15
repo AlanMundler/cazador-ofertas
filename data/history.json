@@ -32,14 +32,14 @@
     "count": 441
   },
   "PedidosYa:PedidosYa Market Crisol:price": {
-    "lastSeen": 1789510018020,
+    "lastSeen": 1789511573604,
     "price": "$ 2.560",
     "discount": 80,
-    "count": 1239
+    "count": 1241
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Chocolate Milka Relleno de Avellanas Enteras 95 g": {
-    "lastSeen": 1789507985490,
-    "count": 425
+    "lastSeen": 1789511573602,
+    "count": 426
   },
   "Rappi:El Palacio del Oriente:50:50% OFF": {
     "lastSeen": 1789481530065,
@@ -146,8 +146,8 @@
     "count": 42
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Palta Hass Selección 115 g": {
-    "lastSeen": 1789507985490,
-    "count": 31
+    "lastSeen": 1789511573602,
+    "count": 32
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Papas Air Fryer Mc Cain Más Finitas 700 g": {
     "lastSeen": 1789510018019,
@@ -170,8 +170,8 @@
     "count": 35
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:60:60% OFF 60% - Salsa La Campagnola Barbacoa 250 g": {
-    "lastSeen": 1789507985490,
-    "count": 29
+    "lastSeen": 1789511573602,
+    "count": 30
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Vino Tinto Benjamin Malbec 750 ml": {
     "lastSeen": 1789510018019,
@@ -350,8 +350,8 @@
     "count": 41
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Chocolate Kit Kat White 4 Fingers 41.5 g": {
-    "lastSeen": 1789507985490,
-    "count": 38
+    "lastSeen": 1789511573602,
+    "count": 39
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Chocolate Kit Kat Dark Semiamargo 41.5 g": {
     "lastSeen": 1789510018019,
@@ -586,13 +586,17 @@
     "count": 1
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:price": {
-    "lastSeen": 1789510018020,
+    "lastSeen": 1789511573604,
     "price": "$ 2.560",
     "discount": 80,
-    "count": 1
+    "count": 2
   },
   "Rappi:Casero & Natural:55:Hasta 55% Off": {
     "lastSeen": 1789510312509,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Máscara De Tratamiento Tresemmé Reparación Intra Capilar 300 ml": {
+    "lastSeen": 1789511573602,
     "count": 1
   }
 }
