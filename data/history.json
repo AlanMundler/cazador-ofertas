@@ -528,8 +528,8 @@
     "count": 20
   },
   "UberEats:Lomitos 2x1:65": {
-    "lastSeen": 1789485690024,
-    "count": 3
+    "lastSeen": 1789494686608,
+    "count": 4
   },
   "UberEats:LOMITO CBA:50": {
     "lastSeen": 1789485690024,
@@ -548,8 +548,8 @@
     "count": 3
   },
   "UberEats:Salad Box:55": {
-    "lastSeen": 1789485690024,
-    "count": 3
+    "lastSeen": 1789494686608,
+    "count": 4
   },
   "PedidosYa:Carrefour Express:cheap:$230:$230 - Yogur Cremoso Tregar Light Frutilla 125 g": {
     "lastSeen": 1789493769248,
@@ -597,6 +597,10 @@
   },
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 50% - Galletitas Surtido Bagley 400 g": {
     "lastSeen": 1789493769247,
+    "count": 1
+  },
+  "UberEats:Lomito CBA Sur:50": {
+    "lastSeen": 1789494686608,
     "count": 1
   }
 }
