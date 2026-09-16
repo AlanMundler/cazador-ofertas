@@ -8,18 +8,15 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: scrape-py
+  cancel-in-progress: false
+
 jobs:
   scrape:
     runs-on: ubuntu-latest
     timeout-minutes: 12
-    name: PY ${{ matrix.store }}
-    concurrency:
-      group: scrape-py-${{ matrix.store }}
-      cancel-in-progress: false
-    strategy:
-      fail-fast: false
-      matrix:
-        store: ['169481', '290812', '398683', '550495', '620891']
+    name: PY Market + Restaurantes
     steps:
       - uses: actions/checkout@v4
 
@@ -65,15 +62,15 @@ jobs:
         run: |
           mkdir -p data
           sleep $((RANDOM % 90))
-          xvfb-run --auto-servernum node index.js --target=pedidosya --store=${{ matrix.store }}
+          xvfb-run --auto-servernum node index.js --target=pedidosya
 
       - name: Commit history
         if: always()
         run: |
           git config --global user.name "cazador-bot"
           git config --global user.email "bot@cazador-ofertas.local"
-          git add data/history-py-${{ matrix.store }}.json data/py-store-scans.json || true
-          git diff --cached --quiet || git commit -m "update history py-${{ matrix.store }} $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git add data/ || true
+          git diff --cached --quiet || git commit -m "update history $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           for i in 1 2 3; do
             git pull --rebase origin master || true
             git push && break
