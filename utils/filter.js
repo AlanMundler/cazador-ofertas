@@ -4,19 +4,19 @@ import { fileURLToPath } from 'url';
 import config from '../config.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const HISTORY_FILE = join(__dirname, '..', 'data', 'history.json');
+const DEFAULT_HISTORY_FILE = join(__dirname, '..', 'data', 'history.json');
 
-function loadHistory() {
+function loadHistory(historyFile = DEFAULT_HISTORY_FILE) {
   try {
-    if (!existsSync(HISTORY_FILE)) return {};
-    return JSON.parse(readFileSync(HISTORY_FILE, 'utf-8'));
+    if (!existsSync(historyFile)) return {};
+    return JSON.parse(readFileSync(historyFile, 'utf-8'));
   } catch {
     return {};
   }
 }
 
-function saveHistory(history) {
-  const dir = join(__dirname, '..', 'data');
+function saveHistory(history, historyFile = DEFAULT_HISTORY_FILE) {
+  const dir = dirname(historyFile);
   if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
 
   const now = Date.now();
@@ -28,7 +28,7 @@ function saveHistory(history) {
     entries = entries.slice(0, config.history.pruneKeep);
   }
 
-  writeFileSync(HISTORY_FILE, JSON.stringify(Object.fromEntries(entries), null, 2));
+  writeFileSync(historyFile, JSON.stringify(Object.fromEntries(entries), null, 2));
 }
 
 function offerKey(offer) {
@@ -41,8 +41,8 @@ function offerKey(offer) {
   return `${offer.platform}:${offer.restaurant}:${offer.discount}`;
 }
 
-export function filterNewOffers(offers) {
-  const history = loadHistory();
+export function filterNewOffers(offers, historyFile) {
+  const history = loadHistory(historyFile);
   const newOffers = [];
   const now = Date.now();
 
@@ -56,7 +56,7 @@ export function filterNewOffers(offers) {
     }
   }
 
-  saveHistory(history);
+  saveHistory(history, historyFile);
   return newOffers;
 }
 
@@ -70,8 +70,8 @@ export function deduplicateOffers(offers) {
   });
 }
 
-export function detectFlashDeals(offers) {
-  const history = loadHistory();
+export function detectFlashDeals(offers, historyFile) {
+  const history = loadHistory(historyFile);
   const flashDeals = [];
   const now = Date.now();
 
@@ -98,6 +98,6 @@ export function detectFlashDeals(offers) {
     };
   }
 
-  saveHistory(history);
+  saveHistory(history, historyFile);
   return flashDeals;
 }

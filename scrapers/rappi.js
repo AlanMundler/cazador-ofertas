@@ -4,10 +4,32 @@ import config from '../config.js';
 const MIN_SUPER = config.discounts.super;
 const MIN_RESTAURANT = config.discounts.restaurant;
 
-async function autoScroll(page, times, distance, delay) {
+const VIEWPORTS = [
+  { width: 1366, height: 768 },
+  { width: 1440, height: 900 },
+  { width: 1536, height: 864 },
+  { width: 1920, height: 1080 },
+];
+
+const USER_AGENTS = [
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36',
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
+];
+
+const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+
+async function autoScroll(page, times, distance, baseDelay) {
   for (let i = 0; i < times; i++) {
     await page.evaluate(d => window.scrollBy(0, d), distance);
-    await page.waitForTimeout(delay);
+    await page.waitForTimeout(baseDelay * (0.7 + Math.random() * 0.6));
+  }
+}
+
+async function humanWarmup(page) {
+  for (let k = 0; k < 2; k++) {
+    await page.mouse.move(150 + Math.random() * 1000, 150 + Math.random() * 500, { steps: 8 + Math.floor(Math.random() * 12) }).catch(() => {});
+    await page.waitForTimeout(300 + Math.random() * 600);
   }
 }
 
@@ -18,8 +40,8 @@ export async function scrapeRappi() {
   try {
     context = await chromium.launchPersistentContext('', {
       headless: false,
-      viewport: { width: 1366, height: 768 },
-      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      viewport: pick(VIEWPORTS),
+      userAgent: pick(USER_AGENTS),
       locale: 'es-AR',
       timezoneId: 'America/Argentina/Buenos_Aires',
       geolocation: { latitude: parseFloat(config.lat), longitude: parseFloat(config.lng) },
@@ -30,7 +52,8 @@ export async function scrapeRappi() {
 
     console.log('[Rappi] Setting location to Córdoba...');
     await page.goto('https://www.rappi.com.ar/', { waitUntil: 'domcontentloaded', timeout: 20000 });
-    await page.waitForTimeout(3000);
+    await page.waitForTimeout(2500 + Math.random() * 1500);
+    await humanWarmup(page);
 
     try {
       await page.evaluate(({ lat, lng }) => {
@@ -145,7 +168,8 @@ export async function scrapeRappi() {
       const storeUrl = `https://www.rappi.com.ar/tiendas/${store.slug}`;
       try {
         await page.goto(storeUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
-        await page.waitForTimeout(1500);
+        await page.waitForTimeout(1200 + Math.random() * 1000);
+        await humanWarmup(page);
 
         const blocked = await page.evaluate(() => {
           const t = document.title.toLowerCase();

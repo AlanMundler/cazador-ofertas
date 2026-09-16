@@ -20,6 +20,33 @@ function saveScanTimes(times) {
   writeFileSync(SCAN_FILE, JSON.stringify(times, null, 2));
 }
 
+const VIEWPORTS = [
+  { width: 1366, height: 768 },
+  { width: 1440, height: 900 },
+  { width: 1536, height: 864 },
+  { width: 1920, height: 1080 },
+];
+
+const USER_AGENTS = [
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36',
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
+];
+
+const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+
+async function humanWarmup(page) {
+  for (let k = 0; k < 3; k++) {
+    const x = 150 + Math.random() * 1000;
+    const y = 150 + Math.random() * 500;
+    await page.mouse.move(x, y, { steps: 10 + Math.floor(Math.random() * 15) }).catch(() => {});
+    await page.waitForTimeout(300 + Math.random() * 700);
+  }
+  await page.evaluate(() => window.scrollBy(0, 250 + Math.random() * 450));
+  await page.waitForTimeout(500 + Math.random() * 800);
+  await page.evaluate(() => window.scrollTo(0, 0));
+}
+
 function getStoresToScan(storeFilter) {
   const now = Date.now();
   const scans = loadScanTimes();
@@ -27,7 +54,7 @@ function getStoresToScan(storeFilter) {
 
   for (const store of config.pedidosya.stores) {
     if (storeFilter && store.vendorId !== storeFilter && store.name !== storeFilter) continue;
-    if (store.priority) {
+    if (storeFilter || store.priority) {
       toScan.push(store);
       continue;
     }
@@ -148,6 +175,7 @@ async function fetchStoreData(page, vendorId, maxPriceCheap) {
 
               hasMore = items.length >= PAGE_LIMIT;
               page++;
+              if (hasMore) await sleep(80 + Math.random() * 200);
             } catch {
               break;
             }
@@ -180,13 +208,17 @@ export async function scrapePedidosYa(storeFilter = '') {
   try {
     context = await chromium.launchPersistentContext('', {
       headless: false,
-      viewport: { width: 1366, height: 768 },
+      viewport: pick(VIEWPORTS),
+      userAgent: pick(USER_AGENTS),
+      locale: 'es-AR',
+      timezoneId: 'America/Argentina/Buenos_Aires',
     });
 
     const page = context.pages()[0] || await context.newPage();
 
     await page.goto('https://www.pedidosya.com.ar/', { waitUntil: 'domcontentloaded', timeout: 30000 });
-    await page.waitForTimeout(3000);
+    await page.waitForTimeout(2500 + Math.random() * 2000);
+    await humanWarmup(page);
 
     let title = await page.title();
     if (title.includes('momento')) {
@@ -213,7 +245,8 @@ export async function scrapePedidosYa(storeFilter = '') {
         try {
           if (store.url) {
             await page.goto(store.url, { waitUntil: 'domcontentloaded', timeout: 30000 });
-            await page.waitForTimeout(5000);
+            await page.waitForTimeout(4000 + Math.random() * 2500);
+            await humanWarmup(page);
 
             title = await page.title();
             if (title.includes('momento') || title.includes('denegado')) {

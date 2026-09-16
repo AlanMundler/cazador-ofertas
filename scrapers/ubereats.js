@@ -10,6 +10,21 @@ const LNG = parseFloat(config.lng);
 const ADDRESS = 'San José de Calasanz 50, X5000LHB Córdoba';
 const CITY_RE = /c[oó]rdoba/i;
 
+const VIEWPORTS = [
+  { width: 1366, height: 768 },
+  { width: 1440, height: 900 },
+  { width: 1536, height: 864 },
+  { width: 1920, height: 1080 },
+];
+
+const USER_AGENTS = [
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36',
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
+];
+
+const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+
 function parseDiscount(text) {
   if (!text) return 0;
   const m = text.match(/(\d+)%\s*(off|dto|descuento|en\s+artículos?\s+seleccionados)/i);
@@ -29,8 +44,8 @@ export async function scrapeUberEats() {
     tmpDir = mkdtempSync(join(tmpdir(), 'ue-'));
     context = await chromium.launchPersistentContext(tmpDir, {
       headless: false,
-      viewport: { width: 1366, height: 768 },
-      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      viewport: pick(VIEWPORTS),
+      userAgent: pick(USER_AGENTS),
       locale: 'es-AR',
       timezoneId: 'America/Argentina/Buenos_Aires',
       geolocation: { latitude: LAT, longitude: LNG },
@@ -113,8 +128,11 @@ export async function scrapeUberEats() {
     await page.waitForTimeout(500);
 
     for (let i = 0; i < 15; i++) {
-      await page.evaluate(() => window.scrollBy(0, 600));
-      await page.waitForTimeout(400);
+      await page.evaluate(() => window.scrollBy(0, 500 + Math.random() * 300));
+      if (i % 4 === 0) {
+        await page.mouse.move(150 + Math.random() * 1000, 150 + Math.random() * 500, { steps: 10 }).catch(() => {});
+      }
+      await page.waitForTimeout(300 + Math.random() * 400);
     }
 
     const debugInfo = await page.evaluate(() => ({

@@ -5,6 +5,19 @@ import { scrapePedidosYa } from './scrapers/pedidosya.js';
 import { scrapeUberEats } from './scrapers/ubereats.js';
 import { sendMessage, pollUpdates } from './notifier/telegram.js';
 import { filterNewOffers, deduplicateOffers, detectFlashDeals } from './utils/filter.js';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+function historyFileFor(target, storeFilter) {
+  if (target === 'pedidosya' && storeFilter) {
+    const store = config.pedidosya.stores.find(s => s.vendorId === storeFilter || s.name === storeFilter);
+    const id = store ? store.vendorId : storeFilter.replace(/[^a-zA-Z0-9_-]/g, '_');
+    return join(__dirname, 'data', `history-py-${id}.json`);
+  }
+  return join(__dirname, 'data', 'history.json');
+}
 
 const TIMEOUT_MS = 8 * 60 * 1000;
 const target = process.argv.find(a => a.startsWith('--target='))?.split('=')[1] || 'all';
@@ -70,11 +83,13 @@ async function main() {
   const deduplicatedCheap = deduplicateOffers(cheapProducts);
   console.log(`Después de dedup: ${deduplicatedDiscounts.length} ofertas + ${deduplicatedCheap.length} baratos`);
 
-  const newDiscounts = filterNewOffers(deduplicatedDiscounts);
-  const newCheap = filterNewOffers(deduplicatedCheap);
+  const historyFile = historyFileFor(target, storeFilter);
+
+  const newDiscounts = filterNewOffers(deduplicatedDiscounts, historyFile);
+  const newCheap = filterNewOffers(deduplicatedCheap, historyFile);
   console.log(`Nuevos: ${newDiscounts.length} ofertas + ${newCheap.length} baratos`);
 
-  const flashDeals = detectFlashDeals(deduplicatedDiscounts);
+  const flashDeals = detectFlashDeals(deduplicatedDiscounts, historyFile);
   if (flashDeals.length > 0) {
     console.log(`⚡ FLASH DEALS detectados: ${flashDeals.length}`);
   }
