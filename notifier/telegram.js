@@ -123,9 +123,10 @@ export async function sendMessage(offers, cheapProducts = [], flashDeals = []) {
     message += `\n💰 BARATOS (<$${config.maxPriceCheap})\n`;
     for (const o of cheapProducts) {
       const name = o.name || o.description?.replace(/^\$[\d.,]+\s*-\s*/, '') || '';
-      const short = name.length > 45 ? name.substring(0, 42) + '...' : name;
+      const short = name.length > 40 ? name.substring(0, 37) + '...' : name;
       const price = o.currentPrice || '';
-      message += `- ${price} ${short}\n`;
+      const where = o.restaurant ? ` (${o.restaurant})` : '';
+      message += `- ${price} ${short}${where}\n`;
     }
   }
 
