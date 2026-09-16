@@ -8,15 +8,14 @@ on:
 permissions:
   contents: write
 
-concurrency:
-  group: scrape-py-${{ matrix.store }}
-  cancel-in-progress: false
-
 jobs:
   scrape:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     name: PY ${{ matrix.store }}
+    concurrency:
+      group: scrape-py-${{ matrix.store }}
+      cancel-in-progress: false
     strategy:
       fail-fast: false
       matrix:
