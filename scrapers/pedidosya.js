@@ -27,12 +27,6 @@ const VIEWPORTS = [
   { width: 1920, height: 1080 },
 ];
 
-const USER_AGENTS = [
-  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
-  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36',
-  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
-];
-
 const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 
 const STATE_FILE = join(__dirname, '..', '.py-state.json');
@@ -228,9 +222,8 @@ export async function scrapePedidosYa(storeFilter = '') {
   let context;
   try {
     const launchOpts = {
-      headless: false,
+      headless: process.env.HEADLESS === 'true',
       viewport: pick(VIEWPORTS),
-      userAgent: pick(USER_AGENTS),
       locale: 'es-AR',
       timezoneId: 'America/Argentina/Buenos_Aires',
       ...proxyConfig(),
@@ -274,6 +267,8 @@ export async function scrapePedidosYa(storeFilter = '') {
     }
 
     console.log('[PedidosYa] Cloudflare passed!');
+    await page.waitForLoadState('domcontentloaded', { timeout: 15000 }).catch(() => {});
+    await page.waitForTimeout(2000);
     await context.storageState({ path: STATE_FILE }).catch(() => {});
 
     const scannedIds = [];
@@ -290,6 +285,18 @@ export async function scrapePedidosYa(storeFilter = '') {
         }
       } catch (e) {
         storeData = { error: e.message };
+      }
+      if (/Execution context was destroyed|Target crashed|Target closed|Protocol error/i.test(storeData?.error || '')) {
+        console.log(`  [${store.name}] Página inestable tras challenge, esperando y reintentando...`);
+        await page.waitForTimeout(5000);
+        try {
+          storeData = await fetchStoreData(page, store.vendorId, config.maxPriceCheap);
+        } catch (e) {
+          storeData = { error: 'categories:403 transient-navigation' };
+        }
+        if (/Execution context was destroyed|Target crashed|Target closed|Protocol error/i.test(storeData?.error || '')) {
+          storeData = { error: 'categories:403 transient-navigation' };
+        }
       }
 
       for (let attempt = 1; storeData?.error && attempt <= 3; attempt++) {

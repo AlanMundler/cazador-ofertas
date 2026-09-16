@@ -17,12 +17,6 @@ const VIEWPORTS = [
   { width: 1920, height: 1080 },
 ];
 
-const USER_AGENTS = [
-  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
-  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36',
-  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
-];
-
 const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 
 function parseDiscount(text) {
@@ -43,9 +37,8 @@ export async function scrapeUberEats() {
   try {
     tmpDir = mkdtempSync(join(tmpdir(), 'ue-'));
     context = await chromium.launchPersistentContext(tmpDir, {
-      headless: false,
+      headless: process.env.HEADLESS === 'true',
       viewport: pick(VIEWPORTS),
-      userAgent: pick(USER_AGENTS),
       ...(process.env.PROXY_URL ? { proxy: { server: process.env.PROXY_URL } } : {}),
       locale: 'es-AR',
       timezoneId: 'America/Argentina/Buenos_Aires',
