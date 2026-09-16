@@ -7,7 +7,7 @@ import { tmpdir } from 'os';
 const MIN_RESTAURANT = config.discounts.uberEats;
 const LAT = parseFloat(config.lat);
 const LNG = parseFloat(config.lng);
-const ADDRESS = 'San José de Calasanz 50, X5000LHB Córdoba';
+const ADDRESS = 'San José de Calasanz 50, Córdoba, Argentina';
 const CITY_RE = /c[oó]rdoba/i;
 
 const VIEWPORTS = [
