@@ -20,12 +20,13 @@ function saveScanTimes(times) {
   writeFileSync(SCAN_FILE, JSON.stringify(times, null, 2));
 }
 
-function getStoresToScan() {
+function getStoresToScan(storeFilter) {
   const now = Date.now();
   const scans = loadScanTimes();
   const toScan = [];
 
   for (const store of config.pedidosya.stores) {
+    if (storeFilter && store.vendorId !== storeFilter && store.name !== storeFilter) continue;
     if (store.priority) {
       toScan.push(store);
       continue;
@@ -66,24 +67,32 @@ async function fetchStoreData(page, vendorId, maxPriceCheap) {
 
       const discountedItems = [];
       const cheapItems = [];
-      const BATCH = 8;
-      let rateLimited = false;
+      const BATCH = 5;
+      let throttleCount = 0;
       let catsScanned = 0;
       const PAGE_LIMIT = 100;
 
       for (let i = 0; i < allCatIds.length; i += BATCH) {
-        if (rateLimited) break;
         const batch = allCatIds.slice(i, i + BATCH);
 
         for (const catId of batch) {
-          if (rateLimited) break;
           let page = 0;
           let hasMore = true;
+          let catRetries = 0;
 
-          while (hasMore && !rateLimited) {
+          while (hasMore) {
             try {
               const resp = await fetch(`/groceries/web/v1/vendors/${vendorId}/products?categoryId=${catId}&limit=${PAGE_LIMIT}&page=${page}`, { credentials: 'include' });
-              if (resp.status === 429) { rateLimited = true; break; }
+              if (resp.status === 429) {
+                throttleCount++;
+                if (catRetries < 2 && throttleCount < 6) {
+                  catRetries++;
+                  await sleep(15000 + Math.random() * 15000);
+                  continue;
+                }
+                break;
+              }
+              catRetries = 0;
               if (resp.status !== 200) break;
               const pData = await resp.json();
               const items = pData.items || [];
@@ -146,19 +155,19 @@ async function fetchStoreData(page, vendorId, maxPriceCheap) {
           catsScanned++;
         }
 
-        if (i + BATCH < allCatIds.length) await sleep(150);
+        if (i + BATCH < allCatIds.length) await sleep(400 + Math.random() * 600);
       }
 
-      return { discountedItems, cheapItems, totalCats: allCatIds.length, catsScanned: Math.min(catsScanned, allCatIds.length), rateLimited };
+      return { discountedItems, cheapItems, totalCats: allCatIds.length, catsScanned: Math.min(catsScanned, allCatIds.length), rateLimited: throttleCount > 0, throttles: throttleCount };
     } catch (e) {
       return { error: e.message };
     }
   }, { vendorId, maxPriceCheap });
 }
 
-export async function scrapePedidosYa() {
+export async function scrapePedidosYa(storeFilter = '') {
   const offers = [];
-  const stores = getStoresToScan();
+  const stores = getStoresToScan(storeFilter);
 
   if (stores.length === 0) {
     console.log('[PedidosYa] All stores scanned recently, skipping');

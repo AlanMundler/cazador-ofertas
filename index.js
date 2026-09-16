@@ -8,6 +8,7 @@ import { filterNewOffers, deduplicateOffers, detectFlashDeals } from './utils/fi
 
 const TIMEOUT_MS = 8 * 60 * 1000;
 const target = process.argv.find(a => a.startsWith('--target='))?.split('=')[1] || 'all';
+const storeFilter = process.argv.find(a => a.startsWith('--store='))?.split('=')[1] || '';
 
 async function main() {
   const startTime = Date.now();
@@ -19,7 +20,7 @@ async function main() {
 
   console.log(`\n${'='.repeat(50)}`);
   console.log(`CAZADOR DE OFERTAS - ${new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' })}`);
-  console.log(`${config.city}, ${config.country} | target: ${target}`);
+  console.log(`${config.city}, ${config.country} | target: ${target}${storeFilter ? ` | store: ${storeFilter}` : ''}`);
   console.log(`${'='.repeat(50)}\n`);
 
   const { token } = config.telegram;
@@ -40,7 +41,7 @@ async function main() {
 
   if (target === 'all' || target === 'pedidosya') {
     scrapers.push(
-      scrapePedidosYa().catch(e => { console.error('[PedidosYa] Error:', e.message); return []; })
+      scrapePedidosYa(storeFilter).catch(e => { console.error('[PedidosYa] Error:', e.message); return []; })
     );
   } else {
     scrapers.push(Promise.resolve([]));
