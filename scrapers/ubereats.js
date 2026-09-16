@@ -46,6 +46,7 @@ export async function scrapeUberEats() {
       headless: false,
       viewport: pick(VIEWPORTS),
       userAgent: pick(USER_AGENTS),
+      ...(process.env.PROXY_URL ? { proxy: { server: process.env.PROXY_URL } } : {}),
       locale: 'es-AR',
       timezoneId: 'America/Argentina/Buenos_Aires',
       geolocation: { latitude: LAT, longitude: LNG },

@@ -45,9 +45,17 @@ jobs:
       - name: Install Patchright browser
         run: npx patchright install chromium --with-deps
 
+      - name: Cache browser session
+        uses: actions/cache@v4
+        with:
+          path: .py-state.json
+          key: py-state-${{ github.run_id }}
+          restore-keys: py-state-
+
       - name: Scrape PedidosYa
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          PROXY_URL: ${{ secrets.PROXY_URL }}
           BOT_USERNAME: ${{ secrets.BOT_USERNAME }}
           CITY: ${{ secrets.CITY || 'Córdoba' }}
           COUNTRY: ${{ secrets.COUNTRY || 'Argentina' }}

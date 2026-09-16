@@ -1,6 +1,6 @@
 import { chromium } from 'patchright';
 import config from '../config.js';
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync, unlinkSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -34,6 +34,27 @@ const USER_AGENTS = [
 ];
 
 const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+
+const STATE_FILE = join(__dirname, '..', '.py-state.json');
+
+function proxyConfig() {
+  return process.env.PROXY_URL ? { proxy: { server: process.env.PROXY_URL } } : {};
+}
+
+function isChallenged(title) {
+  const t = (title || '').toLowerCase();
+  return t.includes('momento') || t.includes('denegado') || t.includes('verific') || t.includes('captcha');
+}
+
+async function waitForClear(page, label, maxMs) {
+  const start = Date.now();
+  while (Date.now() - start < maxMs) {
+    const title = await page.title().catch(() => '');
+    if (!isChallenged(title)) return true;
+    await page.waitForTimeout(5000);
+  }
+  return false;
+}
 
 async function humanWarmup(page) {
   for (let k = 0; k < 3; k++) {
@@ -206,33 +227,54 @@ export async function scrapePedidosYa(storeFilter = '') {
 
   let context;
   try {
-    context = await chromium.launchPersistentContext('', {
+    const launchOpts = {
       headless: false,
       viewport: pick(VIEWPORTS),
       userAgent: pick(USER_AGENTS),
       locale: 'es-AR',
       timezoneId: 'America/Argentina/Buenos_Aires',
-    });
+      ...proxyConfig(),
+    };
+    if (existsSync(STATE_FILE)) {
+      console.log('[PedidosYa] Restoring previous session...');
+      launchOpts.storageState = STATE_FILE;
+    }
+    context = await chromium.launchPersistentContext('', launchOpts);
 
-    const page = context.pages()[0] || await context.newPage();
+    let page = context.pages()[0] || await context.newPage();
 
     await page.goto('https://www.pedidosya.com.ar/', { waitUntil: 'domcontentloaded', timeout: 30000 });
     await page.waitForTimeout(2500 + Math.random() * 2000);
     await humanWarmup(page);
 
     let title = await page.title();
-    if (title.includes('momento')) {
-      console.log('[PedidosYa] Waiting for Turnstile...');
-      await page.waitForTimeout(20000);
-      title = await page.title();
-    }
-
-    if (title.includes('momento')) {
-      console.log('[PedidosYa] Blocked by Cloudflare');
-      return offers;
+    if (isChallenged(title)) {
+      console.log('[PedidosYa] Waiting for Turnstile (up to 60s)...');
+      if (!await waitForClear(page, 'home', 60000)) {
+        if (existsSync(STATE_FILE)) {
+          console.log('[PedidosYa] Saved session looks poisoned, retrying fresh...');
+          try { unlinkSync(STATE_FILE); } catch {}
+          await context.close().catch(() => {});
+          delete launchOpts.storageState;
+          context = await chromium.launchPersistentContext('', launchOpts);
+          const fresh = context.pages()[0] || await context.newPage();
+          await fresh.goto('https://www.pedidosya.com.ar/', { waitUntil: 'domcontentloaded', timeout: 30000 });
+          await fresh.waitForTimeout(5000);
+          if (!await waitForClear(fresh, 'home-fresh', 60000)) {
+            console.log('[PedidosYa] Blocked by Cloudflare');
+            return offers;
+          }
+          page = context.pages()[0] || await context.newPage();
+          await context.storageState({ path: STATE_FILE }).catch(() => {});
+          console.log('[PedidosYa] Cloudflare passed with fresh session!');
+        }
+        console.log('[PedidosYa] Blocked by Cloudflare');
+        return offers;
+      }
     }
 
     console.log('[PedidosYa] Cloudflare passed!');
+    await context.storageState({ path: STATE_FILE }).catch(() => {});
 
     const scannedIds = [];
 
@@ -241,46 +283,50 @@ export async function scrapePedidosYa(storeFilter = '') {
 
       let storeData = null;
 
-      for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        storeData = await fetchStoreData(page, store.vendorId, config.maxPriceCheap);
+        if (storeData && !storeData.error) {
+          console.log(`  [${store.name}] API directa OK (sin navegar)`);
+        }
+      } catch (e) {
+        storeData = { error: e.message };
+      }
+
+      for (let attempt = 1; storeData?.error && attempt <= 3; attempt++) {
+        const challenge = /403|blocked|captcha|challenge|momento|denegado|verific/i.test(storeData.error || '');
+        if (!challenge) {
+          console.log(`  [${store.name}] API error no desafiable (${storeData.error}), skipping`);
+          break;
+        }
         try {
           if (store.url) {
+            console.log(`  [${store.name}] Navegando a tienda (intento ${attempt}/3)...`);
             await page.goto(store.url, { waitUntil: 'domcontentloaded', timeout: 30000 });
             await page.waitForTimeout(4000 + Math.random() * 2500);
             await humanWarmup(page);
 
-            title = await page.title();
-            if (title.includes('momento') || title.includes('denegado')) {
-              if (attempt < 3) {
-                console.log(`  [${store.name}] Blocked (attempt ${attempt}/3), waiting for Turnstile...`);
-                await page.waitForTimeout(15000);
-                title = await page.title();
-                if (title.includes('momento') || title.includes('denegado')) {
-                  console.log(`  [${store.name}] Still blocked, reloading home...`);
-                  await page.goto('https://www.pedidosya.com.ar/', { waitUntil: 'domcontentloaded', timeout: 30000 });
-                  await page.waitForTimeout(8000);
-                  continue;
+            if (isChallenged(await page.title())) {
+              console.log(`  [${store.name}] Challenge, esperando Turnstile (hasta 60s)...`);
+              if (!await waitForClear(page, store.name, 60000)) {
+                console.log(`  [${store.name}] Still blocked, reloading home...`);
+                await page.goto('https://www.pedidosya.com.ar/', { waitUntil: 'domcontentloaded', timeout: 30000 });
+                await page.waitForTimeout(8000 + Math.random() * 4000);
+                if (isChallenged(await page.title())) {
+                  console.log(`  [${store.name}] Home también bloqueado, skipping`);
+                  break;
                 }
-              } else {
-                console.log(`  [${store.name}] Blocked after ${attempt} attempts, skipping`);
-                break;
+                storeData = { error: 'categories:403 retry-after-home' };
+                continue;
               }
             }
           }
 
           storeData = await fetchStoreData(page, store.vendorId, config.maxPriceCheap);
-
-          if (storeData && storeData.error && attempt === 1) {
-            console.log(`  [${store.name}] Failed (${storeData.error}), reloading home...`);
-            await page.goto('https://www.pedidosya.com.ar/', { waitUntil: 'domcontentloaded', timeout: 30000 });
-            await page.waitForTimeout(5000);
-            storeData = null;
-            continue;
-          }
-          break;
+          if (!storeData?.error) break;
+          console.log(`  [${store.name}] Intento ${attempt}: ${storeData.error}`);
         } catch (e) {
-          if (attempt === 2) {
-            console.log(`  [${store.name}] Error: ${e.message.substring(0, 80)}`);
-          }
+          console.log(`  [${store.name}] Error: ${e.message.substring(0, 80)}`);
+          storeData = { error: e.message };
         }
       }
 

@@ -48,6 +48,7 @@ jobs:
       - name: Scrape Rappi
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          PROXY_URL: ${{ secrets.PROXY_URL }}
           BOT_USERNAME: ${{ secrets.BOT_USERNAME }}
           CITY: ${{ secrets.CITY || 'Córdoba' }}
           COUNTRY: ${{ secrets.COUNTRY || 'Argentina' }}
