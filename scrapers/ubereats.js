@@ -1,6 +1,6 @@
 import config from '../config.js';
 import { chromium } from 'patchright';
-import { mkdtempSync } from 'fs';
+import { mkdtempSync, rmSync } from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
 
@@ -113,7 +113,7 @@ export async function scrapeUberEats() {
     await page.waitForTimeout(500);
 
     for (let i = 0; i < 15; i++) {
-      await page.evaluate(d => window.scrollBy(0, 600), null);
+      await page.evaluate(() => window.scrollBy(0, 600));
       await page.waitForTimeout(400);
     }
 
@@ -224,6 +224,7 @@ export async function scrapeUberEats() {
     console.error(`[UberEats] Error: ${err.message}`);
   } finally {
     if (context) await context.close().catch(() => {});
+    if (tmpDir) try { rmSync(tmpDir, { recursive: true, force: true }); } catch {}
   }
 
   return offers;

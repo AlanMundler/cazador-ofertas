@@ -163,27 +163,41 @@ export async function scrapeRappi() {
           const lines = text.split('\n').map(l => l.trim()).filter(l => l);
           const results = [];
 
+          const parseBadge = (line, nextLine) => {
+            let m = line.match(/^[−–-]\s*(\d+)\s*%\s*(OFF)?$/i)
+              || line.match(/^(\d+)\s*%\s*(OFF)?$/i)
+              || line.match(/^Hasta\s+(\d+)\s*%\s*Off$/i);
+            if (m) {
+              const n = m.slice(1).find(g => g && /^\d+$/.test(g));
+              return n ? parseInt(n, 10) : 0;
+            }
+            if (/^(\d+)\s*%$/.test(line) && nextLine && /^OFF$/i.test(nextLine)) {
+              return parseInt(line, 10);
+            }
+            return 0;
+          };
+
           for (let i = 0; i < lines.length; i++) {
             const line = lines[i];
-            const discountMatch = line.match(/^(\d+)%$/);
-            if (discountMatch) {
-              const discount = parseInt(discountMatch[1], 10);
-
-              let currentPrice = '';
-              for (let j = i - 1; j >= Math.max(0, i - 4); j--) {
-                if (lines[j].match(/^\$\s*[\d.,]+$/)) { currentPrice = lines[j]; break; }
+            const discount = parseBadge(line, lines[i + 1]);
+            if (discount > 0) {
+              const prices = [];
+              for (let j = Math.max(0, i - 5); j < i; j++) {
+                if (/^\$\s*[\d.,]+$/.test(lines[j])) prices.push(lines[j]);
               }
 
+              let currentPrice = prices.length > 0 ? prices[prices.length - 1] : '';
               let originalPrice = '';
-              for (let j = i - 1; j >= Math.max(0, i - 5); j--) {
-                if (lines[j].match(/^\$\s*[\d.,]+$/) && lines[j] !== currentPrice) { originalPrice = lines[j]; break; }
+              for (const p of prices) {
+                if (p !== currentPrice) { originalPrice = p; break; }
               }
 
               let productName = '';
               for (let j = i + 1; j <= Math.min(lines.length - 1, i + 6); j++) {
                 const next = lines[j];
                 if (next.length > 3 && next.length < 100 &&
-                    !next.match(/^\$/) && !next.match(/^\d+%$/) &&
+                    !next.match(/^\$/) && !next.match(/^[−–-]?\s*\d+\s*%\s*(OFF)?$/i) &&
+                    !next.match(/^Hasta\s+\d+\s*%/i) &&
                     !next.match(/^\(/) && !next.match(/^Agregar$/) &&
                     !next.match(/^Ver$/) && !next.match(/^Ver más$/) &&
                     !next.match(/^Ofertas$/) && !next.match(/^\d+\s*x\s*/i) &&
@@ -204,7 +218,14 @@ export async function scrapeRappi() {
 
         const storeDiscounts = storeOffers.filter(o => o.discount >= MIN_SUPER);
         if (storeOffers.length > 0) {
-          console.log(`  [${store.name}] ${storeOffers.length} productos con descuento, ${storeDiscounts.length} >${MIN_SUPER}%`);
+          console.log(`  [${store.name}] ${storeOffers.length} productos con descuento, ${storeDiscounts.length} >=${MIN_SUPER}%`);
+        } else {
+          const sample = await page.evaluate(() => {
+            const t = document.body.innerText || '';
+            const hits = t.split('\n').map(l => l.trim()).filter(l => /%/.test(l)).slice(0, 8);
+            return { len: t.length, hits };
+          }).catch(() => ({ len: 0, hits: [] }));
+          console.log(`  [${store.name}] 0 descuentos (texto ${sample.len} chars, líneas con %: ${JSON.stringify(sample.hits).substring(0, 200)})`);
         }
 
         for (const o of storeDiscounts) {

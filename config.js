@@ -15,7 +15,7 @@ const config = {
   },
 
   discounts: {
-    super: parseInt(process.env.MIN_DISCOUNT_SUPER || '51'),
+    super: parseInt(process.env.MIN_DISCOUNT_SUPER || '50'),
     restaurant: parseInt(process.env.MIN_DISCOUNT || '50'),
     uberEats: parseInt(process.env.MIN_DISCOUNT_UE || '50'),
     flashThreshold: parseInt(process.env.FLASH_THRESHOLD || '75'),
@@ -31,7 +31,7 @@ const config = {
       { name: 'Jumbo Córdoba', vendorId: '550495', url: 'https://www.pedidosya.com.ar/restaurantes/cordoba/jumbo-cordoba-791c33b2-6317-4717-8b90-6bee5a9554fa-menu' },
       { name: 'La Anónima Jacinto Ríos', vendorId: '620891', url: 'https://www.pedidosya.com.ar/restaurantes/cordoba/la-anonima-jacinto-rios-f6d50a50-cb1d-40d8-b8a4-7aba60e16270-menu' },
     ],
-    storeScanCooldownMs: 55 * 60 * 1000,
+    storeScanCooldownMs: 15 * 60 * 1000,
   },
 
   rappi: {
@@ -48,12 +48,7 @@ const config = {
     ],
   },
 
-  ubereats: {
-    concurrency: 5,
-    baseUrl: 'https://www.ubereats.com',
-    feedEndpoint: 'https://www.ubereats.com/_p/api/getFeedV1?localeCode=es-ar',
-    storeEndpoint: 'https://www.ubereats.com/_p/api/getStoreV1?localeCode=es-ar',
-  },
+  ubereats: {},
 
   history: {
     dedupWindowMs: 45 * 60 * 1000,

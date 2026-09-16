@@ -9,14 +9,13 @@ import { filterNewOffers, deduplicateOffers, detectFlashDeals } from './utils/fi
 const TIMEOUT_MS = 8 * 60 * 1000;
 const target = process.argv.find(a => a.startsWith('--target='))?.split('=')[1] || 'all';
 
-let timedOut = false;
-
 async function main() {
   const startTime = Date.now();
   const timer = setTimeout(() => {
     console.error(`\n[TIMEOUT] Límite de ${TIMEOUT_MS / 60000}min alcanzado, forzando salida`);
-    timedOut = true;
+    process.exit(124);
   }, TIMEOUT_MS);
+  timer.unref?.();
 
   console.log(`\n${'='.repeat(50)}`);
   console.log(`CAZADOR DE OFERTAS - ${new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' })}`);
@@ -56,11 +55,6 @@ async function main() {
   }
 
   const [rappiOffers, pedidosYaOffers, uberEatsOffers] = await Promise.all(scrapers);
-
-  if (timedOut) {
-    clearTimeout(timer);
-    console.log(`[TIMEOUT] Scraping completado antes del límite, continuando...`);
-  }
 
   const allOffers = [...rappiOffers, ...pedidosYaOffers, ...uberEatsOffers];
 

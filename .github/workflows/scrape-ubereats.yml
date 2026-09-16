@@ -2,7 +2,7 @@ name: UberEats
 
 on:
   schedule:
-    - cron: '20,50 * * * *'
+    - cron: '5 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -47,13 +47,6 @@ jobs:
       - name: Install Patchright browser
         run: npx patchright install chromium --with-deps
 
-      - name: Restore dedup history
-        uses: actions/cache@v4
-        with:
-          path: data
-          key: dedup-history-${{ github.run_id }}
-          restore-keys: dedup-history-
-
       - name: Scrape UberEats
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -63,19 +56,12 @@ jobs:
           LATITUDE: ${{ secrets.LATITUDE || '-31.412943' }}
           LONGITUDE: ${{ secrets.LONGITUDE || '-64.1966036' }}
           MIN_DISCOUNT: '50'
-          MIN_DISCOUNT_SUPER: '51'
+          MIN_DISCOUNT_SUPER: '50'
           FLASH_THRESHOLD: '75'
           MAX_PRICE_CHEAP: '500'
         run: |
           mkdir -p data
           xvfb-run --auto-servernum node index.js --target=ubereats
-
-      - name: Save dedup history
-        if: always()
-        uses: actions/cache/save@v4
-        with:
-          path: data
-          key: dedup-history-${{ github.run_id }}
 
       - name: Commit history
         if: always()
