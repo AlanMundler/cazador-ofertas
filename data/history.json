@@ -60,8 +60,8 @@
     "count": 7
   },
   "Rappi:Vea:56:56% OFF - Nesquik Original Chocolatada Listo Para Tomar 200 mL": {
-    "lastSeen": 1789605734598,
-    "count": 35
+    "lastSeen": 1789612927475,
+    "count": 36
   },
   "UberEats:Él aventurero Pizzeria:50": {
     "lastSeen": 1789604502194,
@@ -1137,6 +1137,10 @@
   },
   "UberEats:Burgueses:50": {
     "lastSeen": 1789604502194,
+    "count": 1
+  },
+  "Rappi:The Wrapée:50:50% OFF": {
+    "lastSeen": 1789612927475,
     "count": 1
   }
 }
