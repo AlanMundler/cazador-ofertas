@@ -1,11 +1,11 @@
 {
   "Rappi:El Palacio del Oriente:50:50% OFF": {
-    "lastSeen": 1789701119193,
-    "count": 43
+    "lastSeen": 1789704745900,
+    "count": 44
   },
   "Rappi:Gourmet de Shangai:50:50% OFF": {
-    "lastSeen": 1789701119193,
-    "count": 43
+    "lastSeen": 1789704745900,
+    "count": 44
   },
   "Rappi:Cultura China:50:Hasta 50% Off": {
     "lastSeen": 1789702936354,
@@ -16,8 +16,8 @@
     "count": 14
   },
   "Rappi:Asian Vegan:50:50% OFF": {
-    "lastSeen": 1789618341922,
-    "count": 7
+    "lastSeen": 1789704745900,
+    "count": 8
   },
   "Rappi:Nawebona:50:Hasta 50% Off": {
     "lastSeen": 1789623746475,
@@ -28,12 +28,12 @@
     "count": 7
   },
   "Rappi:Wok de Flores:50:Hasta 50% Off": {
-    "lastSeen": 1789618341922,
-    "count": 6
+    "lastSeen": 1789704745900,
+    "count": 7
   },
   "Rappi:Dragon Chinnese Food:50:50% OFF": {
-    "lastSeen": 1789618341922,
-    "count": 5
+    "lastSeen": 1789704745900,
+    "count": 6
   },
   "Rappi:Vea:73:73% OFF - Cuisine & Co Queso Crema Clásico": {
     "lastSeen": 1789702936354,
@@ -62,10 +62,6 @@
   "UberEats:Él aventurero Pizzeria:50": {
     "lastSeen": 1789703489283,
     "count": 6
-  },
-  "Rappi:Pizzeria Alpaca:53:Hasta 53% Off": {
-    "lastSeen": 1789618341922,
-    "count": 2
   },
   "Rappi:Vea:50:50% OFF - Mogul Goma Mundial Jelly Beans": {
     "lastSeen": 1789702936354,
@@ -1457,6 +1453,10 @@
   },
   "PedidosYa:Jumbo Córdoba:50:50% OFF 2 x 1 - Barra De Cereal Flow Con Frutos Secos 30 g": {
     "lastSeen": 1789704424212,
+    "count": 1
+  },
+  "Rappi:Maracuchana:51:Hasta 51% Off": {
+    "lastSeen": 1789704745900,
     "count": 1
   }
 }
