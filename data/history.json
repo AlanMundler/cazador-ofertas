@@ -152,8 +152,8 @@
     "count": 33
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Yogur Tregar Vainilla 125 g": {
-    "lastSeen": 1789945734814,
-    "count": 36
+    "lastSeen": 1789994349510,
+    "count": 37
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Máscara Dove 1 Min Reconstruccion 300 g": {
     "lastSeen": 1789952947713,
@@ -472,10 +472,10 @@
     "count": 6
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:price": {
-    "lastSeen": 1789992535242,
+    "lastSeen": 1789994349513,
     "price": "$ 1",
     "discount": 100,
-    "count": 18
+    "count": 20
   },
   "PedidosYa:Jumbo Córdoba:50:50% OFF 4 x 2 - Alfajor Cofler Block Simple 40 g": {
     "lastSeen": 1789974508121,
@@ -483,6 +483,22 @@
   },
   "PedidosYa:Jumbo Córdoba:50:50% OFF 4 x 2 - Alfajor Bon O Bon Negro 40 g": {
     "lastSeen": 1789974508121,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:60:60% OFF 60% - Bocadito De Huevo Cheddar Y Panceta Cañón 2 Unidades": {
+    "lastSeen": 1789994349510,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:60:60% OFF 60% - Salchichas Largas Union Ganadera 6 U": {
+    "lastSeen": 1789994349510,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:60:60% OFF 60% - Perfume De Mujer Today Tomorrow Always Wonder Avon 50 ml": {
+    "lastSeen": 1789994349510,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Cheetos Ondulados Ketchup 80 g": {
+    "lastSeen": 1789994349510,
     "count": 1
   }
 }
