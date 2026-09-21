@@ -1,7 +1,7 @@
 {
   "Rappi:El Palacio del Oriente:50:50% OFF": {
-    "lastSeen": 1789960335120,
-    "count": 50
+    "lastSeen": 1789963925371,
+    "count": 51
   },
   "Rappi:Cultura China:50:Hasta 50% Off": {
     "lastSeen": 1789962129187,
@@ -12,12 +12,12 @@
     "count": 21
   },
   "Rappi:Helados Kronch Full:53:53% OFF": {
-    "lastSeen": 1789881129766,
-    "count": 10
+    "lastSeen": 1789963925371,
+    "count": 11
   },
   "Rappi:Vea:73:73% OFF - Cuisine & Co Queso Crema Clásico": {
-    "lastSeen": 1789960335120,
-    "count": 146
+    "lastSeen": 1789963925371,
+    "count": 147
   },
   "UberEats:Lomitos 2x1:65": {
     "lastSeen": 1789953690087,
@@ -36,8 +36,8 @@
     "count": 22
   },
   "Rappi:Vea:50:50% OFF - Mogul Goma Mundial Jelly Beans": {
-    "lastSeen": 1789960335120,
-    "count": 108
+    "lastSeen": 1789963925371,
+    "count": 109
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Chocolate Milka Relleno de Avellanas Enteras 95 g": {
     "lastSeen": 1789960170290,
@@ -192,8 +192,8 @@
     "count": 29
   },
   "Rappi:Wok de Flores:50:Hasta 50% Off": {
-    "lastSeen": 1789879333143,
-    "count": 2
+    "lastSeen": 1789963925371,
+    "count": 3
   },
   "UberEats:Lomitos 348:50": {
     "lastSeen": 1789926691603,
@@ -204,8 +204,8 @@
     "count": 12
   },
   "Rappi:Gourmet de Shangai:50:50% OFF": {
-    "lastSeen": 1789960335120,
-    "count": 3
+    "lastSeen": 1789963925371,
+    "count": 4
   },
   "UberEats:CASA NEGRA:70": {
     "lastSeen": 1789960885706,
@@ -409,6 +409,18 @@
   },
   "UberEats:Diablo Huma:50": {
     "lastSeen": 1789960885706,
+    "count": 1
+  },
+  "Rappi:Dragon Chinnese Food:50:50% OFF": {
+    "lastSeen": 1789963925371,
+    "count": 1
+  },
+  "Rappi:Asian Vegan:50:50% OFF": {
+    "lastSeen": 1789963925371,
+    "count": 1
+  },
+  "Rappi:Pizzeria Alpaca:53:Hasta 53% Off": {
+    "lastSeen": 1789963925371,
     "count": 1
   }
 }
