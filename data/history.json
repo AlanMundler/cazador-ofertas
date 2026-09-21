@@ -396,12 +396,12 @@
     "count": 2
   },
   "UberEats:Guchy´s:50": {
-    "lastSeen": 1789987896527,
-    "count": 6
+    "lastSeen": 1789995091499,
+    "count": 7
   },
   "UberEats:La Perla Córdoba:50": {
-    "lastSeen": 1789987896527,
-    "count": 5
+    "lastSeen": 1789995091499,
+    "count": 6
   },
   "UberEats:Diablo Huma:50": {
     "lastSeen": 1789960885706,
@@ -503,6 +503,10 @@
   },
   "Rappi:Peqube:50:Hasta 50% Off": {
     "lastSeen": 1789994566382,
+    "count": 1
+  },
+  "UberEats:Mila & Go:50": {
+    "lastSeen": 1789995091499,
     "count": 1
   }
 }
