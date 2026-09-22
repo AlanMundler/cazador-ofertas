@@ -20,8 +20,8 @@
     "count": 42
   },
   "UberEats:LOMITO CBA:50": {
-    "lastSeen": 1790079716758,
-    "count": 46
+    "lastSeen": 1790117495972,
+    "count": 47
   },
   "UberEats:Él aventurero Pizzeria:50": {
     "lastSeen": 1790068893641,
@@ -84,8 +84,8 @@
     "count": 110
   },
   "UberEats:Pachata  Manso Sabor.:60": {
-    "lastSeen": 1790068893641,
-    "count": 39
+    "lastSeen": 1790117495972,
+    "count": 40
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Yogur Tregar Vainilla 125 g": {
     "lastSeen": 1790111374334,
@@ -208,8 +208,8 @@
     "count": 24
   },
   "UberEats:La Perla Córdoba:50": {
-    "lastSeen": 1790101301030,
-    "count": 18
+    "lastSeen": 1790117495972,
+    "count": 19
   },
   "UberEats:Diablo Huma:50": {
     "lastSeen": 1790115698811,
@@ -811,6 +811,10 @@
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:60:60% OFF 60% - Triples De Jamón Crudo Y Queso En Pan Negro Cañón 3 Unidades": {
     "lastSeen": 1790113100830,
+    "count": 1
+  },
+  "UberEats:DeBarrrio:50": {
+    "lastSeen": 1790117495972,
     "count": 1
   }
 }
