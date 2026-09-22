@@ -256,10 +256,10 @@
     "count": 20
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:price": {
-    "lastSeen": 1790111374336,
+    "lastSeen": 1790113100832,
     "price": "$ 1",
     "discount": 100,
-    "count": 44
+    "count": 45
   },
   "PedidosYa:Jumbo Córdoba:50:50% OFF 4 x 2 - Alfajor Cofler Block Simple 40 g": {
     "lastSeen": 1790091536377,
@@ -274,8 +274,8 @@
     "count": 25
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:60:60% OFF 60% - Perfume De Mujer Today Tomorrow Always Wonder Avon 50 ml": {
-    "lastSeen": 1790077162708,
-    "count": 18
+    "lastSeen": 1790113100830,
+    "count": 19
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Cheetos Ondulados Ketchup 80 g": {
     "lastSeen": 1790066324019,
@@ -928,5 +928,13 @@
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Preservativo Maxx Texturado 6 Unidades": {
     "lastSeen": 1790111374334,
     "count": 3
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:60:60% OFF 60% - Tapas Para Pascualina Villa D'Agri Hojaldre 2 Unidades": {
+    "lastSeen": 1790113100830,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:60:60% OFF 60% - Triples De Jamón Crudo Y Queso En Pan Negro Cañón 3 Unidades": {
+    "lastSeen": 1790113100830,
+    "count": 1
   }
 }
