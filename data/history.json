@@ -1,7 +1,7 @@
 {
   "Rappi:El Palacio del Oriente:50:50% OFF": {
-    "lastSeen": 1790050330289,
-    "count": 53
+    "lastSeen": 1790133130135,
+    "count": 54
   },
   "Rappi:Cultura China:50:Hasta 50% Off": {
     "lastSeen": 1790052136416,
@@ -12,8 +12,8 @@
     "count": 13
   },
   "Rappi:Vea:73:73% OFF - Cuisine & Co Queso Crema Clásico": {
-    "lastSeen": 1790127743178,
-    "count": 192
+    "lastSeen": 1790133130135,
+    "count": 193
   },
   "UberEats:Lomitos 2x1:65": {
     "lastSeen": 1790128301692,
@@ -100,8 +100,8 @@
     "count": 4
   },
   "Rappi:Gourmet de Shangai:50:50% OFF": {
-    "lastSeen": 1790050330289,
-    "count": 6
+    "lastSeen": 1790133130135,
+    "count": 7
   },
   "UberEats:CASA NEGRA:70": {
     "lastSeen": 1790049097009,
@@ -796,5 +796,9 @@
   "UberEats:Catelo:50": {
     "lastSeen": 1790131916659,
     "count": 3
+  },
+  "Rappi:Helados L'sucre:50:50% OFF": {
+    "lastSeen": 1790133130135,
+    "count": 1
   }
 }
