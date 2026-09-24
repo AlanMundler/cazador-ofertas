@@ -278,8 +278,8 @@
     "count": 39
   },
   "UberEats:Humberto:50": {
-    "lastSeen": 1790263305165,
-    "count": 34
+    "lastSeen": 1790272289096,
+    "count": 35
   },
   "PedidosYa:PedidosYa Market Crisol:50:50% OFF 50% - Galletitas Surtido Bagley 400 g": {
     "lastSeen": 1790192313352,
@@ -462,11 +462,19 @@
     "count": 2
   },
   "UberEats:Lomito CBA Sur:50": {
-    "lastSeen": 1790263305165,
-    "count": 1
+    "lastSeen": 1790272289096,
+    "count": 2
   },
   "UberEats:Pachata Sur:50": {
     "lastSeen": 1790270507904,
     "count": 2
+  },
+  "UberEats:Lo + Rico Empanadas Martin Garcia:50": {
+    "lastSeen": 1790272289096,
+    "count": 1
+  },
+  "UberEats:DeBarrrio Martin Garcia:55": {
+    "lastSeen": 1790272289096,
+    "count": 1
   }
 }
