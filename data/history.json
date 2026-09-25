@@ -776,10 +776,10 @@
     "count": 2
   },
   "PedidosYa:Jumbo Córdoba:price": {
-    "lastSeen": 1790350759109,
+    "lastSeen": 1790352637473,
     "price": "$ 16.990",
     "discount": 76,
-    "count": 2
+    "count": 3
   },
   "Rappi:Páru Inkas Sushi:81:81% OFF": {
     "lastSeen": 1790349142476,
@@ -1876,9 +1876,13 @@
     "count": 1
   },
   "PedidosYa:La Anónima Jacinto Ríos:price": {
-    "lastSeen": 1790350759109,
+    "lastSeen": 1790352637473,
     "price": "$ 1.300",
     "discount": 77,
+    "count": 2
+  },
+  "PedidosYa:La Anónima Jacinto Ríos:50:50% OFF 50% - Papas Fritas Lays Provoleta 77 g": {
+    "lastSeen": 1790352637469,
     "count": 1
   }
 }
