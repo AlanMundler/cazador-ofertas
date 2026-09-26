@@ -56,8 +56,8 @@
     "count": 59
   },
   "Rappi:Gourmet de Shangai:50:50% OFF": {
-    "lastSeen": 1790394128865,
-    "count": 13
+    "lastSeen": 1790397730631,
+    "count": 14
   },
   "UberEats:Salad Box:55": {
     "lastSeen": 1790389289012,
@@ -1651,6 +1651,14 @@
   },
   "UberEats:CASA NEGRA:70": {
     "lastSeen": 1790394695409,
+    "count": 1
+  },
+  "Rappi:Wok de Flores:50:Hasta 50% Off": {
+    "lastSeen": 1790397730631,
+    "count": 1
+  },
+  "Rappi:Dragon Chinnese Food:50:50% OFF": {
+    "lastSeen": 1790397730631,
     "count": 1
   }
 }
