@@ -191,23 +191,19 @@
     "lastSeen": 1790683733223,
     "count": 6
   },
-  "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Crema Doble La Paulina 200 g": {
-    "lastSeen": 1790599139833,
-    "count": 3
-  },
   "PedidosYa:PedidosYa Market 25 de Mayo:cheap:$1:$1 - Mayonesa Sabor Asado Hellmann's 340 g": {
     "lastSeen": 1790617099653,
     "count": 5
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:cheap:$446.25:$446.25 - Limpiador Ecovita Smart Concentrado Para Piso Lavanda Sachet 27 ml": {
-    "lastSeen": 1790618928906,
-    "count": 3
+    "lastSeen": 1790685554683,
+    "count": 4
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:price": {
-    "lastSeen": 1790683733225,
+    "lastSeen": 1790685554684,
     "price": "$ 2.480",
     "discount": 80,
-    "count": 17
+    "count": 19
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Yogur Ilolay Batido Protéico Vainilla 180 g": {
     "lastSeen": 1790627940408,
@@ -228,14 +224,6 @@
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Crema Para Cocinar La Paulina 200 g": {
     "lastSeen": 1790618928904,
     "count": 2
-  },
-  "PedidosYa:PedidosYa Market 25 de Mayo:60:60% OFF 60% - Crema Sin Lactosa Tonadita En Pote 200 g": {
-    "lastSeen": 1790599139833,
-    "count": 1
-  },
-  "PedidosYa:PedidosYa Market 25 de Mayo:60:60% OFF 60% - Queso Crematto Milkaut Balance 445 g": {
-    "lastSeen": 1790599139833,
-    "count": 1
   },
   "Rappi:Peqube:50:Hasta 50% Off": {
     "lastSeen": 1790602944025,
@@ -1069,6 +1057,18 @@
   },
   "UberEats:Pachata  Manso Sabor.:50": {
     "lastSeen": 1790644892637,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:60:60% OFF 60% - Salchicha Viena Copetin Friolim": {
+    "lastSeen": 1790685554682,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Salamín Cagnoli Tandilero Especiado 145 g": {
+    "lastSeen": 1790685554682,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:cheap:$441:$441 - Limpiador Líquido Multimax Ultraconcentrado Marina 35 ml": {
+    "lastSeen": 1790685554683,
     "count": 1
   }
 }
