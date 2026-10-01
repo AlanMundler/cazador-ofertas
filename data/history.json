@@ -1,7 +1,7 @@
 {
   "Rappi:El Palacio del Oriente:50:50% OFF": {
-    "lastSeen": 1790743339395,
-    "count": 69
+    "lastSeen": 1790824361367,
+    "count": 70
   },
   "Rappi:Cultura China:50:Hasta 50% Off": {
     "lastSeen": 1790743339395,
@@ -20,8 +20,8 @@
     "count": 171
   },
   "Rappi:Gourmet de Shangai:50:50% OFF": {
-    "lastSeen": 1790743339395,
-    "count": 22
+    "lastSeen": 1790824361367,
+    "count": 23
   },
   "UberEats:Salad Box:55": {
     "lastSeen": 1790817698649,
@@ -911,6 +911,10 @@
   },
   "Rappi:The Wrapée:50:50% OFF": {
     "lastSeen": 1790822523564,
+    "count": 1
+  },
+  "Rappi:Helados L'sucre:50:50% OFF": {
+    "lastSeen": 1790824361367,
     "count": 1
   }
 }
