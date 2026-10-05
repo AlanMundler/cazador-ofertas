@@ -1,7 +1,7 @@
 {
   "Rappi:El Palacio del Oriente:50:50% OFF": {
-    "lastSeen": 1791169926869,
-    "count": 78
+    "lastSeen": 1791173524316,
+    "count": 79
   },
   "Rappi:Cultura China:50:Hasta 50% Off": {
     "lastSeen": 1791171725933,
@@ -12,8 +12,8 @@
     "count": 101
   },
   "Rappi:Gourmet de Shangai:50:50% OFF": {
-    "lastSeen": 1791169926869,
-    "count": 31
+    "lastSeen": 1791173524316,
+    "count": 32
   },
   "UberEats:Salad Box:55": {
     "lastSeen": 1791161504330,
@@ -2789,6 +2789,18 @@
   },
   "PedidosYa:Jumbo Córdoba:cheap:$386.75:$386.75 - Sacapuntas Ezco Plástico 3 Unidades": {
     "lastSeen": 1791173291003,
+    "count": 1
+  },
+  "Rappi:Wok de Flores:50:Hasta 50% Off": {
+    "lastSeen": 1791173524316,
+    "count": 1
+  },
+  "Rappi:Dragon Chinnese Food:50:50% OFF": {
+    "lastSeen": 1791173524316,
+    "count": 1
+  },
+  "Rappi:Asian Vegan:50:50% OFF": {
+    "lastSeen": 1791173524316,
     "count": 1
   }
 }
