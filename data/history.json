@@ -272,5 +272,15 @@
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 2 x 1 - Cerveza Patagonia Amber Lager Lata 473 ml": {
     "lastSeen": 1791272390814,
     "count": 2
+  },
+  "Rappi:Dean & Dennys:75:75% OFF": {
+    "lastSeen": 1791297726929,
+    "count": 1
+  },
+  "Rappi:Dean & Dennys:price": {
+    "lastSeen": 1791297726930,
+    "price": "",
+    "discount": 75,
+    "count": 1
   }
 }
