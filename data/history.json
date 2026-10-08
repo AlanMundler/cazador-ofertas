@@ -1,15 +1,15 @@
 {
   "Rappi:El Palacio del Oriente:50:50% OFF": {
-    "lastSeen": 1791346337918,
-    "count": 83
+    "lastSeen": 1791429128009,
+    "count": 84
   },
   "Rappi:Cultura China:50:Hasta 50% Off": {
     "lastSeen": 1791346337918,
     "count": 71
   },
   "Rappi:Gourmet de Shangai:50:50% OFF": {
-    "lastSeen": 1791346337918,
-    "count": 36
+    "lastSeen": 1791429128009,
+    "count": 37
   },
   "UberEats:Humberto:50": {
     "lastSeen": 1791427885474,
@@ -237,10 +237,6 @@
     "lastSeen": 1791418180825,
     "count": 3
   },
-  "Rappi:Occo Helados - Turbo:70:Hasta 70% Off": {
-    "lastSeen": 1791342727283,
-    "count": 1
-  },
   "Rappi:Occo Helados:70:Hasta 70% Off": {
     "lastSeen": 1791348123221,
     "count": 2
@@ -347,6 +343,10 @@
   },
   "UberEats:Guchy´s:50": {
     "lastSeen": 1791427885474,
+    "count": 1
+  },
+  "Rappi:Tigger Asia:50:50% OFF": {
+    "lastSeen": 1791429128009,
     "count": 1
   }
 }
