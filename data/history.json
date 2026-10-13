@@ -32,8 +32,8 @@
     "count": 28
   },
   "UberEats:Shasho:60": {
-    "lastSeen": 1791921096663,
-    "count": 28
+    "lastSeen": 1791924686714,
+    "count": 29
   },
   "UberEats:Pachata  Manso Sabor.:60": {
     "lastSeen": 1791858090264,
@@ -130,5 +130,9 @@
   "UberEats:Pachata Sur:50": {
     "lastSeen": 1791910298066,
     "count": 2
+  },
+  "UberEats:HUMBERTO:50": {
+    "lastSeen": 1791924686714,
+    "count": 1
   }
 }
