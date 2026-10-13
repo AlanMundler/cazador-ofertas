@@ -32,6 +32,8 @@ const config = {
       { name: 'La Anónima Jacinto Ríos', vendorId: '620891', url: 'https://www.pedidosya.com.ar/restaurantes/cordoba/la-anonima-jacinto-rios-f6d50a50-cb1d-40d8-b8a4-7aba60e16270-menu' },
     ],
     storeScanCooldownMs: 15 * 60 * 1000,
+    storesPerRun: 2,          // cuántas tiendas se escanean por corrida
+    rotationFile: 'py-rotation.json', // archivo de cursor en data/
   },
 
   rappi: {
