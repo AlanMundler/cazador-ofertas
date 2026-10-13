@@ -1,7 +1,7 @@
 {
   "UberEats:Humberto:50": {
-    "lastSeen": 1791901315932,
-    "count": 230
+    "lastSeen": 1791904898768,
+    "count": 231
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:60:60% OFF 60% - Helado Cofler Dulce De Leche 63 g": {
     "lastSeen": 1791871760091,
@@ -20,12 +20,12 @@
     "count": 15
   },
   "UberEats:Lo + Rico Empanadas:50": {
-    "lastSeen": 1791858090264,
-    "count": 21
+    "lastSeen": 1791904898768,
+    "count": 22
   },
   "UberEats:Lomitos 2x1:65": {
-    "lastSeen": 1791858090264,
-    "count": 19
+    "lastSeen": 1791904898768,
+    "count": 20
   },
   "UberEats:Que Gusto:50": {
     "lastSeen": 1791861698770,
@@ -48,8 +48,8 @@
     "count": 87
   },
   "UberEats:Sushi Pop:50": {
-    "lastSeen": 1791901315932,
-    "count": 12
+    "lastSeen": 1791904898768,
+    "count": 13
   },
   "Rappi:Helados L'sucre - Turbo:65:65% OFF": {
     "lastSeen": 1791861147125,
@@ -243,6 +243,10 @@
   },
   "Rappi:Asian Vegan:50:50% OFF": {
     "lastSeen": 1791864725196,
+    "count": 1
+  },
+  "UberEats:Pachata Sur:50": {
+    "lastSeen": 1791904898768,
     "count": 1
   }
 }
