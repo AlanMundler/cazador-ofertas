@@ -1,7 +1,7 @@
 {
   "UberEats:Humberto:50": {
-    "lastSeen": 1791953511056,
-    "count": 237
+    "lastSeen": 1791957096676,
+    "count": 238
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:60:60% OFF 60% - Helado Cofler Dulce De Leche 63 g": {
     "lastSeen": 1791871760091,
@@ -134,5 +134,9 @@
   "Rappi:Jumbo:50:50% OFF - Pitusas Galletas Chocolate Rellenas 160 g": {
     "lastSeen": 1791954733459,
     "count": 2
+  },
+  "UberEats:Lomitos 2x1:50": {
+    "lastSeen": 1791957096676,
+    "count": 1
   }
 }
