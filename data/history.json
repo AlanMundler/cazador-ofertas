@@ -1,7 +1,7 @@
 {
   "UberEats:Humberto:50": {
-    "lastSeen": 1792151494364,
-    "count": 252
+    "lastSeen": 1792164089777,
+    "count": 253
   },
   "UberEats:Que Gusto:50": {
     "lastSeen": 1792088507344,
@@ -112,8 +112,8 @@
     "count": 3
   },
   "UberEats:Salad Box:60": {
-    "lastSeen": 1792088507344,
-    "count": 5
+    "lastSeen": 1792164089777,
+    "count": 6
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Jamón Cocido Feteado Lario 200 g": {
     "lastSeen": 1792078723456,
@@ -177,6 +177,14 @@
   },
   "UberEats:Sushi Pop:50": {
     "lastSeen": 1792162296652,
+    "count": 1
+  },
+  "UberEats:Pachata Sur:60": {
+    "lastSeen": 1792164089777,
+    "count": 1
+  },
+  "UberEats:Lomito CBA Sur:60": {
+    "lastSeen": 1792164089777,
     "count": 1
   }
 }
