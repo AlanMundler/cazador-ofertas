@@ -28,8 +28,8 @@
     "count": 4
   },
   "UberEats:Lo + Rico Empanadas:50": {
-    "lastSeen": 1792425120802,
-    "count": 4
+    "lastSeen": 1792450291808,
+    "count": 5
   },
   "UberEats:Pachata  Manso Sabor.:60": {
     "lastSeen": 1792363895968,
@@ -44,8 +44,8 @@
     "count": 3
   },
   "UberEats:Pachata Sur:60": {
-    "lastSeen": 1792374693566,
-    "count": 1
+    "lastSeen": 1792450291808,
+    "count": 2
   },
   "Rappi:Dragon Chinnese Food:50:50% OFF": {
     "lastSeen": 1792384932779,
@@ -73,6 +73,10 @@
   },
   "Rappi:Turbo Market:50:50% OFF - Chocolate Milka Bubbly Caramel": {
     "lastSeen": 1792437134133,
+    "count": 1
+  },
+  "UberEats:Sushi Pop:50": {
+    "lastSeen": 1792450291808,
     "count": 1
   }
 }
