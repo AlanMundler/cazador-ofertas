@@ -1,7 +1,7 @@
 {
   "UberEats:Humberto:50": {
-    "lastSeen": 1792412499793,
-    "count": 272
+    "lastSeen": 1792425120802,
+    "count": 273
   },
   "Rappi:El Palacio del Oriente:50:50% OFF": {
     "lastSeen": 1792383124446,
@@ -32,8 +32,8 @@
     "count": 4
   },
   "UberEats:Lo + Rico Empanadas:50": {
-    "lastSeen": 1792374693566,
-    "count": 3
+    "lastSeen": 1792425120802,
+    "count": 4
   },
   "UberEats:Pachata  Manso Sabor.:60": {
     "lastSeen": 1792363895968,
@@ -65,6 +65,10 @@
   },
   "Rappi:Disco:69:69% OFF - Cuisine & Co Queso Crema Light": {
     "lastSeen": 1792422734028,
+    "count": 1
+  },
+  "UberEats:Lomitos 2x1:65": {
+    "lastSeen": 1792425120802,
     "count": 1
   }
 }
