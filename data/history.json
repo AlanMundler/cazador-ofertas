@@ -16,8 +16,8 @@
     "count": 11
   },
   "Rappi:Carrefour Express:50:50% OFF - Nestlé Leche Condensada Descremada 395 g": {
-    "lastSeen": 1792411928351,
-    "count": 74
+    "lastSeen": 1792415533903,
+    "count": 75
   },
   "UberEats:Sushi Pop:50": {
     "lastSeen": 1792362105950,
@@ -58,5 +58,9 @@
   "Rappi:Asian Vegan:50:50% OFF": {
     "lastSeen": 1792384932779,
     "count": 2
+  },
+  "Rappi:Teque Onda:60:Hasta 60% Off": {
+    "lastSeen": 1792415533903,
+    "count": 1
   }
 }
