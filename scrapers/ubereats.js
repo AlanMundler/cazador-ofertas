@@ -288,6 +288,10 @@ async function scrapeDirectStores(page) {
 
       const promo = parseStorePromos(storeData.lines, store.minDiscount);
       if (!promo) {
+        const pctLines = storeData.lines
+          .filter(l => /%|\b2x1\b|2da unidad|dto|descuento/i.test(l) && l.length <= 100)
+          .slice(0, 8);
+        console.log(`[UberEats] ${store.name}: debug promoCandidates=${JSON.stringify(pctLines)}`);
         console.log(`[UberEats] ${store.name}: sin promo >=${store.minDiscount}%, se salta`);
         continue;
       }
