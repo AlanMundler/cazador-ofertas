@@ -24,12 +24,12 @@
     "count": 6
   },
   "UberEats:Salad Box:60": {
-    "lastSeen": 1792773055832,
-    "count": 8
+    "lastSeen": 1792777918990,
+    "count": 9
   },
   "UberEats:Que Gusto:50": {
-    "lastSeen": 1792773055832,
-    "count": 6
+    "lastSeen": 1792777918990,
+    "count": 7
   },
   "Rappi:Wok de Flores:50:Hasta 50% Off": {
     "lastSeen": 1792730532111,
@@ -192,5 +192,9 @@
     "price": "$ 3.200",
     "discount": 75,
     "count": 2
+  },
+  "UberEats:Pachata Sur:60": {
+    "lastSeen": 1792777918990,
+    "count": 1
   }
 }
