@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import config from './config.js';
 import { scrapeRappi } from './scrapers/rappi.js';
-import { scrapePedidosYa } from './scrapers/pedidosya.js';
+import { takeCuratedOffers } from './scrapers/curated.js';
 import { scrapeUberEats } from './scrapers/ubereats.js';
 import { sendMessage, pollUpdates } from './notifier/telegram.js';
 import { filterNewOffers, deduplicateOffers, detectFlashDeals } from './utils/filter.js';
@@ -22,6 +22,7 @@ function historyFileFor(target, storeFilter) {
 const TIMEOUT_MS = 8 * 60 * 1000;
 const target = process.argv.find(a => a.startsWith('--target='))?.split('=')[1] || 'all';
 const storeFilter = process.argv.find(a => a.startsWith('--store='))?.split('=')[1] || '';
+const dryRun = process.argv.includes('--dry-run');
 
 async function main() {
   const startTime = Date.now();
@@ -37,12 +38,15 @@ async function main() {
   console.log(`${'='.repeat(50)}\n`);
 
   const { token } = config.telegram;
-  if (token) {
+  if (dryRun) {
+    console.log('[Dry-run] Poll de Telegram omitido (no se modifica subscribers.json).');
+  } else if (token) {
     const subs = await pollUpdates(token);
     console.log(`[Telegram] Suscriptores activos: ${subs.length}`);
   }
 
   const scrapers = [];
+  let curatedCommit = null;
 
   if (target === 'all' || target === 'rappi') {
     scrapers.push(
@@ -53,9 +57,13 @@ async function main() {
   }
 
   if (target === 'all' || target === 'pedidosya') {
-    scrapers.push(
-      scrapePedidosYa(storeFilter).catch(e => { console.error('[PedidosYa] Error:', e.message); return []; })
-    );
+    const { offers: curatedOffers, errors, commit } = takeCuratedOffers(undefined, { consume: false });
+    curatedCommit = commit;
+    for (const error of errors) {
+      console.error(`[Curado] Oferta inválida conservada en cola: ${error.error}`);
+    }
+    console.log(`[Curado] ${curatedOffers.length} oferta(s) tomada(s) de la cola${errors.length ? ` (${errors.length} inválida(s) conservada(s))` : ''}`);
+    scrapers.push(Promise.resolve(curatedOffers));
   } else {
     scrapers.push(Promise.resolve([]));
   }
@@ -85,11 +93,11 @@ async function main() {
 
   const historyFile = historyFileFor(target, storeFilter);
 
-  const newDiscounts = filterNewOffers(deduplicatedDiscounts, historyFile);
-  const newCheap = filterNewOffers(deduplicatedCheap, historyFile);
+  const newDiscounts = filterNewOffers(deduplicatedDiscounts, historyFile, { persist: !dryRun });
+  const newCheap = filterNewOffers(deduplicatedCheap, historyFile, { persist: !dryRun });
   console.log(`Nuevos: ${newDiscounts.length} ofertas + ${newCheap.length} baratos`);
 
-  const flashDeals = detectFlashDeals(deduplicatedDiscounts, historyFile);
+  const flashDeals = detectFlashDeals(deduplicatedDiscounts, historyFile, { persist: !dryRun });
   if (flashDeals.length > 0) {
     console.log(`⚡ FLASH DEALS detectados: ${flashDeals.length}`);
   }
@@ -97,10 +105,19 @@ async function main() {
   const hasNewContent = newDiscounts.length > 0 || newCheap.length > 0 || flashDeals.length > 0;
 
   if (hasNewContent) {
-    await sendMessage(newDiscounts, newCheap, flashDeals);
-    console.log(`\n¡Notificación enviada!`);
+    await sendMessage(newDiscounts, newCheap, flashDeals, { dryRun });
+    console.log(dryRun ? `\n[Dry-run] Mensaje generado, no enviado.` : `\n¡Notificación enviada!`);
   } else {
     console.log(`\nSin ofertas nuevas, no se envía notificación.`);
+  }
+
+  if (curatedCommit) {
+    const committed = curatedCommit();
+    if (!committed.ok) {
+      console.error(`[Curado] ${committed.error}`);
+    } else {
+      console.log(`[Curado] Cola actualizada (${committed.remaining} oferta(s) inválida(s) conservada(s)).`);
+    }
   }
 
   clearTimeout(timer);

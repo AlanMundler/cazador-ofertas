@@ -41,7 +41,7 @@ function offerKey(offer) {
   return `${offer.platform}:${offer.restaurant}:${offer.discount}`;
 }
 
-export function filterNewOffers(offers, historyFile) {
+export function filterNewOffers(offers, historyFile, { persist = true } = {}) {
   const history = loadHistory(historyFile);
   const newOffers = [];
   const now = Date.now();
@@ -56,7 +56,7 @@ export function filterNewOffers(offers, historyFile) {
     }
   }
 
-  saveHistory(history, historyFile);
+  if (persist) saveHistory(history, historyFile);
   return newOffers;
 }
 
@@ -70,7 +70,7 @@ export function deduplicateOffers(offers) {
   });
 }
 
-export function detectFlashDeals(offers, historyFile) {
+export function detectFlashDeals(offers, historyFile, { persist = true } = {}) {
   const history = loadHistory(historyFile);
   const flashDeals = [];
   const now = Date.now();
@@ -98,6 +98,6 @@ export function detectFlashDeals(offers, historyFile) {
     };
   }
 
-  saveHistory(history, historyFile);
+  if (persist) saveHistory(history, historyFile);
   return flashDeals;
 }

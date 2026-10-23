@@ -12,6 +12,7 @@ const config = {
   telegram: {
     token: process.env.TELEGRAM_BOT_TOKEN || '',
     botUsername: process.env.BOT_USERNAME || '',
+    adminChatId: Number(process.env.TELEGRAM_CHAT_ID) || 0,
   },
 
   discounts: {
