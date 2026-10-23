@@ -51,7 +51,13 @@ const config = {
     ],
   },
 
-  ubereats: {},
+  ubereats: {
+    directStores: [
+      { slug: 'supermercado-justmart', storeId: 'wvymqlJBWVikLAVxmURagQ', name: 'JustMart', category: 'supermercado', minDiscount: 35 },
+      { slug: 'carrefour-express-santiago-derqui', storeId: '-0bSYWbrW8CowiVVbD6K0g', name: 'Carrefour Express Santiago Derqui', category: 'supermercado', minDiscount: 35 },
+      { slug: 'tadicor-cordoba', storeId: 'f1zid1uSUZuf000t2Tjmyw', name: 'Tadicor', category: 'supermercado', minDiscount: 35 },
+    ],
+  },
 
   history: {
     dedupWindowMs: 45 * 60 * 1000,
