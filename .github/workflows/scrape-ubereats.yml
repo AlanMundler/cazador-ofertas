@@ -2,6 +2,8 @@ name: UberEats
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '20,50 * * * *'
 
 permissions:
   contents: write
