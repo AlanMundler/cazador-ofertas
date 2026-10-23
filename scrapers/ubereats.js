@@ -250,7 +250,8 @@ async function scrapeDirectStores(page) {
     try {
       console.log(`[UberEats] Direct: visitando ${store.name} — ${storeUrl}`);
       try {
-        await page.goto(storeUrl, { waitUntil: 'networkidle', timeout: 45000 });
+        await page.goto(storeUrl, { waitUntil: 'domcontentloaded', timeout: 45000 });
+        await page.waitForTimeout(6000);
       } catch (e) {
         console.log(`[UberEats] ${store.name}: navegación con error (${e.message.substring(0, 80)}), revisando estado...`);
       }
@@ -288,10 +289,14 @@ async function scrapeDirectStores(page) {
 
       const promo = parseStorePromos(storeData.lines, store.minDiscount);
       if (!promo) {
-        const pctLines = storeData.lines
-          .filter(l => /%|\b2x1\b|2da unidad|dto|descuento/i.test(l) && l.length <= 100)
-          .slice(0, 8);
-        console.log(`[UberEats] ${store.name}: debug promoCandidates=${JSON.stringify(pctLines)}`);
+        const idxs = [];
+        for (let i = 0; i < storeData.lines.length; i++) {
+          const l = storeData.lines[i];
+          if (l.length <= 100 && /%|2x1|2da unidad|dto|descuento/i.test(l)) idxs.push(i);
+        }
+        const ctx = idxs.slice(0, 8).map(i =>
+          storeData.lines.slice(Math.max(0, i - 3), i + 2).join(' | '));
+        console.log(`[UberEats] ${store.name}: debug ctx=${JSON.stringify(ctx)}`);
         console.log(`[UberEats] ${store.name}: sin promo >=${store.minDiscount}%, se salta`);
         continue;
       }
