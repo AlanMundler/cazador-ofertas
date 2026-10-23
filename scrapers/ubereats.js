@@ -3,12 +3,14 @@ import { chromium } from 'patchright';
 import { mkdtempSync, rmSync } from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
+import { formatPrice, parsePrice } from './curated.js';
 
 const MIN_RESTAURANT = config.discounts.uberEats;
 const LAT = parseFloat(config.lat);
 const LNG = parseFloat(config.lng);
 const ADDRESS = 'San José de Calasanz 50, Córdoba, Argentina';
 const CITY_RE = /c[oó]rdoba/i;
+const SIZE_RE = /^\s*\d+(?:[.,]\d+)?\s*(?:g|ml|l|kg|cc)(?:\s*-\s*[a-z]+)?\s*$/i;
 
 const VIEWPORTS = [
   { width: 1366, height: 768 },
@@ -45,6 +47,57 @@ export function parseStorePromos(lines, minDiscount = 0) {
 
   if (!best || best.discount < minDiscount) return null;
   return best;
+}
+
+/**
+ * Parsea líneas de productos de groceries con badge "- N%" y precios.
+ * Formato típico: Nombre | tamaño | - N% | $actual $original
+ * Devuelve items con precios numéricos para que el llamador los formatee.
+ */
+export function parseStoreItems(lines, minDiscount = 0) {
+  const items = [];
+
+  for (const rawLine of lines || []) {
+    const line = String(rawLine ?? '').trim();
+    if (!line || !line.includes('$')) continue;
+    if (!/-\s*\d+%/.test(line)) continue;
+
+    const segments = line.split('|').map(segment => segment.trim());
+    const badgeIndex = segments.findIndex(segment => /-\s*\d+%/.test(segment));
+    if (badgeIndex < 0) continue;
+
+    const badgeMatch = segments[badgeIndex].match(/-\s*(\d+)%/);
+    if (!badgeMatch) continue;
+
+    let name = '';
+    for (let i = 0; i < badgeIndex; i++) {
+      const segment = segments[i];
+      if (segment.length >= 4 && !SIZE_RE.test(segment)) {
+        name = segment;
+        break;
+      }
+    }
+    if (!name) continue;
+
+    const priceText = segments.slice(badgeIndex + 1).join(' ');
+    const priceMatches = [...priceText.matchAll(/\$\s*([\d.,]+)/g)];
+    if (priceMatches.length === 0) continue;
+
+    const currentPrice = parsePrice(priceMatches[0][1]);
+    if (!Number.isFinite(currentPrice)) continue;
+
+    const parsedOriginal = priceMatches[1] ? parsePrice(priceMatches[1][1]) : null;
+    const originalPrice = Number.isFinite(parsedOriginal) ? parsedOriginal : null;
+
+    if (originalPrice !== null && currentPrice > originalPrice) continue;
+
+    const discount = parseInt(badgeMatch[1], 10);
+    if (discount < minDiscount) continue;
+
+    items.push({ name, discount, currentPrice, originalPrice });
+  }
+
+  return items;
 }
 
 /**
@@ -281,6 +334,27 @@ async function scrapeDirectStores(page) {
       });
 
       const storeName = storeData.name || store.name;
+      const discountedItems = parseStoreItems(storeData.lines, 0).filter(item => item.discount > 0);
+      const items = parseStoreItems(storeData.lines, store.minDiscount);
+      console.log(`[UberEats] ${store.name}: ${items.length} items >=${store.minDiscount}% (descontados ${discountedItems.length})`);
+
+      if (items.length > 0) {
+        for (const item of items) {
+          directOffers.push({
+            platform: 'UberEats', category: store.category || 'supermercado',
+            restaurant: storeName, slug: store.slug || '', discount: item.discount,
+            name: item.name,
+            description: `${item.name} -${item.discount}%`,
+            originalPrice: item.originalPrice !== null ? formatPrice(item.originalPrice) : null,
+            currentPrice: formatPrice(item.currentPrice),
+            url: storeUrl, deliveryTime: '', rating: '', imageUrl: '',
+            promoType: 'campaign', isCheapProduct: false,
+          });
+        }
+        console.log(`[UberEats] ${store.name}: ${items.length} ofertas por item agregadas`);
+        continue;
+      }
+
       const best = parseStorePromos(storeData.lines, 0);
       console.log(
         `[UberEats] ${store.name}: name="${storeName}", best=${best ? best.discount : 0}%`
