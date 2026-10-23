@@ -2,6 +2,7 @@ const CITY = process.env.CITY || 'Córdoba';
 const COUNTRY = process.env.COUNTRY || 'Argentina';
 const LAT = process.env.LATITUDE || '-31.412943';
 const LNG = process.env.LONGITUDE || '-64.1966036';
+const UBEREATS_DIRECT_PL = 'JTdCJTIyYWRkcmVzcyUyMiUzQSUyMlNhbiUyMEpvcyVDMyVBOSUyMGRlJTIwQ2FsYXNhbnolMjIlMkMlMjJyZWZlcmVuY2UlMjIlM0ElMjJFakJUWVc0Z1NtOXp3NmtnWkdVZ1EyRnNZWE5oYm5vc0lGZzFNREF3SUVQRHMzSmtiMkpoTENCQmNtZGxiblJwYm1FaUxpb3NDaFFLRWdsTFBOMkVmNkl5bEJHNEJDOWw0SlZoUFJJVUNoSUphVnVQUjEtWU1wUVJrckJtVTVwUG9yQSUyMiUyQyUyMnJlZmVyZW5jZVR5cGUlMjIlM0ElMjJnb29nbGVfcGxhY2VzJTIyJTJDJTIybGF0aXR1ZGUlMjIlM0EtMzEuNDE1ODcxNyUyQyUyMmxvbmdpdHVkZSUyMiUzQS02NC4xOTczNDMyJTdE';
 
 const config = {
   city: CITY,
@@ -53,9 +54,9 @@ const config = {
 
   ubereats: {
     directStores: [
-      { slug: 'supermercado-justmart', storeId: 'wvymqlJBWVikLAVxmURagQ', name: 'JustMart', category: 'supermercado', minDiscount: 35 },
-      { slug: 'carrefour-express-santiago-derqui', storeId: '-0bSYWbrW8CowiVVbD6K0g', name: 'Carrefour Express Santiago Derqui', category: 'supermercado', minDiscount: 35 },
-      { slug: 'tadicor-cordoba', storeId: 'f1zid1uSUZuf000t2Tjmyw', name: 'Tadicor', category: 'supermercado', minDiscount: 35 },
+      { slug: 'supermercado-justmart', storeId: 'wvymqlJBWVikLAVxmURagQ', name: 'JustMart', category: 'supermercado', minDiscount: 35, pl: UBEREATS_DIRECT_PL },
+      { slug: 'carrefour-express-santiago-derqui', storeId: '-0bSYWbrW8CowiVVbD6K0g', name: 'Carrefour Express Santiago Derqui', category: 'supermercado', minDiscount: 35, pl: UBEREATS_DIRECT_PL },
+      { slug: 'tadicor-cordoba', storeId: 'f1zid1uSUZuf000t2Tjmyw', name: 'Tadicor', category: 'supermercado', minDiscount: 35, pl: UBEREATS_DIRECT_PL },
     ],
   },
 
