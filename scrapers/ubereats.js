@@ -28,9 +28,10 @@ const pick = arr => arr[Math.floor(Math.random() * arr.length)];
  */
 export function parseStorePromos(lines, minDiscount = 0) {
   let best = null;
+  const normalizeDash = text => String(text ?? '').replace(/[\u2010-\u2015\u2212]/g, '-');
 
   for (const rawLine of lines || []) {
-    const line = String(rawLine ?? '').trim();
+    const line = normalizeDash(rawLine).trim();
     if (!line) continue;
 
     const percentMatch = line.match(/(\d+)%\s*(off|dto|descuento|en\s+artículos?\s+seleccionados)/i)
@@ -56,9 +57,11 @@ export function parseStorePromos(lines, minDiscount = 0) {
  */
 export function parseStoreItems(lines, minDiscount = 0) {
   const items = [];
+  // UberEats usa guiones Unicode (clave: en-dash/minus rompen regex ASCII) en los badges.
+  const normalizeDash = text => String(text ?? '').replace(/[\u2010-\u2015\u2212]/g, '-');
 
   for (const rawLine of lines || []) {
-    const line = String(rawLine ?? '').trim();
+    const line = normalizeDash(rawLine).trim();
     if (!line || !line.includes('$')) continue;
     if (!/-\s*\d+%/.test(line)) continue;
 

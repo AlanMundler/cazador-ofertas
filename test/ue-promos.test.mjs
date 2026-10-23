@@ -139,3 +139,32 @@ test('parseStoreItems descarta ítems donde el precio actual supera al original'
     []
   );
 });
+
+test('parseStoreItems normaliza el guion unicode del badge (en-dash U+2013)', () => {
+  assert.deepEqual(
+    parseStoreItems(
+      ['Coca-Cola · Gaseosa original (2,5 L) | 2.5 L | \u2013 25% | $ 2.842,50 $ 3.790,00'],
+      0
+    ),
+    [{ name: 'Coca-Cola · Gaseosa original (2,5 L)', discount: 25, currentPrice: 2842.5, originalPrice: 3790 }]
+  );
+});
+
+test('parseStoreItems normaliza el signo menos unicode (U+2212)', () => {
+  assert.deepEqual(
+    parseStoreItems(
+      ['Rexona M Clin Desodorante Aero Clean 55Ml-Nc | \u2212 37% | $ 975,00 $ 1.559,00'],
+      35
+    ),
+    [{ name: 'Rexona M Clin Desodorante Aero Clean 55Ml-Nc', discount: 37, currentPrice: 975, originalPrice: 1559 }]
+  );
+});
+
+test('parseStorePromos normaliza el guion unicode en badges de promo', () => {
+  const promo = parseStorePromos(
+    ['La Serenísima · Lácteos \u2013 50% dto en artículos seleccionados'],
+    35
+  );
+  assert.ok(promo);
+  assert.equal(promo.discount, 50);
+});
