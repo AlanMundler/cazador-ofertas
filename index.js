@@ -3,6 +3,7 @@ import config from './config.js';
 import { scrapeRappi } from './scrapers/rappi.js';
 import { takeCuratedOffers } from './scrapers/curated.js';
 import { scrapeUberEats } from './scrapers/ubereats.js';
+import { scrapePedidosYa } from './scrapers/pedidosya.js';
 import { sendMessage, pollUpdates } from './notifier/telegram.js';
 import { filterNewOffers, deduplicateOffers, detectFlashDeals } from './utils/filter.js';
 import { join, dirname } from 'path';
@@ -63,7 +64,11 @@ async function main() {
       console.error(`[Curado] Oferta inválida conservada en cola: ${error.error}`);
     }
     console.log(`[Curado] ${curatedOffers.length} oferta(s) tomada(s) de la cola${errors.length ? ` (${errors.length} inválida(s) conservada(s))` : ''}`);
-    scrapers.push(Promise.resolve(curatedOffers));
+    const pyLive = scrapePedidosYa(storeFilter)
+      .catch(e => { console.error('[PedidosYa] Error:', e.message); return []; });
+    const pyCombined = Promise.all([pyLive, Promise.resolve(curatedOffers)])
+      .then(([live, curated]) => [...live, ...curated]);
+    scrapers.push(pyCombined);
   } else {
     scrapers.push(Promise.resolve([]));
   }
