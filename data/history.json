@@ -24,8 +24,8 @@
     "count": 6
   },
   "UberEats:Humberto:50": {
-    "lastSeen": 1792835532042,
-    "count": 15
+    "lastSeen": 1792871535595,
+    "count": 16
   },
   "Rappi:Jumbo:50:50% OFF - Pitusas Galletas Chocolate Rellenas 160 g": {
     "lastSeen": 1792869126087,
@@ -123,6 +123,10 @@
   },
   "Rappi:Cártago:50:50% OFF": {
     "lastSeen": 1792869126087,
+    "count": 1
+  },
+  "UberEats:Shasho:60": {
+    "lastSeen": 1792871535595,
     "count": 1
   }
 }
