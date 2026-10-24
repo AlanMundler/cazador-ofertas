@@ -4,6 +4,7 @@ import { scrapeRappi } from './scrapers/rappi.js';
 import { takeCuratedOffers } from './scrapers/curated.js';
 import { scrapeUberEats } from './scrapers/ubereats.js';
 import { scrapePedidosYa } from './scrapers/pedidosya.js';
+import { scrapePyDeals } from './scrapers/pydeals.js';
 import { sendMessage, pollUpdates } from './notifier/telegram.js';
 import { filterNewOffers, deduplicateOffers, detectFlashDeals } from './utils/filter.js';
 import { join, dirname } from 'path';
@@ -66,8 +67,10 @@ async function main() {
     console.log(`[Curado] ${curatedOffers.length} oferta(s) tomada(s) de la cola${errors.length ? ` (${errors.length} inválida(s) conservada(s))` : ''}`);
     const pyLive = scrapePedidosYa(storeFilter)
       .catch(e => { console.error('[PedidosYa] Error:', e.message); return []; });
-    const pyCombined = Promise.all([pyLive, Promise.resolve(curatedOffers)])
-      .then(([live, curated]) => [...live, ...curated]);
+    const pyDeals = scrapePyDeals()
+      .catch(e => { console.error('[PY Campañas] Error:', e.message); return []; });
+    const pyCombined = Promise.all([pyLive, pyDeals, Promise.resolve(curatedOffers)])
+      .then(([live, deals, curated]) => [...live, ...deals, ...curated]);
     scrapers.push(pyCombined);
   } else {
     scrapers.push(Promise.resolve([]));

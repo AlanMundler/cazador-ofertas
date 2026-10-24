@@ -36,6 +36,7 @@ const config = {
     storeScanCooldownMs: 15 * 60 * 1000,
     storesPerRun: 2,          // cuántas tiendas se escanean por corrida
     rotationFile: 'py-rotation.json', // archivo de cursor en data/
+    campaigns: { minDiscount: 35 },   // promos de sitio/banco vía agregador (fetch plano, sin browser)
   },
 
   rappi: {
