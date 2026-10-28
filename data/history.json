@@ -36,8 +36,8 @@
     "count": 49
   },
   "Rappi:Jumbo:50:50% OFF - Pitusas Galletas Chocolate Rellenas 160 g": {
-    "lastSeen": 1793223727963,
-    "count": 39
+    "lastSeen": 1793227326875,
+    "count": 40
   },
   "Rappi:Vea:53:53% OFF - Cuisine & Co Salchichas Cocidas sin Piel": {
     "lastSeen": 1793225537240,
@@ -54,5 +54,15 @@
   "Rappi:La Despensa:60:60% OFF - Bon o Bon Dulce de Alfajor con Chocolate": {
     "lastSeen": 1793178749732,
     "count": 4
+  },
+  "Rappi:Turbo Market:99:99% OFF - Milka Chocolate Relleno con Oreo y Crema": {
+    "lastSeen": 1793227326875,
+    "count": 1
+  },
+  "Rappi:Turbo Market:price": {
+    "lastSeen": 1793227326876,
+    "price": "$ 11.119,00",
+    "discount": 99,
+    "count": 1
   }
 }
