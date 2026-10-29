@@ -36,8 +36,8 @@
     "count": 50
   },
   "Rappi:Vea:53:53% OFF - Cuisine & Co Salchichas Cocidas sin Piel": {
-    "lastSeen": 1793261538861,
-    "count": 45
+    "lastSeen": 1793265130615,
+    "count": 46
   },
   "Rappi:Teque Onda:60:Hasta 60% Off": {
     "lastSeen": 1793193132404,
@@ -66,5 +66,9 @@
     "price": "$ 11.119,00",
     "discount": 99,
     "count": 3
+  },
+  "Rappi:Mostaza Deli Café y Postres:62:62% OFF": {
+    "lastSeen": 1793265130615,
+    "count": 1
   }
 }
