@@ -1,7 +1,7 @@
 {
   "Rappi:El Palacio del Oriente:50:50% OFF": {
-    "lastSeen": 1793333525936,
-    "count": 35
+    "lastSeen": 1793416326283,
+    "count": 36
   },
   "Rappi:Gourmet de Shangai:50:50% OFF": {
     "lastSeen": 1793333525936,
@@ -28,8 +28,8 @@
     "count": 8
   },
   "Rappi:Jumbo:50:50% OFF - Pitusas Galletas Chocolate Rellenas 160 g": {
-    "lastSeen": 1793412721657,
-    "count": 90
+    "lastSeen": 1793416326283,
+    "count": 91
   },
   "UberEats:Sushi Pop:50": {
     "lastSeen": 1793371928482,
@@ -65,6 +65,10 @@
   },
   "UberEats:Él aventurero Pizzeria:50": {
     "lastSeen": 1793415132385,
+    "count": 1
+  },
+  "Rappi:Chacarita Gf:50:Hasta 50% Off": {
+    "lastSeen": 1793416326283,
     "count": 1
   }
 }
