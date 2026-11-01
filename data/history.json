@@ -28,8 +28,8 @@
     "count": 4
   },
   "Rappi:Mostaza Deli Café y Postres:62:62% OFF": {
-    "lastSeen": 1793439725217,
-    "count": 1
+    "lastSeen": 1793508129018,
+    "count": 2
   },
   "UberEats:Humberto:50": {
     "lastSeen": 1793452933172,
@@ -51,6 +51,10 @@
     "lastSeen": 1793500937396,
     "price": "",
     "discount": 79,
+    "count": 1
+  },
+  "Rappi:Wok de Flores:50:Hasta 50% Off": {
+    "lastSeen": 1793508129018,
     "count": 1
   }
 }
