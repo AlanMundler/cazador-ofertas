@@ -28,8 +28,8 @@
     "count": 5
   },
   "UberEats:Humberto:50": {
-    "lastSeen": 1793539325814,
-    "count": 4
+    "lastSeen": 1793544723839,
+    "count": 5
   },
   "UberEats:Humberto:50:50% off select items": {
     "lastSeen": 1793476312798,
@@ -51,6 +51,10 @@
   },
   "UberEats:Lomitos 2x1:50": {
     "lastSeen": 1793533931637,
+    "count": 1
+  },
+  "UberEats:Sushi Pop:50": {
+    "lastSeen": 1793544723839,
     "count": 1
   }
 }
