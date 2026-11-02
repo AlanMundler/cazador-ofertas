@@ -16,8 +16,8 @@
     "count": 14
   },
   "Rappi:Jumbo:50:50% OFF - Pitusas Galletas Chocolate Rellenas 160 g": {
-    "lastSeen": 1793632331095,
-    "count": 139
+    "lastSeen": 1793635935205,
+    "count": 140
   },
   "Rappi:Mostaza Deli Café y Postres:62:62% OFF": {
     "lastSeen": 1793614329431,
@@ -118,5 +118,59 @@
   "Rappi:Disco:50:50% OFF - Shot Alfajor Triple Blanco": {
     "lastSeen": 1793634126147,
     "count": 2
+  },
+  "Rappi:Vea:50:50% OFF - Milka Alfajor de Chocolate Relleno de Dulce de Leche": {
+    "lastSeen": 1793635935205,
+    "count": 1
+  },
+  "Rappi:Vea:50:50% OFF - Nestlé Leche Condensada 395 g": {
+    "lastSeen": 1793635935205,
+    "count": 1
+  },
+  "Rappi:Vea:75:75% OFF - Skip Jabón Líquido para Diluir": {
+    "lastSeen": 1793635935205,
+    "count": 1
+  },
+  "Rappi:Vea:50:50% OFF - Nestlé Leche Condensada Descremada 395 g": {
+    "lastSeen": 1793635935205,
+    "count": 1
+  },
+  "Rappi:Vea:79:79% OFF - Skip Jabón Líquido Con Bio Enzimas": {
+    "lastSeen": 1793635935205,
+    "count": 1
+  },
+  "Rappi:Vea:70:70% OFF - Villavicencio Agua Mineral Sin Gas": {
+    "lastSeen": 1793635935205,
+    "count": 1
+  },
+  "Rappi:Vea:60:60% OFF - Villavicencio Agua Natural Con Gas": {
+    "lastSeen": 1793635935205,
+    "count": 1
+  },
+  "Rappi:Vea:50:50% OFF - Kitkat Oblea Chocolate Con Leche 41.5 g": {
+    "lastSeen": 1793635935205,
+    "count": 1
+  },
+  "Rappi:Vea:50:50% OFF - Milka Alfajor Super Dulce de Leche Blanco": {
+    "lastSeen": 1793635935205,
+    "count": 1
+  },
+  "Rappi:Vea:50:50% OFF - Alfajor Pepitos Triple": {
+    "lastSeen": 1793635935205,
+    "count": 1
+  },
+  "Rappi:Vea:83:83% OFF - Detergente Cif Bioactive Lima Doypack 450 mL": {
+    "lastSeen": 1793635935205,
+    "count": 1
+  },
+  "Rappi:Vea:60:60% OFF - Michelob Cerveza Light Ultra": {
+    "lastSeen": 1793635935205,
+    "count": 1
+  },
+  "Rappi:Vea:price": {
+    "lastSeen": 1793635935206,
+    "price": "$ 3.290,00",
+    "discount": 83,
+    "count": 3
   }
 }
