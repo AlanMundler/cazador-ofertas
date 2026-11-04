@@ -112,8 +112,8 @@
     "count": 26
   },
   "UberEats:NOVLE NUEVA CORDOBA:50": {
-    "lastSeen": 1793758924583,
-    "count": 2
+    "lastSeen": 1793767930554,
+    "count": 3
   },
   "UberEats:Que Gusto:50": {
     "lastSeen": 1793758924583,
@@ -369,6 +369,18 @@
   },
   "Rappi:La Malbequería Cocina Porteña:50:Hasta 50% Off": {
     "lastSeen": 1793761930759,
+    "count": 1
+  },
+  "UberEats:La paisanita:50": {
+    "lastSeen": 1793767930554,
+    "count": 1
+  },
+  "UberEats:No Hay 2 Sin 3:50": {
+    "lastSeen": 1793767930554,
+    "count": 1
+  },
+  "UberEats:Humberto:50": {
+    "lastSeen": 1793767930554,
     "count": 1
   }
 }
