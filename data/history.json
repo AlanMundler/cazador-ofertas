@@ -196,8 +196,8 @@
     "count": 9
   },
   "UberEats:El Hornito Santiagueño:50": {
-    "lastSeen": 1793919118374,
-    "count": 1
+    "lastSeen": 1793989320032,
+    "count": 2
   },
   "UberEats:Pachata  Manso Sabor.:50": {
     "lastSeen": 1793919118374,
@@ -221,6 +221,18 @@
   },
   "UberEats:Lomitos 2x1:50": {
     "lastSeen": 1793951523162,
+    "count": 1
+  },
+  "UberEats:Lomitos 2x1:60": {
+    "lastSeen": 1793989320032,
+    "count": 1
+  },
+  "UberEats:Que Gusto:50": {
+    "lastSeen": 1793989320032,
+    "count": 1
+  },
+  "UberEats:Strong Bar:50": {
+    "lastSeen": 1793989320032,
     "count": 1
   }
 }
