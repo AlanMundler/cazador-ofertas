@@ -192,12 +192,12 @@
     "count": 6
   },
   "UberEats:Pachata  Manso Sabor.:50:50% off select items": {
-    "lastSeen": 1794068512691,
-    "count": 2
+    "lastSeen": 1794102708861,
+    "count": 3
   },
   "UberEats:Que Gusto:50:50% off select items": {
-    "lastSeen": 1794068512691,
-    "count": 2
+    "lastSeen": 1794102708861,
+    "count": 3
   },
   "UberEats:LOMITO CBA:50:50% off select items": {
     "lastSeen": 1794019906637,
@@ -476,8 +476,8 @@
     "count": 1
   },
   "UberEats:El Hornito Santiagueño:50:50% off select items": {
-    "lastSeen": 1794077511279,
-    "count": 2
+    "lastSeen": 1794102708861,
+    "count": 3
   },
   "UberEats:Mr. Tasty:50:50% off select items": {
     "lastSeen": 1794077511279,
@@ -496,8 +496,8 @@
     "count": 1
   },
   "UberEats:Strong Bar:50:50% off select items": {
-    "lastSeen": 1794077511279,
-    "count": 1
+    "lastSeen": 1794102708861,
+    "count": 2
   },
   "UberEats:Lomos La Catedral:50": {
     "lastSeen": 1794088325838,
@@ -556,5 +556,17 @@
   "Rappi:Disco:50:50% OFF - Shot Alfajor Trishot Maní Triple 60g": {
     "lastSeen": 1794102116296,
     "count": 2
+  },
+  "UberEats:Lo + Rico Empanadas:50:50% off select items": {
+    "lastSeen": 1794102708861,
+    "count": 1
+  },
+  "UberEats:Flama Pizzas:50": {
+    "lastSeen": 1794102708861,
+    "count": 1
+  },
+  "UberEats:Salad Box:50:50% off select items": {
+    "lastSeen": 1794102708861,
+    "count": 1
   }
 }
