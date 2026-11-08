@@ -172,8 +172,8 @@
     "count": 51
   },
   "UberEats:Humberto:50": {
-    "lastSeen": 1794084717446,
-    "count": 6
+    "lastSeen": 1794122516574,
+    "count": 7
   },
   "UberEats:Lomitos 2x1:60": {
     "lastSeen": 1794070315953,
@@ -576,5 +576,9 @@
   "Rappi:Carrefour Express:50:50% OFF - Nestlé Leche Condensada Descremada 395 g": {
     "lastSeen": 1794120116220,
     "count": 3
+  },
+  "UberEats:Lomitos 2x1:50": {
+    "lastSeen": 1794122516574,
+    "count": 1
   }
 }
