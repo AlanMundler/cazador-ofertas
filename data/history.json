@@ -140,8 +140,8 @@
     "count": 13
   },
   "UberEats:El Hornito Santiagueño:50": {
-    "lastSeen": 1794174714450,
-    "count": 12
+    "lastSeen": 1794181926850,
+    "count": 13
   },
   "Rappi:Teque Onda:53:Hasta 53% Off": {
     "lastSeen": 1794105725847,
@@ -192,8 +192,8 @@
     "count": 2
   },
   "UberEats:Lo + Rico Empanadas:50": {
-    "lastSeen": 1794178322166,
-    "count": 5
+    "lastSeen": 1794181926850,
+    "count": 6
   },
   "UberEats:Sushi Pop:50": {
     "lastSeen": 1794174714450,
@@ -270,8 +270,8 @@
     "count": 3
   },
   "UberEats:Flama Pizzas:50": {
-    "lastSeen": 1794178322166,
-    "count": 2
+    "lastSeen": 1794181926850,
+    "count": 3
   },
   "UberEats:Salad Box:50:50% off select items": {
     "lastSeen": 1794180116323,
@@ -322,11 +322,19 @@
     "count": 1
   },
   "UberEats:Pachata  Manso Sabor.:50": {
-    "lastSeen": 1794178322166,
-    "count": 1
+    "lastSeen": 1794181926850,
+    "count": 2
   },
   "UberEats:De Cajon Velez Sarfield:60": {
     "lastSeen": 1794178322166,
+    "count": 1
+  },
+  "UberEats:Salad Box:50": {
+    "lastSeen": 1794181926850,
+    "count": 1
+  },
+  "UberEats:Que Gusto:50": {
+    "lastSeen": 1794181926850,
     "count": 1
   }
 }
