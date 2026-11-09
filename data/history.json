@@ -176,8 +176,8 @@
     "count": 5
   },
   "UberEats:Humberto:50:50% off select items": {
-    "lastSeen": 1794172921749,
-    "count": 7
+    "lastSeen": 1794216124960,
+    "count": 8
   },
   "UberEats:Strong Bar:50:50% off select items": {
     "lastSeen": 1794192725361,
@@ -246,8 +246,8 @@
     "count": 14
   },
   "UberEats:Lomitos 2x1:50": {
-    "lastSeen": 1794194515908,
-    "count": 6
+    "lastSeen": 1794216124960,
+    "count": 7
   },
   "Rappi:Disco:90:90% OFF - Kitkat Oblea Chocolate Blanco 41.5 g": {
     "lastSeen": 1794156123652,
@@ -303,6 +303,10 @@
   },
   "UberEats:Sa Cova:50": {
     "lastSeen": 1794201790738,
+    "count": 1
+  },
+  "UberEats:Sa Cova:50:50% off select items": {
+    "lastSeen": 1794216124960,
     "count": 1
   }
 }
