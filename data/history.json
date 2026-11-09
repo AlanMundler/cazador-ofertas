@@ -124,12 +124,12 @@
     "count": 15
   },
   "UberEats:Pachata  Manso Sabor.:50:50% off select items": {
-    "lastSeen": 1794192725361,
-    "count": 6
+    "lastSeen": 1794244908189,
+    "count": 7
   },
   "UberEats:Que Gusto:50:50% off select items": {
-    "lastSeen": 1794192725361,
-    "count": 5
+    "lastSeen": 1794244908189,
+    "count": 6
   },
   "UberEats:LOMITO CBA:50:50% off select items": {
     "lastSeen": 1794192725361,
@@ -230,8 +230,8 @@
     "count": 17
   },
   "UberEats:Lomitos 2x1:50": {
-    "lastSeen": 1794216124960,
-    "count": 7
+    "lastSeen": 1794244908189,
+    "count": 8
   },
   "Rappi:Disco:55:55% OFF - Villavicencio Agua Mineral Sin Gas 1.5L": {
     "lastSeen": 1794197519787,
@@ -335,6 +335,10 @@
   },
   "PedidosYa:Jumbo Córdoba:cheap:$450:$450 - Kétchup Danica 50 g": {
     "lastSeen": 1794242075571,
+    "count": 1
+  },
+  "UberEats:Lo + Rico Empanadas Martin Garcia:50:50% off select items": {
+    "lastSeen": 1794244908189,
     "count": 1
   }
 }
