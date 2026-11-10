@@ -80,8 +80,8 @@
     "count": 9
   },
   "UberEats:Humberto:50:50% off select items": {
-    "lastSeen": 1794293669830,
-    "count": 10
+    "lastSeen": 1794318832030,
+    "count": 11
   },
   "Rappi:La Despensa:50:50% OFF - Bon o Bon Dulce de Alfajor con Chocolate": {
     "lastSeen": 1794316407364,
@@ -258,5 +258,9 @@
   "Rappi:Turbo Market:50:50% OFF - Arcor Salsa Lista Pomarola": {
     "lastSeen": 1794318132609,
     "count": 8
+  },
+  "UberEats:Mr. Tasty:50:50% off select items": {
+    "lastSeen": 1794318832030,
+    "count": 1
   }
 }
