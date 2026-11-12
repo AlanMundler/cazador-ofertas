@@ -116,8 +116,8 @@
     "count": 2
   },
   "UberEats:Pachata  Manso Sabor.:50:50% off select items": {
-    "lastSeen": 1794448312040,
-    "count": 2
+    "lastSeen": 1794522128391,
+    "count": 3
   },
   "UberEats:Que Gusto:50:50% off select items": {
     "lastSeen": 1794448312040,
@@ -201,6 +201,10 @@
   },
   "UberEats:Humberto:50": {
     "lastSeen": 1794511320798,
+    "count": 1
+  },
+  "UberEats:Fabaag:50": {
+    "lastSeen": 1794522128391,
     "count": 1
   }
 }
