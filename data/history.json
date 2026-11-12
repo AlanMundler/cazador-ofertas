@@ -1,7 +1,7 @@
 {
   "PedidosYa:Descuentos Hoy:50:50% OFF — Descuentos Hoy": {
-    "lastSeen": 1794499456948,
-    "count": 468
+    "lastSeen": 1794503033081,
+    "count": 469
   },
   "Rappi:Turbo Market:50:50% OFF - Bon o Bon Dulce de Alfajor con Chocolate": {
     "lastSeen": 1794499930363,
@@ -132,16 +132,16 @@
     "count": 1
   },
   "PedidosYa:Jumbo Córdoba:50:50% OFF 2 x 1 - Gomitas Mogul Tubitos Hechizados Uva Extreme 100 g": {
-    "lastSeen": 1794497600202,
-    "count": 1
+    "lastSeen": 1794503033081,
+    "count": 2
   },
   "PedidosYa:Jumbo Córdoba:56:56% OFF 56% - Molde Cuadrado Aluminio 20x20 CM AM": {
-    "lastSeen": 1794497600202,
-    "count": 1
+    "lastSeen": 1794503033081,
+    "count": 2
   },
   "PedidosYa:Jumbo Córdoba:cheap:$450:$450 - Kétchup Danica 50 g": {
-    "lastSeen": 1794497600202,
-    "count": 1
+    "lastSeen": 1794503033082,
+    "count": 2
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Snack Pep Rueditas Pizza 120 g": {
     "lastSeen": 1794499456948,
@@ -181,6 +181,10 @@
   },
   "PedidosYa:PedidosYa Market 25 de Mayo:55:55% OFF 55% - Aceite De Oliva Extra Virgen Filippo Berio 500 ml": {
     "lastSeen": 1794499456948,
+    "count": 1
+  },
+  "PedidosYa:Jumbo Córdoba:50:50% OFF 50% - Servidor De Pastas Krea Antiadherente (30 cm) 1 Unidad": {
+    "lastSeen": 1794503033081,
     "count": 1
   }
 }
