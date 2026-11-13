@@ -28,16 +28,16 @@
     "count": 84
   },
   "Rappi:El Palacio del Oriente:50:50% OFF": {
-    "lastSeen": 1794543128558,
-    "count": 8
+    "lastSeen": 1794595338391,
+    "count": 9
   },
   "Rappi:Gourmet de Shangai:50:50% OFF": {
-    "lastSeen": 1794543128558,
-    "count": 8
+    "lastSeen": 1794595338391,
+    "count": 9
   },
   "Rappi:Cultura China:50:Hasta 50% Off": {
-    "lastSeen": 1794544930439,
-    "count": 8
+    "lastSeen": 1794595338391,
+    "count": 9
   },
   "Rappi:Wok de Flores:50:Hasta 50% Off": {
     "lastSeen": 1794543128558,
@@ -173,6 +173,10 @@
   },
   "UberEats:DeBarrrio Alvear:50:50% off select items": {
     "lastSeen": 1794592307843,
+    "count": 1
+  },
+  "Rappi:Otaku Sushi:50:50% OFF": {
+    "lastSeen": 1794595338391,
     "count": 1
   }
 }
