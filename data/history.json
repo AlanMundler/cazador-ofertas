@@ -20,8 +20,8 @@
     "count": 209
   },
   "UberEats:Humberto:50:50% off select items": {
-    "lastSeen": 1794574313707,
-    "count": 17
+    "lastSeen": 1794577918052,
+    "count": 18
   },
   "Rappi:La Despensa:50:50% OFF - Bon o Bon Dulce de Alfajor con Chocolate": {
     "lastSeen": 1794555738202,
@@ -184,8 +184,8 @@
     "count": 2
   },
   "UberEats:Fabaag:50": {
-    "lastSeen": 1794563521680,
-    "count": 2
+    "lastSeen": 1794577918052,
+    "count": 3
   },
   "Rappi:Teque Onda:53:Hasta 53% Off": {
     "lastSeen": 1794537740601,
@@ -209,6 +209,10 @@
   },
   "UberEats:Bocconi:50": {
     "lastSeen": 1794563521680,
+    "count": 1
+  },
+  "UberEats:Mr. Tasty:50:50% off select items": {
+    "lastSeen": 1794577918052,
     "count": 1
   }
 }
