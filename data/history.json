@@ -128,8 +128,8 @@
     "count": 2
   },
   "UberEats:Fabaag:50": {
-    "lastSeen": 1794577918052,
-    "count": 3
+    "lastSeen": 1794592307843,
+    "count": 4
   },
   "Rappi:Teque Onda:53:Hasta 53% Off": {
     "lastSeen": 1794537740601,
@@ -140,12 +140,12 @@
     "count": 1
   },
   "UberEats:Lomitos 2x1:50": {
-    "lastSeen": 1794540113095,
-    "count": 1
+    "lastSeen": 1794592307843,
+    "count": 2
   },
   "UberEats:Que Gusto:50:50% off select items": {
-    "lastSeen": 1794540113095,
-    "count": 1
+    "lastSeen": 1794592307843,
+    "count": 2
   },
   "Rappi:Mostaza Deli Café y Postres:62:62% OFF": {
     "lastSeen": 1794561133874,
@@ -157,6 +157,22 @@
   },
   "UberEats:Mr. Tasty:50:50% off select items": {
     "lastSeen": 1794577918052,
+    "count": 1
+  },
+  "UberEats:Sushi Pop:50:50% off select items": {
+    "lastSeen": 1794592307843,
+    "count": 1
+  },
+  "UberEats:Pachata Sur:50:50% off select items": {
+    "lastSeen": 1794592307843,
+    "count": 1
+  },
+  "UberEats:Lomito CBA Sur:50:50% off select items": {
+    "lastSeen": 1794592307843,
+    "count": 1
+  },
+  "UberEats:DeBarrrio Alvear:50:50% off select items": {
+    "lastSeen": 1794592307843,
     "count": 1
   }
 }
