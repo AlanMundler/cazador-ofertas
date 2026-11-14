@@ -1,7 +1,7 @@
 {
   "PedidosYa:Descuentos Hoy:50:50% OFF — Descuentos Hoy": {
-    "lastSeen": 1794657761846,
-    "count": 512
+    "lastSeen": 1794661487914,
+    "count": 513
   },
   "Rappi:La Despensa:50:50% OFF - Mogul Gomita en Rollo Con Sabores Frutales": {
     "lastSeen": 1794593527445,
@@ -125,6 +125,44 @@
   },
   "UberEats:Lo + Rico Empanadas:50:50% off select items": {
     "lastSeen": 1794619310068,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Queso Procesado Cheddar Tonadita En Fetas 120 g": {
+    "lastSeen": 1794661487914,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Harina Leudante Blancaflor 1 kg": {
+    "lastSeen": 1794661487914,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Cerveza Imperial Golden 710 mL": {
+    "lastSeen": 1794661487914,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:100:100% OFF 100% - Cerveza Rubia Sin Alcohol 0.0% Corona 330 ml": {
+    "lastSeen": 1794661487914,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:50:50% OFF 50% - Palitos Fritos Krachitos Salados 110 g": {
+    "lastSeen": 1794661487914,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:55:55% OFF 55% - Edulcorante Hileret Zucra Minipancitos En Pote 112 g": {
+    "lastSeen": 1794661487914,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:55:55% OFF 55% - Aceite De Oliva Extra Virgen Filippo Berio 500 ml": {
+    "lastSeen": 1794661487914,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:cheap:$1:$1 - Cerveza Rubia Sin Alcohol 0.0% Corona 330 ml": {
+    "lastSeen": 1794661487915,
+    "count": 1
+  },
+  "PedidosYa:PedidosYa Market 25 de Mayo:price": {
+    "lastSeen": 1794661487915,
+    "price": "$ 1",
+    "discount": 100,
     "count": 1
   }
 }
