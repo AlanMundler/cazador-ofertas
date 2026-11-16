@@ -36,8 +36,8 @@
     "count": 2
   },
   "UberEats:Lomitos 2x1:50": {
-    "lastSeen": 1794734529476,
-    "count": 2
+    "lastSeen": 1794806517948,
+    "count": 3
   },
   "UberEats:Mr. Tasty:50:50% off select items": {
     "lastSeen": 1794774114935,
@@ -81,6 +81,10 @@
   },
   "UberEats:Strong Bar:50": {
     "lastSeen": 1794793922073,
+    "count": 1
+  },
+  "UberEats:Humberto:50": {
+    "lastSeen": 1794806517948,
     "count": 1
   }
 }
