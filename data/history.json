@@ -36,8 +36,8 @@
     "count": 6
   },
   "UberEats:Que Gusto:50:50% off select items": {
-    "lastSeen": 1794972116071,
-    "count": 2
+    "lastSeen": 1795045919754,
+    "count": 3
   },
   "UberEats:Lomitos 2x1:60:60% off select items": {
     "lastSeen": 1795044115104,
@@ -157,6 +157,10 @@
   },
   "Rappi:Fare Pinsa y Vermu:60:Hasta 60% Off": {
     "lastSeen": 1795045465116,
+    "count": 1
+  },
+  "UberEats:ANTOJAZOS FOOD:50": {
+    "lastSeen": 1795045919754,
     "count": 1
   }
 }
