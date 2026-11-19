@@ -68,16 +68,16 @@
     "count": 1
   },
   "UberEats:Strong Bar:50": {
-    "lastSeen": 1795026118046,
-    "count": 1
+    "lastSeen": 1795051324801,
+    "count": 2
   },
   "UberEats:Que Gusto:50": {
-    "lastSeen": 1795026118046,
-    "count": 1
+    "lastSeen": 1795051324801,
+    "count": 2
   },
   "UberEats:Buccelatto Guemes:50": {
-    "lastSeen": 1795035122667,
-    "count": 3
+    "lastSeen": 1795051324801,
+    "count": 4
   },
   "UberEats:Strong Bar:50:50% off select items": {
     "lastSeen": 1795047724674,
@@ -144,12 +144,12 @@
     "count": 2
   },
   "UberEats:Pizza Bianca:50": {
-    "lastSeen": 1795047724674,
-    "count": 2
+    "lastSeen": 1795051324801,
+    "count": 3
   },
   "UberEats:BUDA BURGERS:50": {
-    "lastSeen": 1795047724674,
-    "count": 2
+    "lastSeen": 1795051324801,
+    "count": 3
   },
   "UberEats:Noah's Green Kitchen:60:60% off select items": {
     "lastSeen": 1795047724674,
@@ -160,8 +160,8 @@
     "count": 1
   },
   "UberEats:ANTOJAZOS FOOD:50": {
-    "lastSeen": 1795045919754,
-    "count": 1
+    "lastSeen": 1795051324801,
+    "count": 2
   },
   "Rappi:Tequeñoño:50:Hasta 50% Off": {
     "lastSeen": 1795047166025,
@@ -177,6 +177,30 @@
   },
   "Rappi:Operacion Tabule:50:Hasta 50% Off": {
     "lastSeen": 1795047166025,
+    "count": 1
+  },
+  "UberEats:Lomitos 2x1:60": {
+    "lastSeen": 1795051324801,
+    "count": 1
+  },
+  "UberEats:Che Sushi:50": {
+    "lastSeen": 1795051324801,
+    "count": 1
+  },
+  "UberEats:LOMITO CBA:50": {
+    "lastSeen": 1795051324801,
+    "count": 1
+  },
+  "UberEats:Pachata  Manso Sabor.:50": {
+    "lastSeen": 1795051324801,
+    "count": 1
+  },
+  "UberEats:Lo + Rico Empanadas:50": {
+    "lastSeen": 1795051324801,
+    "count": 1
+  },
+  "UberEats:Noah's Green Kitchen:60": {
+    "lastSeen": 1795051324801,
     "count": 1
   }
 }
