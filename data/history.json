@@ -8,8 +8,8 @@
     "count": 39
   },
   "UberEats:Lomitos 2x1:50": {
-    "lastSeen": 1795026118046,
-    "count": 10
+    "lastSeen": 1795071183126,
+    "count": 11
   },
   "UberEats:Que Gusto:50:50% off select items": {
     "lastSeen": 1795056714287,
@@ -225,6 +225,10 @@
   },
   "Rappi:Glaseado Cookies & Donuts:50:Hasta 50% Off": {
     "lastSeen": 1795070632365,
+    "count": 1
+  },
+  "UberEats:Humberto:55:55% off select items": {
+    "lastSeen": 1795071183126,
     "count": 1
   }
 }
