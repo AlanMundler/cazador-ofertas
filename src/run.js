@@ -205,8 +205,12 @@ async function main() {
     }
   }
 
-  const thresholds = { [PEDIDOSYA]: 50, [RAPPI]: 50, [UBEREATS]: 35 };
-  const ranked = rankByPlatform(products, { minDiscount: thresholds, flash: 75 });
+  const thresholds = { [PEDIDOSYA]: 50, [RAPPI]: 50, [UBEREATS]: 40 };
+  // Sólo supermercados/markets: 'otro' son farmacias, licorerías, veterinarias, etc.
+  const marketProducts = products.filter(product => product.storeKind !== 'otro');
+  const skipped = products.length - marketProducts.length;
+  if (skipped) console.log(`Descartados por no ser supermercado/market: ${skipped}`);
+  const ranked = rankByPlatform(marketProducts, { minDiscount: thresholds, flash: 75 });
   const deck = {
     generatedAt: new Date().toISOString(),
     point: POINT,
@@ -261,7 +265,10 @@ async function main() {
   for (const failure of failures) console.log(`FALLA ${failure.platform}: ${failure.error}`);
 
   const { buildDigest, chunk, offerKey } = await import('./report.js');
-  const isNew = product => !previousKeys.has(`${product.platform}|${product.storeId}|${product.productId}|${product.price}`);
+  const sendAll = flag('all-offers');
+  const isNew = sendAll
+    ? () => true
+    : product => !previousKeys.has(`${product.platform}|${product.storeId}|${product.productId}|${product.price}`);
   const digest = buildDigest(ranked, { keep: isNew, coverages, thresholds, maxPerPlatform: Number(arg('max-per-platform', '0')) });
   if (flag('send')) {
     if (!digest.text) {

@@ -78,7 +78,8 @@ export function rankByPlatform(products, { minDiscount = 30, flash = 75, maxPerS
 
     const perStore = new Map();
     const min = thresholdFor(platform);
-    for (const product of list.filter(item => (item.discount ?? 0) >= min).sort(byDiscount)) {
+    const shownDiscount = product => Math.max(product.discount ?? 0, product.advertisedDiscount ?? 0);
+    for (const product of list.filter(item => shownDiscount(item) >= min).sort((a, b) => shownDiscount(b) - shownDiscount(a) || byDiscount(a, b))) {
       const store = product.storeId ?? product.storeName ?? 'unknown';
       const count = perStore.get(store) ?? 0;
       if (count >= maxPerStore) continue;

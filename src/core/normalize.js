@@ -294,6 +294,14 @@ export function normalizeProduct(raw, meta = {}) {
   const effectivePrice = Number.isFinite(promo.effectivePrice) ? promo.effectivePrice : price;
   const requiresQty = Number.isInteger(promo.requiresQty) && promo.requiresQty > 0 ? promo.requiresQty : 1;
 
+  // Descuento anunciado: el % que muestra la app (ej. "1 ud. al 50% dto").
+  // El descuento efectivo del par puede ser la mitad; para el umbral vale el anunciado.
+  const advertised = (() => {
+    const match = String(promo.promoDetail ?? '').match(/(\d{1,2})\s*%/);
+    const fromTag = match ? Number(match[1]) : null;
+    return Math.max(Number.isFinite(fromTag) ? fromTag : 0, Number.isFinite(promo.discount) ? promo.discount : 0);
+  })();
+
   // Un multibuy se mide contra el precio de lista (price), nunca contra beforePrice:
   // apilar markdown + bundle fabricaría un flash falso.
   const reference = promo.promoType === 'multibuy'
@@ -324,6 +332,7 @@ export function normalizeProduct(raw, meta = {}) {
     unitLabel,
     promoType: promo.promoType ?? null,
     promoDetail: promo.promoDetail ?? null,
+    advertisedDiscount: advertised,
     effectivePrice,
     requiresQty,
     available: data.available !== false,

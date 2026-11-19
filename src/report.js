@@ -28,7 +28,11 @@ function storeLink(product) {
 }
 
 function offerLine(product) {
-  return `• ${product.discount}% ${escapeHtml(product.name)} — ${money(product.price)} — ${storeLink(product)}`;
+  const shown = Math.max(product.discount ?? 0, product.advertisedDiscount ?? 0);
+  const condition = product.promoType === 'multibuy' && product.promoDetail
+    ? ` (${product.promoDetail})`
+    : '';
+  return `• ${shown}% ${escapeHtml(product.name)} — ${money(product.price)} — ${storeLink(product)}${condition}`;
 }
 
 const PLATFORM_LABEL = { PedidosYa: 'PEDIDOSYA', Rappi: 'RAPPI', UberEats: 'UBER EATS' };

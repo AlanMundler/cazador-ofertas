@@ -48,7 +48,8 @@ test('normalizeProduct devuelve el objeto §1 exacto y la promo porcentual PY re
   assert.deepEqual(Object.keys(result.product), [
     'platform', 'storeId', 'storeName', 'storeKind', 'productId', 'rawName', 'brand', 'name',
     'size', 'ean', 'price', 'beforePrice', 'discount', 'unitPrice', 'unitLabel', 'promoType',
-    'promoDetail', 'effectivePrice', 'requiresQty', 'available', 'deliverability', 'url',
+    'promoDetail', 'advertisedDiscount', 'effectivePrice', 'requiresQty', 'available',
+    'deliverability', 'url',
     'fetchedAt', 'sampled',
   ]);
 
