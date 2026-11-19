@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       platforms:
-        description: 'Plataformas (all | Rappi,UberEats,PedidosYa)'
+        description: 'Plataformas (all | Rappi,PedidosYa,UberEats)'
         default: 'auto'
 
 permissions:
@@ -50,11 +50,12 @@ jobs:
       - name: Install Patchright browser
         run: npx patchright install chromium --with-deps
 
-      # WARP (Cloudflare) cambia la salida: Rappi pasa de 403 a 200 desde CI.
+      # WARP (Cloudflare) da salida válida para Rappi y PedidosYa desde GitHub Actions.
+      # Uber Eats necesita egress argentino: usa UE_PROXY_URL (o corre en local).
       - name: Instalar y conectar Cloudflare WARP
         id: warp
         env:
-          PROXY_URL: ${{ secrets.PROXY_URL }}
+          UE_PROXY_URL: ${{ secrets.UE_PROXY_URL }}
         run: |
           curl -fsSL https://pkg.cloudflareclient.com/pubkey.gpg | sudo gpg --yes --dearmor -o /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg
           echo "deb [signed-by=/usr/share/keyrings/cloudflare-warp-archive-keyring.gpg] https://pkg.cloudflareclient.com/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
@@ -79,53 +80,48 @@ jobs:
             echo "on=true" >> "$GITHUB_OUTPUT"
           else
             echo "on=false" >> "$GITHUB_OUTPUT"
-            echo "::warning::WARP no conectÃ³ tras 3 intentos; Rappi/UberEats van a fallar desde esta IP."
-          fi
-          if [ "$trace" = "warp=on" ] || [ -n "$PROXY_URL" ]; then
-            echo "run=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::WARP no conectó tras 3 intentos."
           fi
           curl -s https://www.cloudflare.com/cdn-cgi/trace | grep -E '^(ip|warp)=' || true
 
-      - name: Verificar proxy (si existe)
+      - name: Verificar proxy de Uber Eats (si existe)
         env:
-          PROXY_URL: ${{ secrets.PROXY_URL }}
+          UE_PROXY_URL: ${{ secrets.UE_PROXY_URL }}
         run: |
-          if [ -z "$PROXY_URL" ]; then
-            echo "sin PROXY_URL"
+          if [ -z "$UE_PROXY_URL" ]; then
+            echo "sin UE_PROXY_URL"
             exit 0
           fi
-          ip=$(curl -s -x "$PROXY_URL" --max-time 20 https://api.ipify.org || true)
-          echo "proxy_egress_ip=${ip:-sin-respuesta}"
+          ip=$(curl -s -x "$UE_PROXY_URL" --max-time 20 https://api.ipify.org || true)
+          code=$(curl -s -x "$UE_PROXY_URL" --max-time 20 -o /dev/null -w '%{http_code}' -A 'Mozilla/5.0' -X POST -H 'content-type: application/json' -H 'x-csrf-token: x' -d '{"feedID":"shop_feed","deliveryLocation":[{"type":"GEOIP"}],"feedmakerCtx":"","cacheKey":""}' 'https://www.ubereats.com/_p/api/getFeedByIdV1?localeCode=ar' || true)
+          echo "ue_proxy_egress_ip=${ip:-sin-respuesta} ue_feed=${code:-sin-respuesta}"
 
       - name: Recolectar ofertas y notificar
-        if: steps.warp.outputs.run == 'true'
+        if: steps.warp.outputs.on == 'true'
         continue-on-error: true
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           BOT_USERNAME: ${{ secrets.BOT_USERNAME }}
-          PROXY_URL: ${{ secrets.PROXY_URL }}
-          CITY: ${{ secrets.CITY || 'CÃ³rdoba' }}
+          UE_PROXY_URL: ${{ secrets.UE_PROXY_URL }}
+          PY_PROXY_URL: ${{ secrets.PY_PROXY_URL }}
+          CITY: ${{ secrets.CITY || 'Córdoba' }}
           COUNTRY: ${{ secrets.COUNTRY || 'Argentina' }}
           LATITUDE: ${{ secrets.LATITUDE || '-31.412943' }}
           LONGITUDE: ${{ secrets.LONGITUDE || '-64.1966036' }}
           IN_PLATFORMS: ${{ inputs.platforms }}
         run: |
           mkdir -p data
-          # PedidosYa queda afuera sin PROXY_URL: su Cloudflare/PX tambiÃ©n bloquea WARP (403 verificado).
-          if [ -n "$PROXY_URL" ]; then
-            TARGET="${IN_PLATFORMS:-auto}"
-            if [ "$TARGET" = "auto" ]; then TARGET=all; fi
-            echo "Con PROXY_URL -> plataformas: $TARGET"
-            xvfb-run --auto-servernum node src/run.js --send --verbose --platform="$TARGET" --max-stores=50 --py-stores=23
-          else
-            TARGET="${IN_PLATFORMS:-Rappi,PedidosYa}"
-            if [ "$TARGET" = "auto" ]; then TARGET=Rappi,PedidosYa; fi
-            echo "::warning::Sin PROXY_URL: Rappi y PedidosYa por WARP; UberEats necesita proxy AR. Plataformas: $TARGET"
-            xvfb-run --auto-servernum node src/run.js --send --verbose --platform="$TARGET" --max-stores=50
+          TARGET="${IN_PLATFORMS:-auto}"
+          if [ "$TARGET" = "auto" ]; then
+            if [ -n "$UE_PROXY_URL" ]; then TARGET=all; else TARGET=Rappi,PedidosYa; fi
           fi
+          if [ "$TARGET" = "all" ] && [ -z "$UE_PROXY_URL" ]; then
+            echo "::warning::UberEats sin UE_PROXY_URL: se saltea (GEOIP de WARP sale por EE.UU.)."
+            TARGET=Rappi,PedidosYa
+          fi
+          echo "Plataformas: $TARGET"
+          xvfb-run --auto-servernum node src/run.js --send --verbose --platform="$TARGET" --max-stores=50 --py-stores=23
 
       - name: Desconectar WARP
         if: always()
@@ -136,10 +132,8 @@ jobs:
         run: |
           git config --global user.name "cazador-bot"
           git config --global user.email "bot@cazador-ofertas.local"
-          # SÃ³lo artefactos chicos: deals.json y runs quedan como artefacto local (evita bloat).
+          # Sólo artefactos chicos: deals.json y runs quedan como artefacto local (evita bloat).
           git add data/seen.json data/coverage.json 2>/dev/null || true
           git diff --cached --quiet || git commit -m "markets state $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           git pull --rebase origin master || true
           git push || true
-
-

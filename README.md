@@ -114,6 +114,11 @@ Opciones:
    ```powershell
    schtasks /Create /TN "Cazador Markets" /SC MINUTE /MO 30 /TR "powershell -ExecutionPolicy Bypass -File E:\Proyectos\PEDIDOYA\cazador-ofertas\scripts\run-local.ps1" /F
    ```
-2. **Nube con proxy residencial AR**: cargar el secret `PROXY_URL`. El workflow
-   `Markets (ofertas)` se salta la corrida (con warning) si no está configurado.
+2. **Nube con proxy residencial AR**: cargar `UE_PROXY_URL` (y opcionalmente `PY_PROXY_URL`) con formato
+   `http://usuario:clave@host:puerto`. Con `UE_PROXY_URL` el cron corre las tres plataformas.
 3. **Self-hosted runner** en tu PC: mismo efecto que (1) pero con la UI de Actions.
+
+Variables por plataforma (los adapters no comparten proxy para no romperse entre sí):
+- `UE_PROXY_URL` → sólo Uber Eats (necesita egress AR).
+- `PY_PROXY_URL` → sólo PedidosYa (por defecto usa WARP).
+- Rappi no usa proxy (WARP alcanza).

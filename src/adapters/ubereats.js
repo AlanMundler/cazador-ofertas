@@ -148,7 +148,8 @@ export async function collectUberEats({
     geolocation: { latitude: point.lat, longitude: point.lng },
     permissions: ['geolocation'],
   };
-  if (process.env.PROXY_URL) launchOptions.proxy = { server: process.env.PROXY_URL };
+  const proxyUrl = process.env.UE_PROXY_URL || process.env.PROXY_URL;
+  if (proxyUrl) launchOptions.proxy = { server: proxyUrl };
   const context = await chromium.launchPersistentContext(profile, launchOptions);
 
   const products = [];

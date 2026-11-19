@@ -116,7 +116,9 @@ export async function collectPedidosYa({
     timezoneId: 'America/Argentina/Buenos_Aires',
     viewport: { width: 1366, height: 768 },
   };
-  if (process.env.PROXY_URL) launchOptions.proxy = { server: process.env.PROXY_URL };
+  // PedidosYa funciona por WARP; un proxy público suele estar bloqueado (403).
+  // Por eso usa su propio env y no hereda PROXY_URL genérico.
+  if (process.env.PY_PROXY_URL) launchOptions.proxy = { server: process.env.PY_PROXY_URL };
   if (stateFile && existsSync(stateFile)) launchOptions.storageState = stateFile;
 
   const context = await chromium.launchPersistentContext('', launchOptions);
