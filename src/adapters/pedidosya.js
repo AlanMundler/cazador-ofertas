@@ -52,6 +52,10 @@ async function storeCatalog(page, vendorId, { maxCategories, maxPages, log }) {
     const categoriesResponse = await fetch(`/groceries/web/v1/vendors/${vendorId}/categories`, { credentials: 'include' });
     const categoriesBody = await categoriesResponse.json().catch(() => null);
     const categories = categoriesBody?.categories ?? [];
+    if (!categoriesResponse.ok || categories.length === 0) {
+      // Sin sesión válida (cookies CF/PX) esta API devuelve vacío: no confundir con "tienda sin catálogo".
+      return { status: categoriesResponse.status, categories: 0, scanned: 0, requests: 0, truncated: false, failed: 1, items: [], error: `categories ${categoriesResponse.status}` };
+    }
     const flat = [];
     for (const category of categories) {
       flat.push(category);
@@ -168,6 +172,7 @@ export async function collectPedidosYa({
     for (const vendor of eligible) {
       try {
         const catalog = await storeCatalog(page, vendor.id, { maxCategories, maxPages, log });
+        if (catalog.error) throw new Error(`pedidosya ${vendor.name}: ${catalog.error}`);
         for (const item of catalog.items) {
           const result = normalizeProduct(item, {
             platform: PEDIDOSYA,

@@ -95,4 +95,20 @@ Notas operativas:
 - Uber Eats y PedidosYa necesitan `xvfb-run` en CI (browser headed).
 - PedidosYa tolera ráfagas cortas: si devuelve "Acceso ha sido denegado", esperar ~90 s y reintentar.
 - Dedupe entre corridas: sólo se envía lo que cambió de precio o es nuevo; el resto se omite.
-- Tests: `npm test` (96 tests, sin red).
+- Tests: `npm test` (100 tests, sin red).
+
+### Dónde conviene correrlo
+
+| Entorno | Resultado verificado |
+|---|---|
+| **Tu PC (IP residencial)** | 10.233 productos / 2.149 ofertas; PY 22/22, Rappi 50/50, UE 23/23 |
+| **GitHub Actions (IP datacenter)** | Rappi `passport 403`, UberEats sin `uev2.loc`, PedidosYa categorías vacías (run 44526698946) |
+
+Opciones:
+1. **Local programado (recomendado hoy)**: `scripts/run-local.ps1` + Programador de tareas.
+   ```powershell
+   schtasks /Create /TN "Cazador Markets" /SC MINUTE /MO 30 /TR "powershell -ExecutionPolicy Bypass -File E:\Proyectos\PEDIDOYA\cazador-ofertas\scripts\run-local.ps1" /F
+   ```
+2. **Nube con proxy residencial AR**: cargar el secret `PROXY_URL`. El workflow
+   `Markets (ofertas)` se salta la corrida (con warning) si no está configurado.
+3. **Self-hosted runner** en tu PC: mismo efecto que (1) pero con la UI de Actions.

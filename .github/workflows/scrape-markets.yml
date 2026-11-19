@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: '*/30 * * * *'
   workflow_dispatch:
+    inputs:
+      force:
+        description: 'Correr aunque no haya PROXY_URL (IP de datacenter suele estar bloqueada)'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -16,7 +21,7 @@ concurrency:
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
 
@@ -46,7 +51,21 @@ jobs:
       - name: Install Patchright browser
         run: npx patchright install chromium --with-deps
 
+      - name: Chequear proxy
+        id: proxy
+        env:
+          PROXY_URL: ${{ secrets.PROXY_URL }}
+        run: |
+          if [ -z "$PROXY_URL" ]; then
+            echo "::warning::PROXY_URL no configurado. Desde IPs de GitHub Actions (datacenter) Rappi responde 403, UberEats no setea dirección y PedidosYa no entrega categorías. Configurá el secret PROXY_URL (residencial AR) o corré el pipeline en tu PC / self-hosted runner."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Recolectar ofertas y notificar
+        if: steps.proxy.outputs.skip != 'true' || inputs.force
+        continue-on-error: true
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
