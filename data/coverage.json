@@ -5,7 +5,7 @@
       "lat": -31.412943,
       "lng": -64.1966036
     },
-    "fetchedAt": "2026-11-19T12:40:05.081Z",
+    "fetchedAt": "2026-11-19T12:45:25.191Z",
     "storesAvailable": 22,
     "storesScanned": 22,
     "storesSeen": 22,
@@ -20,12 +20,12 @@
       "Makro"
     ],
     "catalogCoverage": {
-      "itemsSeen": 1017,
-      "aislesAnnounced": 393,
+      "itemsSeen": 0,
+      "aislesAnnounced": 0,
       "sampled": false,
       "truncated": false
     },
-    "health": "ok"
+    "health": "dead"
   },
   {
     "platform": "Rappi",
@@ -33,27 +33,32 @@
       "lat": -31.412943,
       "lng": -64.1966036
     },
-    "fetchedAt": "2026-11-19T12:42:09.230Z",
-    "storesAvailable": 50,
-    "storesScanned": 50,
-    "storesSeen": 50,
+    "fetchedAt": "2026-11-19T12:45:25.284Z",
+    "storesAvailable": null,
+    "storesScanned": 0,
+    "storesSeen": 0,
     "storesByKind": {
-      "super": 5,
-      "vertical": 45,
+      "super": 0,
+      "vertical": 0,
       "otro": 0
     },
     "missingChains": [
       "Coto",
       "Día",
-      "La Anónima"
+      "La Anónima",
+      "Jumbo",
+      "Disco",
+      "Carrefour",
+      "Vea",
+      "Makro"
     ],
     "catalogCoverage": {
-      "itemsSeen": 6886,
+      "itemsSeen": 0,
       "aislesAnnounced": null,
       "sampled": true,
       "truncated": false
     },
-    "health": "ok"
+    "health": "dead"
   },
   {
     "platform": "UberEats",
@@ -61,14 +66,14 @@
       "lat": -31.412943,
       "lng": -64.1966036
     },
-    "fetchedAt": "2026-11-19T12:42:55.401Z",
-    "storesAvailable": 23,
-    "storesScanned": 23,
-    "storesSeen": 23,
+    "fetchedAt": "2026-11-19T12:45:40.916Z",
+    "storesAvailable": null,
+    "storesScanned": 0,
+    "storesSeen": 0,
     "storesByKind": {
-      "super": 2,
-      "vertical": 3,
-      "otro": 18
+      "super": 0,
+      "vertical": 0,
+      "otro": 0
     },
     "missingChains": [
       "Jumbo",
@@ -79,11 +84,11 @@
       "Makro"
     ],
     "catalogCoverage": {
-      "itemsSeen": 2330,
+      "itemsSeen": 0,
       "aislesAnnounced": null,
       "sampled": true,
       "truncated": false
     },
-    "health": "ok"
+    "health": "dead"
   }
 ]
