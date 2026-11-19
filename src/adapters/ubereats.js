@@ -174,9 +174,32 @@ export async function collectUberEats({
     }
 
     await setAddress(page, address, log);
-    await page.waitForTimeout(5000);
-    const cookies = await context.cookies(ORIGIN);
-    const locCookie = cookies.find(cookie => cookie.name === 'uev2.loc');
+    await page.waitForTimeout(3000);
+
+    // Fallback determinístico: si el modal no dejó la cookie, se inyecta el `uev2.loc`
+    // (misma forma que usa la app: address/lat/lng URL-encoded) y se recarga.
+    let cookies = await context.cookies(ORIGIN);
+    let locCookie = cookies.find(cookie => cookie.name === 'uev2.loc');
+    if (!locCookie) {
+      const payload = {
+        address,
+        reference: address,
+        referenceType: 'google_places',
+        latitude: point.lat,
+        longitude: point.lng,
+      };
+      await context.addCookies([{
+        name: 'uev2.loc',
+        value: encodeURIComponent(JSON.stringify(payload)),
+        domain: '.ubereats.com',
+        path: '/',
+      }]).catch(() => {});
+      await page.goto(`${ORIGIN}/ar`, { waitUntil: 'domcontentloaded', timeout: 60000 }).catch(() => {});
+      await page.waitForTimeout(4000);
+      cookies = await context.cookies(ORIGIN);
+      locCookie = cookies.find(cookie => cookie.name === 'uev2.loc');
+      log('ubereats: uev2.loc inyectada por fallback');
+    }
     const location = locCookie ? locationFromCookie(locCookie.value) : null;
     if (!location) throw new Error('ubereats: sin cookie uev2.loc');
 
