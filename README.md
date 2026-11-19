@@ -101,8 +101,11 @@ Notas operativas:
 
 | Entorno | Resultado verificado |
 |---|---|
-| **Tu PC (IP residencial)** | 10.233 productos / 2.149 ofertas; PY 22/22, Rappi 50/50, UE 23/23 |
-| **GitHub Actions (IP datacenter)** | Rappi `passport 403`, UberEats sin `uev2.loc`, PedidosYa categorías vacías (run 44526698946) |
+| **Tu PC (IP residencial)** | 10.245 productos / 2.093 ofertas; PY 22/22, Rappi 50/50, UE 23/23 |
+| **GitHub Actions + Cloudflare WARP** | Rappi 50/50 (6.011 productos, run 44531600913). Uber Eats no logra fijar la ubicación y PedidosYa sigue en 403 |
+| **GitHub Actions sin WARP** | Rappi `passport 403`, UberEats sin `uev2.loc`, PedidosYa 403 |
+
+Cloudflare WARP es la única opción de Cloudflare que cambia la IP de salida (Workers/Browser Rendering salen por rangos datacenter y no destraban nada). Verificado: con WARP la IP pasa a `2a09:bac5:…` y `rappi_passport=200`; `pedidosya_home` y `pedidosya_shoplist` siguen en 403.
 
 Opciones:
 1. **Local programado (recomendado hoy)**: `scripts/run-local.ps1` + Programador de tareas.
