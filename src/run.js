@@ -30,6 +30,9 @@ function arg(name, fallback) {
 const flag = name => process.argv.includes(`--${name}`);
 
 const platform = arg('platform', 'all');
+const platforms = platform === 'all'
+  ? PLATFORM_IDS
+  : platform.split(',').map(name => name.trim()).filter(Boolean);
 const dryRun = flag('dry-run');
 const maxStores = Number(arg('max-stores', '25'));
 const debug = flag('verbose');
@@ -160,7 +163,6 @@ async function notifyBestPrice(ranked, { dryRun = false, max = 6, keep = () => t
 
 async function main() {
   const started = Date.now();
-  const platforms = platform === 'all' ? PLATFORM_IDS : [platform];
   const products = [];
   const coverages = [];
   const failures = [];

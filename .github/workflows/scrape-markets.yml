@@ -5,10 +5,9 @@ on:
     - cron: '*/30 * * * *'
   workflow_dispatch:
     inputs:
-      force:
-        description: 'Correr aunque no haya PROXY_URL (IP de datacenter suele estar bloqueada)'
-        type: boolean
-        default: false
+      platforms:
+        description: 'Plataformas (all | Rappi,UberEats,PedidosYa)'
+        default: 'auto'
 
 permissions:
   contents: write
@@ -21,7 +20,7 @@ concurrency:
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
 
@@ -51,20 +50,20 @@ jobs:
       - name: Install Patchright browser
         run: npx patchright install chromium --with-deps
 
-      - name: Chequear proxy
-        id: proxy
-        env:
-          PROXY_URL: ${{ secrets.PROXY_URL }}
+      # WARP (Cloudflare) cambia la salida: Rappi pasa de 403 a 200 desde CI.
+      - name: Instalar y conectar Cloudflare WARP
         run: |
-          if [ -z "$PROXY_URL" ]; then
-            echo "::warning::PROXY_URL no configurado. Desde IPs de GitHub Actions (datacenter) Rappi responde 403, UberEats no setea dirección y PedidosYa no entrega categorías. Configurá el secret PROXY_URL (residencial AR) o corré el pipeline en tu PC / self-hosted runner."
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "skip=false" >> "$GITHUB_OUTPUT"
-          fi
+          curl -fsSL https://pkg.cloudflareclient.com/pubkey.gpg | sudo gpg --yes --dearmor -o /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg
+          echo "deb [signed-by=/usr/share/keyrings/cloudflare-warp-archive-keyring.gpg] https://pkg.cloudflareclient.com/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
+          sudo apt-get update
+          sudo apt-get install -y cloudflare-warp
+          sudo warp-cli --accept-tos registration new || true
+          sudo warp-cli --accept-tos connect || true
+          sleep 8
+          sudo warp-cli --accept-tos status || true
+          curl -s https://www.cloudflare.com/cdn-cgi/trace | grep -E '^(ip|warp)=' || true
 
       - name: Recolectar ofertas y notificar
-        if: steps.proxy.outputs.skip != 'true' || inputs.force
         continue-on-error: true
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -75,9 +74,25 @@ jobs:
           COUNTRY: ${{ secrets.COUNTRY || 'Argentina' }}
           LATITUDE: ${{ secrets.LATITUDE || '-31.412943' }}
           LONGITUDE: ${{ secrets.LONGITUDE || '-64.1966036' }}
+          IN_PLATFORMS: ${{ inputs.platforms }}
         run: |
           mkdir -p data
-          xvfb-run --auto-servernum node src/run.js --send --verbose --max-stores=50 --py-stores=23
+          # PedidosYa queda afuera sin PROXY_URL: su Cloudflare/PX también bloquea WARP (403 verificado).
+          if [ -n "$PROXY_URL" ]; then
+            TARGET="${IN_PLATFORMS:-auto}"
+            if [ "$TARGET" = "auto" ]; then TARGET=all; fi
+            echo "Con PROXY_URL -> plataformas: $TARGET"
+            xvfb-run --auto-servernum node src/run.js --send --verbose --platform="$TARGET" --max-stores=50 --py-stores=23
+          else
+            TARGET="${IN_PLATFORMS:-Rappi,UberEats}"
+            if [ "$TARGET" = "auto" ]; then TARGET=Rappi,UberEats; fi
+            echo "::warning::Sin PROXY_URL: PedidosYa queda afuera (WARP no lo destraba). Plataformas: $TARGET"
+            xvfb-run --auto-servernum node src/run.js --send --verbose --platform="$TARGET" --max-stores=50
+          fi
+
+      - name: Desconectar WARP
+        if: always()
+        run: sudo warp-cli --accept-tos disconnect || true
 
       - name: Commit estado compacto
         if: always()
