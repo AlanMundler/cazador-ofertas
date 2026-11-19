@@ -251,7 +251,7 @@ async function main() {
 
   const { buildDigest, chunk, offerKey } = await import('./report.js');
   const isNew = product => !previousKeys.has(`${product.platform}|${product.storeId}|${product.productId}|${product.price}`);
-  const digest = buildDigest(ranked, { keep: isNew, coverages, thresholds });
+  const digest = buildDigest(ranked, { keep: isNew, coverages, thresholds, maxPerPlatform: Number(arg('max-per-platform', '0')) });
   if (flag('send')) {
     if (!digest.text) {
       console.log('[Telegram] sin ofertas nuevas sobre el umbral');
@@ -301,6 +301,7 @@ main().catch(error => {
   console.error('Error fatal:', error);
   process.exitCode = 1;
 });
+
 
 
 

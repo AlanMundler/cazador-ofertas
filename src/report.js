@@ -41,6 +41,7 @@ export function buildDigest(ranked, {
   keep = () => true,
   coverages = [],
   thresholds = {},
+  maxPerPlatform = 0,
   now = new Date(),
 } = {}) {
   const when = now.toLocaleString('es-AR', {
@@ -67,7 +68,7 @@ export function buildDigest(ranked, {
       seen.add(key);
       deduped.push(product);
     }
-    if (deduped.length) fresh[platform] = deduped;
+    if (deduped.length) fresh[platform] = maxPerPlatform > 0 ? deduped.slice(0, maxPerPlatform) : deduped;
   }
 
   const rule = Object.entries(thresholds)
