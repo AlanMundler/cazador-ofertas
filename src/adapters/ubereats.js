@@ -126,6 +126,18 @@ async function setAddress(page, address, log) {
   return true;
 }
 
+export function buildShopFeedBody(point) {
+  return {
+    feedID: 'shop_feed',
+    // MANUAL fija la ubicación y manda sobre GEOIP: es lo que permite correr en CI
+    // sin proxy argentino (verificado: MANUAL con Córdoba devuelve las mismas 25 tiendas
+    // que una IP argentina; MANUAL con NY devuelve tiendas de EE.UU.).
+    deliveryLocation: [{ type: 'MANUAL', location: { latitude: point.lat, longitude: point.lng } }],
+    feedmakerCtx: '',
+    cacheKey: '',
+  };
+}
+
 /**
  * Recolecta ofertas de Uber Eats para una dirección.
  * Requiere patchright + chromium y modo headed (headless = reCAPTCHA).
@@ -148,25 +160,7 @@ export async function collectUberEats({
     geolocation: { latitude: point.lat, longitude: point.lng },
     permissions: ['geolocation'],
   };
-  const proxyUrl = process.env.UE_PROXY_URL || process.env.PROXY_URL || await (async () => {
-    try {
-      const { getFreeProxy, isArgentina } = await import('../proxies.js');
-      if (await isArgentina()) {
-        log('ubereats: IP local ya es AR, sin proxy');
-        return null;
-      }
-      const found = await getFreeProxy({
-        cacheFile: process.env.PROXY_CACHE || 'data/proxies.json',
-        log,
-      });
-      if (found) log(`ubereats: proxy gratuito AR ${found}`);
-      else log('ubereats: sin proxy gratuito AR disponible');
-      return found;
-    } catch (error) {
-      log(`ubereats: pool de proxies falló (${error.message})`);
-      return null;
-    }
-  })();
+  const proxyUrl = process.env.UE_PROXY_URL || process.env.PROXY_URL || null;
   if (proxyUrl) launchOptions.proxy = { server: proxyUrl };
   const context = await chromium.launchPersistentContext(profile, launchOptions);
 
@@ -192,37 +186,8 @@ export async function collectUberEats({
       await page.waitForTimeout(20000);
     }
 
-    await setAddress(page, address, log);
-    await page.waitForTimeout(3000);
-
-    // Fallback determinístico: si el modal no dejó la cookie, se inyecta el `uev2.loc`
-    // (misma forma que usa la app: address/lat/lng URL-encoded) y se recarga.
-    let cookies = await context.cookies(ORIGIN);
-    let locCookie = cookies.find(cookie => cookie.name === 'uev2.loc');
-    if (!locCookie) {
-      const payload = {
-        address,
-        reference: address,
-        referenceType: 'google_places',
-        latitude: point.lat,
-        longitude: point.lng,
-      };
-      await context.addCookies([{
-        name: 'uev2.loc',
-        value: encodeURIComponent(JSON.stringify(payload)),
-        domain: '.ubereats.com',
-        path: '/',
-      }]).catch(() => {});
-      await page.goto(`${ORIGIN}/ar`, { waitUntil: 'domcontentloaded', timeout: 60000 }).catch(() => {});
-      await page.waitForTimeout(4000);
-      cookies = await context.cookies(ORIGIN);
-      locCookie = cookies.find(cookie => cookie.name === 'uev2.loc');
-      log('ubereats: uev2.loc inyectada por fallback');
-    }
-    const location = locCookie ? locationFromCookie(locCookie.value) : null;
-    if (!location) {
-      log('ubereats: sin uev2.loc; se usa GEOIP + coordenadas de config para el feed');
-    }
+    // La ubicación va en el body del feed (type MANUAL): no hace falta modal ni cookie.
+    log('ubereats: ubicación fijada por body (MANUAL)');
 
     const template = traffic
       .filter(record => /getFeedV1/.test(record.path) && record.status === 200 && record.json?.status === 'success')
@@ -253,12 +218,7 @@ export async function collectUberEats({
       return result;
     };
 
-    const shopFeed = await replay('/_p/api/getFeedByIdV1?localeCode=ar', {
-      feedID: 'shop_feed',
-      deliveryLocation: [{ type: 'USER' }, { type: 'GEOIP' }],
-      feedmakerCtx: '',
-      cacheKey: '',
-    });
+    const shopFeed = await replay('/_p/api/getFeedByIdV1?localeCode=ar', buildShopFeedBody(point));
     if (shopFeed.status !== 200 || shopFeed.json?.status !== 'success') {
       throw new Error(`ubereats feed failed: ${shopFeed.status}`);
     }
@@ -307,7 +267,7 @@ export async function collectUberEats({
       products,
       coverage: {
         platform: UBEREATS,
-        point: { lat: location?.lat ?? point.lat, lng: location?.lng ?? point.lng },
+        point: { lat: point.lat, lng: point.lng },
         fetchedAt: new Date().toISOString(),
         storesSeen: scanned.length,
         storesAvailable: available.length,

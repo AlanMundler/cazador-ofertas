@@ -80,7 +80,7 @@ jobs:
             echo "on=true" >> "$GITHUB_OUTPUT"
           else
             echo "on=false" >> "$GITHUB_OUTPUT"
-            echo "::warning::WARP no conectó tras 3 intentos."
+            echo "::warning::WARP no conectó tras 3 intentos; Rappi/PedidosYa pueden fallar."
           fi
           curl -s https://www.cloudflare.com/cdn-cgi/trace | grep -E '^(ip|warp)=' || true
 
@@ -133,4 +133,5 @@ jobs:
           git diff --cached --quiet || git commit -m "markets state $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           git pull --rebase origin master || true
           git push || true
+
 

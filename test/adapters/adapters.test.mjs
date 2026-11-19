@@ -1,10 +1,11 @@
-import test from 'node:test';
+﻿import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import { classifyPedidosYaStore, productUrl, isChallenged } from '../../src/adapters/pedidosya.js';
 import { classifyStore, storeSlug } from '../../src/adapters/rappi.js';
 import {
   classifyUberStore,
+  buildShopFeedBody,
   feedStores,
   catalogItems,
   locationFromCookie,
@@ -42,6 +43,14 @@ test('UberEats: clasificación por merchant type y marca', () => {
   assert.equal(classifyUberStore({ title: 'Tadicor', merchantType: 'MERCHANT_TYPE_GROCERY' }), 'vertical');
   assert.equal(classifyUberStore({ title: 'Farmacia Estrella', merchantType: 'MERCHANT_TYPE_PHARMACY' }), 'otro');
   assert.equal(classifyUberStore({ title: 'Pizza Place', merchantType: 'MERCHANT_TYPE_RESTAURANT' }), 'otro');
+});
+
+test('UberEats: el feed fija la ubicación con MANUAL (no depende de la IP)', () => {
+  const body = buildShopFeedBody({ lat: -31.412943, lng: -64.1966036 });
+  assert.equal(body.feedID, 'shop_feed');
+  assert.deepEqual(body.deliveryLocation, [
+    { type: 'MANUAL', location: { latitude: -31.412943, longitude: -64.1966036 } },
+  ]);
 });
 
 test('UberEats: feedStores extrae MINI_STORE y carruseles sin duplicar', () => {
