@@ -114,13 +114,9 @@ jobs:
           mkdir -p data
           TARGET="${IN_PLATFORMS:-auto}"
           if [ "$TARGET" = "auto" ]; then
-            if [ -n "$UE_PROXY_URL" ]; then TARGET=all; else TARGET=Rappi,PedidosYa; fi
+            TARGET=Rappi,PedidosYa,UberEats
           fi
-          if [ "$TARGET" = "all" ] && [ -z "$UE_PROXY_URL" ]; then
-            echo "::warning::UberEats sin UE_PROXY_URL: se saltea (GEOIP de WARP sale por EE.UU.)."
-            TARGET=Rappi,PedidosYa
-          fi
-          echo "Plataformas: $TARGET"
+                    echo "Plataformas: $TARGET"
           xvfb-run --auto-servernum node src/run.js --send --verbose --platform="$TARGET" --max-stores=50 --py-stores=23
 
       - name: Desconectar WARP
@@ -133,7 +129,8 @@ jobs:
           git config --global user.name "cazador-bot"
           git config --global user.email "bot@cazador-ofertas.local"
           # Sólo artefactos chicos: deals.json y runs quedan como artefacto local (evita bloat).
-          git add data/seen.json data/coverage.json 2>/dev/null || true
+          git add data/seen.json data/coverage.json data/health.json 2>/dev/null || true
           git diff --cached --quiet || git commit -m "markets state $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           git pull --rebase origin master || true
           git push || true
+

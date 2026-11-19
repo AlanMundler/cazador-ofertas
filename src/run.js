@@ -107,21 +107,39 @@ async function sendPlain(text, chatId, { dryRun = false } = {}) {
   return { sent: response && response.ok ? 1 : 0, dryRun: false };
 }
 
-/** Aviso explÃ­cito cuando una plataforma quedÃ³ degradada o caÃ­da. */
-async function notifyHealth(coverages, failures, dryRun) {
-  const broken = coverages.filter(coverage => coverage.health !== 'ok');
-  if (broken.length === 0 && failures.length === 0) return null;
+/** Aviso de salud: solo cuando una plataforma cambia de estado (evita spam cada 30 min). */
+async function notifyHealth(coverages, failures, dryRun, dataDir) {
+  const current = {};
+  for (const coverage of coverages) current[coverage.platform] = coverage.health;
 
-  const lines = ['âš ï¸ CAZADOR â€” salud de la corrida'];
-  for (const coverage of coverages) {
-    lines.push(`${coverage.health === 'ok' ? 'âœ…' : coverage.health === 'degraded' ? 'âš ï¸' : 'âŒ'} ${coverage.platform}: ${coverage.storesScanned}/${coverage.storesAvailable ?? '?'} tiendas, ${coverage.catalogCoverage.itemsSeen} productos (${coverage.health})`);
+  const healthFile = join(dataDir, 'health.json');
+  let previous = {};
+  if (existsSync(healthFile)) {
+    try { previous = JSON.parse(readFileSync(healthFile, 'utf8')) ?? {}; } catch {}
   }
-  for (const failure of failures) lines.push(`âŒ ${failure.platform}: ${failure.error}`);
+
+  const firstRun = Object.keys(previous).length === 0;
+  const changed = failures.length > 0 || firstRun
+    || coverages.some(coverage => previous[coverage.platform] !== coverage.health);
+
+  if (!dryRun) {
+    try { writeFileSync(healthFile, `${JSON.stringify(current, null, 2)}\n`, 'utf8'); } catch {}
+  }
+
+  const broken = coverages.filter(coverage => coverage.health !== 'ok');
+  if (!changed || (broken.length === 0 && failures.length === 0)) return null;
+
+  const icon = status => (status === 'ok' ? '\u2705' : status === 'degraded' ? '\u26A0\uFE0F' : '\u274C');
+  const lines = ['\u26A0\uFE0F CAZADOR \u00B7 salud de la corrida'];
+  for (const coverage of coverages) {
+    lines.push(`${icon(coverage.health)} ${coverage.platform}: ${coverage.storesScanned}/${coverage.storesAvailable ?? '?'} tiendas, ${coverage.catalogCoverage.itemsSeen} productos (${coverage.health})`);
+  }
+  for (const failure of failures) lines.push(`\u274C ${failure.platform}: ${failure.error}`);
 
   const text = lines.join('\n');
   let chatId = config.telegram.adminChatId || null;
   if (!chatId) {
-    const subscribersFile = join(ROOT, 'data', 'subscribers.json');
+    const subscribersFile = join(dataDir, 'subscribers.json');
     if (existsSync(subscribersFile)) {
       chatId = (JSON.parse(readFileSync(subscribersFile, 'utf8'))?.ids ?? [])[0] ?? null;
     }
@@ -199,7 +217,7 @@ async function main() {
   const previousKeys = new Set([...recentKeys(join(dataDir, 'runs'), platforms).keys(), ...loadSeen(dataDir).keys()]);
 
   if (flag('send')) {
-    const alert = await notifyHealth(coverages, failures, dryRun);
+    const alert = await notifyHealth(coverages, failures, dryRun, dataDir);
     if (alert) console.log(`[Telegram] aviso de salud: ${alert}`);
   }
 
@@ -283,4 +301,5 @@ main().catch(error => {
   console.error('Error fatal:', error);
   process.exitCode = 1;
 });
+
 
