@@ -201,7 +201,9 @@ export async function collectUberEats({
       log('ubereats: uev2.loc inyectada por fallback');
     }
     const location = locCookie ? locationFromCookie(locCookie.value) : null;
-    if (!location) throw new Error('ubereats: sin cookie uev2.loc');
+    if (!location) {
+      log('ubereats: sin uev2.loc; se usa GEOIP + coordenadas de config para el feed');
+    }
 
     const template = traffic
       .filter(record => /getFeedV1/.test(record.path) && record.status === 200 && record.json?.status === 'success')
@@ -233,6 +235,14 @@ export async function collectUberEats({
 
     const available = feedStores(shopFeed.json)
       .filter(store => !/farmacia|veterinaria|drugstore|pets|mascota/i.test(store.title));
+    if (available.length === 0) {
+      throw new Error('ubereats: feed vacío (¿IP fuera de Argentina?)');
+    }
+    // Guardia de ciudad: si el feed no trae marcas argentinas, no se publica nada.
+    const argentine = available.filter(store => /carrefour|tadicor|justmart|jumbo|disco|coto|día|dia|vea|farmacity|kiosco|market|carnave|almac[eé]n/i.test(store.title));
+    if (argentine.length === 0) {
+      throw new Error(`ubereats: feed fuera de Argentina (${available.slice(0, 3).map(s => s.title).join(', ')})`);
+    }
     const stores = available.slice(0, maxStores);
     for (const store of stores) {
       const catalog = await replay('/_p/api/getStoreV1?localeCode=ar', {
@@ -264,7 +274,7 @@ export async function collectUberEats({
       products,
       coverage: {
         platform: UBEREATS,
-        point: { lat: location.lat, lng: location.lng },
+        point: { lat: location?.lat ?? point.lat, lng: location?.lng ?? point.lng },
         fetchedAt: new Date().toISOString(),
         storesSeen: scanned.length,
         storesAvailable: available.length,

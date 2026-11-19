@@ -110,9 +110,9 @@ jobs:
             echo "Con PROXY_URL -> plataformas: $TARGET"
             xvfb-run --auto-servernum node src/run.js --send --verbose --platform="$TARGET" --max-stores=50 --py-stores=23
           else
-            TARGET="${IN_PLATFORMS:-Rappi}"
-            if [ "$TARGET" = "auto" ]; then TARGET=Rappi; fi
-            echo "::warning::Sin PROXY_URL: PedidosYa queda afuera (WARP no lo destraba). Plataformas: $TARGET"
+            TARGET="${IN_PLATFORMS:-Rappi,PedidosYa}"
+            if [ "$TARGET" = "auto" ]; then TARGET=Rappi,PedidosYa; fi
+            echo "::warning::Sin PROXY_URL: Rappi y PedidosYa por WARP; UberEats necesita proxy AR. Plataformas: $TARGET"
             xvfb-run --auto-servernum node src/run.js --send --verbose --platform="$TARGET" --max-stores=50
           fi
 
@@ -130,4 +130,5 @@ jobs:
           git diff --cached --quiet || git commit -m "markets state $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           git pull --rebase origin master || true
           git push || true
+
 
