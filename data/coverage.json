@@ -5,14 +5,14 @@
       "lat": -31.412943,
       "lng": -64.1966036
     },
-    "fetchedAt": "2026-11-19T13:49:37.379Z",
-    "storesAvailable": null,
-    "storesScanned": 0,
-    "storesSeen": 0,
+    "fetchedAt": "2026-11-19T13:54:45.806Z",
+    "storesAvailable": 100,
+    "storesScanned": 50,
+    "storesSeen": 50,
     "storesByKind": {
       "super": 0,
-      "vertical": 0,
-      "otro": 0
+      "vertical": 17,
+      "otro": 33
     },
     "missingChains": [
       "Jumbo",
@@ -23,11 +23,11 @@
       "Makro"
     ],
     "catalogCoverage": {
-      "itemsSeen": 0,
+      "itemsSeen": 33,
       "aislesAnnounced": null,
       "sampled": true,
-      "truncated": false
+      "truncated": true
     },
-    "health": "dead"
+    "health": "ok"
   }
 ]
