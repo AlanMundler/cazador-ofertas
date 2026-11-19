@@ -1,0 +1,72 @@
+name: Markets (ofertas)
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Un solo escritor: nunca dos corridas tocando data/ a la vez.
+concurrency:
+  group: markets-scraper
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Cache Patchright browser
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: patchright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: patchright-${{ runner.os }}-
+
+      - name: Install xvfb
+        run: |
+          for i in {1..3}; do
+            sudo apt-get update && sudo apt-get install -y xvfb && break
+            echo "apt-get update failed (attempt $i/3), retrying in 10s..."
+            sleep 10
+          done
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Patchright browser
+        run: npx patchright install chromium --with-deps
+
+      - name: Recolectar ofertas y notificar
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          BOT_USERNAME: ${{ secrets.BOT_USERNAME }}
+          PROXY_URL: ${{ secrets.PROXY_URL }}
+          CITY: ${{ secrets.CITY || 'Córdoba' }}
+          COUNTRY: ${{ secrets.COUNTRY || 'Argentina' }}
+          LATITUDE: ${{ secrets.LATITUDE || '-31.412943' }}
+          LONGITUDE: ${{ secrets.LONGITUDE || '-64.1966036' }}
+        run: |
+          mkdir -p data
+          xvfb-run --auto-servernum node src/run.js --send --verbose --max-stores=50 --py-stores=23
+
+      - name: Commit estado compacto
+        if: always()
+        run: |
+          git config --global user.name "cazador-bot"
+          git config --global user.email "bot@cazador-ofertas.local"
+          # Sólo artefactos chicos: deals.json y runs quedan como artefacto local (evita bloat).
+          git add data/seen.json data/coverage.json 2>/dev/null || true
+          git diff --cached --quiet || git commit -m "markets state $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git pull --rebase origin master || true
+          git push || true

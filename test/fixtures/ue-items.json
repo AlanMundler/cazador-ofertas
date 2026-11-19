@@ -1,0 +1,256 @@
+[
+ {
+  "uuid": "045b45d1-0510-50b3-8dc0-9d8fbf4e1fd8",
+  "title": "Paty · Salchichas viena clásica (6 un)",
+  "price": 232125,
+  "purchaseInfo": {
+   "purchaseOptions": [
+    {
+     "purchasePriceV2": {
+      "base": {
+       "high": 0,
+       "low": 309500,
+       "unsigned": false
+      },
+      "exponent": -2
+     }
+    }
+   ]
+  },
+  "isSoldOut": false,
+  "isAvailable": true,
+  "itemAvailabilityState": "AVAILABLE",
+  "itemThumbnailElements": [
+   {
+    "payload": {
+     "labelPayload": {
+      "label": {
+       "accessibilityText": "230 g"
+      }
+     }
+    }
+   }
+  ]
+ },
+ {
+  "uuid": "c5a48540-ee5c-56ae-8096-faa810fbf6e4",
+  "title": "Nesfit · Cereal tradicional sin azúcar (220 g)",
+  "price": 373140,
+  "purchaseInfo": {
+   "purchaseOptions": [
+    {
+     "purchasePriceV2": {
+      "base": {
+       "high": 0,
+       "low": 621900,
+       "unsigned": false
+      },
+      "exponent": -2
+     }
+    }
+   ]
+  },
+  "isSoldOut": false,
+  "isAvailable": true,
+  "itemAvailabilityState": "AVAILABLE",
+  "itemThumbnailElements": [
+   {
+    "payload": {
+     "labelPayload": {
+      "label": {
+       "accessibilityText": "220 g"
+      }
+     }
+    }
+   }
+  ]
+ },
+ {
+  "uuid": "92de60ff-dc94-5261-b9a6-4ab49c478f27",
+  "title": "Frosted Flakes · Copos de maíz azucarados (240 g)",
+  "price": 277125,
+  "purchaseInfo": {
+   "purchaseOptions": [
+    {
+     "purchasePriceV2": {
+      "base": {
+       "high": 0,
+       "low": 369500,
+       "unsigned": false
+      },
+      "exponent": -2
+     }
+    }
+   ]
+  },
+  "isSoldOut": false,
+  "isAvailable": true,
+  "itemAvailabilityState": "AVAILABLE",
+  "itemThumbnailElements": [
+   {
+    "payload": {
+     "labelPayload": {
+      "label": {
+       "accessibilityText": "240 g"
+      }
+     }
+    }
+   }
+  ]
+ },
+ {
+  "uuid": "771bef30-25d6-5262-8e4e-60d4a67b7e7b",
+  "title": "Nesquik · Cereal bolitas de maíz - Chocolate (210 g)",
+  "price": 423600,
+  "purchaseInfo": {
+   "purchaseOptions": [
+    {
+     "purchasePriceV2": {
+      "base": {
+       "high": 0,
+       "low": 706000,
+       "unsigned": false
+      },
+      "exponent": -2
+     }
+    }
+   ]
+  },
+  "isSoldOut": false,
+  "isAvailable": true,
+  "itemAvailabilityState": "AVAILABLE",
+  "itemThumbnailElements": [
+   {
+    "payload": {
+     "labelPayload": {
+      "label": {
+       "accessibilityText": "210 g"
+      }
+     }
+    }
+   }
+  ]
+ },
+ {
+  "uuid": "dbe55aaf-c1ee-505e-b200-37e793e968f5",
+  "title": "Granix · Copos de maíz tradicionales (400 g)",
+  "price": 269925,
+  "purchaseInfo": {
+   "purchaseOptions": [
+    {
+     "purchasePriceV2": {
+      "base": {
+       "high": 0,
+       "low": 359900,
+       "unsigned": false
+      },
+      "exponent": -2
+     }
+    }
+   ]
+  },
+  "isSoldOut": false,
+  "isAvailable": true,
+  "itemAvailabilityState": "AVAILABLE",
+  "itemThumbnailElements": [
+   {
+    "payload": {
+     "labelPayload": {
+      "label": {
+       "accessibilityText": "400 g"
+      }
+     }
+    }
+   }
+  ]
+ },
+ {
+  "uuid": "65bb3bc9-2a69-5bda-b3d6-cb2be54af286",
+  "title": "Swift · Kid's salchichas cocidas sin piel (6 un)",
+  "price": 261900,
+  "purchaseInfo": {
+   "purchaseOptions": [
+    {
+     "purchasePriceV2": {
+      "base": {
+       "high": 0,
+       "low": 261900,
+       "unsigned": false
+      },
+      "exponent": -2
+     }
+    }
+   ]
+  },
+  "isSoldOut": false,
+  "isAvailable": true,
+  "itemAvailabilityState": "AVAILABLE",
+  "itemThumbnailElements": [
+   {
+    "payload": {
+     "labelPayload": {
+      "label": {
+       "accessibilityText": "190 g"
+      }
+     }
+    }
+   }
+  ]
+ },
+ {
+  "uuid": "31495f8e-ed56-5251-9489-4d99ff11286a",
+  "title": "Colgate · Kids dr. rabbit cepillo dental infantil - 2+ Años - Verde",
+  "price": 190875,
+  "purchaseInfo": {
+   "purchaseOptions": [
+    {
+     "purchasePriceV2": {
+      "base": {
+       "high": 0,
+       "low": 254500,
+       "unsigned": false
+      },
+      "exponent": -2
+     }
+    }
+   ]
+  },
+  "isSoldOut": false,
+  "isAvailable": true,
+  "itemAvailabilityState": "AVAILABLE",
+  "itemThumbnailElements": []
+ },
+ {
+  "uuid": "1448de9b-1b9e-5b22-9c4b-9309ca3c7a65",
+  "title": "Carrefour · Puré de fruta - Manzana (110 g)",
+  "price": 149000,
+  "purchaseInfo": {
+   "purchaseOptions": [
+    {
+     "purchasePriceV2": {
+      "base": {
+       "high": 0,
+       "low": 149000,
+       "unsigned": false
+      },
+      "exponent": -2
+     }
+    }
+   ]
+  },
+  "isSoldOut": false,
+  "isAvailable": true,
+  "itemAvailabilityState": "AVAILABLE",
+  "itemThumbnailElements": [
+   {
+    "payload": {
+     "labelPayload": {
+      "label": {
+       "accessibilityText": "110 g"
+      }
+     }
+    }
+   }
+  ]
+ }
+]

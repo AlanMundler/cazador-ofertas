@@ -3,3 +3,11 @@ node_modules/
 *.log
 .py-state.json
 *.bak
+data/.cache/
+data/raw/
+data/runs/
+data/deals.json
+data/deals.dry-run.json
+data/cross-platform-review.json
+spike/
+slots/
