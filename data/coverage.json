@@ -5,27 +5,32 @@
       "lat": -31.412943,
       "lng": -64.1966036
     },
-    "fetchedAt": "2026-11-19T13:06:33.314Z",
-    "storesAvailable": 50,
-    "storesScanned": 50,
-    "storesSeen": 50,
+    "fetchedAt": "2026-11-19T13:09:22.588Z",
+    "storesAvailable": null,
+    "storesScanned": 0,
+    "storesSeen": 0,
     "storesByKind": {
-      "super": 5,
-      "vertical": 45,
+      "super": 0,
+      "vertical": 0,
       "otro": 0
     },
     "missingChains": [
       "Coto",
       "Día",
-      "La Anónima"
+      "La Anónima",
+      "Jumbo",
+      "Disco",
+      "Carrefour",
+      "Vea",
+      "Makro"
     ],
     "catalogCoverage": {
-      "itemsSeen": 7294,
+      "itemsSeen": 0,
       "aislesAnnounced": null,
       "sampled": true,
       "truncated": false
     },
-    "health": "ok"
+    "health": "dead"
   },
   {
     "platform": "UberEats",
@@ -33,7 +38,7 @@
       "lat": -31.412943,
       "lng": -64.1966036
     },
-    "fetchedAt": "2026-11-19T13:06:48.597Z",
+    "fetchedAt": "2026-11-19T13:09:41.474Z",
     "storesAvailable": null,
     "storesScanned": 0,
     "storesSeen": 0,
