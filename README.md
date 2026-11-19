@@ -26,9 +26,11 @@ Salidas:
 - `data/runs/*.jsonl` — snapshot crudo por corrida (poda 7 días).
 
 ### Umbrales y alcance
-- **PedidosYa y Rappi: ≥50%.** **Uber Eats: ≥35%.** Flash: ≥75%.
+- **PedidosYa y Rappi: ≥50%.** **Uber Eats: ≥40%.** Flash: ≥75%.
 - Sólo supermercados y markets; no hay restaurantes en el pipeline.
 - Se publican **todas** las ofertas sobre el umbral, sin tope por tienda.
+- Los precios son de **sesión anónima**: los descuentos exclusivos de Uber One / membresías
+  no aparecen en la API pública (ej. H2O: la etiqueta de Uber dice −35%, no −50%).
 
 ### Mensaje
 Una línea por producto, link en el nombre del local (HTML de Telegram):
