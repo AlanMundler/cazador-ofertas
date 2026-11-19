@@ -1,6 +1,8 @@
 // Formato del mensaje de ofertas: una sola pieza de texto clara, sin markdown.
 // Regla: sólo supermercados, umbral por plataforma y link directo a la tienda.
 
+import { normalizeName } from './core/identity.js';
+
 export function offerKey(product) {
   return `${product.platform}|${product.storeId}|${product.productId}|${product.price}`;
 }
@@ -55,6 +57,17 @@ export function buildDigest(ranked, {
     .sort((a, b) => b.discount - a.discount)
     .slice(0, maxFlash);
 
+  // Mismo producto repetido en varias sucursales: se muestra una sola vez.
+  const dedupe = list => {
+    const seen = new Set();
+    return list.filter(product => {
+      const key = `${product.platform}|${normalizeName(product.name)}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  };
+
   const rule = Object.entries(thresholds)
     .filter(([, value]) => Number.isFinite(value))
     .map(([platform, value]) => `${PLATFORM_LABEL[platform] ?? platform} ≥${value}%`)
@@ -74,7 +87,7 @@ export function buildDigest(ranked, {
 
   const fresh = {};
   for (const [platform, bucket] of buckets) {
-    const offers = (bucket.topDiscount ?? []).filter(keep);
+    const offers = dedupe((bucket.topDiscount ?? []).filter(keep));
     if (!offers.length) continue;
     fresh[platform] = offers.slice(0, maxPerPlatform);
     lines.push('');
