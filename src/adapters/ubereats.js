@@ -257,7 +257,8 @@ export async function collectUberEats({
     if (argentine.length === 0) {
       throw new Error(`ubereats: feed fuera de Argentina (${available.slice(0, 3).map(s => s.title).join(', ')})`);
     }
-    const stores = argentine.slice(0, maxStores);
+    // La guardia valida el feed, pero se escanean todas las tiendas grocery disponibles.
+    const stores = available.slice(0, maxStores);
     for (const store of stores) {
       const catalog = await replay('/_p/api/getStoreV1?localeCode=ar', {
         storeUuid: store.storeUuid,
