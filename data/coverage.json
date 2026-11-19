@@ -1,0 +1,89 @@
+[
+  {
+    "platform": "PedidosYa",
+    "point": {
+      "lat": -31.412943,
+      "lng": -64.1966036
+    },
+    "fetchedAt": "2026-11-19T12:40:05.081Z",
+    "storesAvailable": 22,
+    "storesScanned": 22,
+    "storesSeen": 22,
+    "storesByKind": {
+      "super": 7,
+      "vertical": 15,
+      "otro": 0
+    },
+    "missingChains": [
+      "Coto",
+      "Vea",
+      "Makro"
+    ],
+    "catalogCoverage": {
+      "itemsSeen": 1017,
+      "aislesAnnounced": 393,
+      "sampled": false,
+      "truncated": false
+    },
+    "health": "ok"
+  },
+  {
+    "platform": "Rappi",
+    "point": {
+      "lat": -31.412943,
+      "lng": -64.1966036
+    },
+    "fetchedAt": "2026-11-19T12:42:09.230Z",
+    "storesAvailable": 50,
+    "storesScanned": 50,
+    "storesSeen": 50,
+    "storesByKind": {
+      "super": 5,
+      "vertical": 45,
+      "otro": 0
+    },
+    "missingChains": [
+      "Coto",
+      "Día",
+      "La Anónima"
+    ],
+    "catalogCoverage": {
+      "itemsSeen": 6886,
+      "aislesAnnounced": null,
+      "sampled": true,
+      "truncated": false
+    },
+    "health": "ok"
+  },
+  {
+    "platform": "UberEats",
+    "point": {
+      "lat": -31.412943,
+      "lng": -64.1966036
+    },
+    "fetchedAt": "2026-11-19T12:42:55.401Z",
+    "storesAvailable": 23,
+    "storesScanned": 23,
+    "storesSeen": 23,
+    "storesByKind": {
+      "super": 2,
+      "vertical": 3,
+      "otro": 18
+    },
+    "missingChains": [
+      "Jumbo",
+      "Disco",
+      "Vea",
+      "Coto",
+      "La Anónima",
+      "Makro"
+    ],
+    "catalogCoverage": {
+      "itemsSeen": 2330,
+      "aislesAnnounced": null,
+      "sampled": true,
+      "truncated": false
+    },
+    "health": "ok"
+  }
+]

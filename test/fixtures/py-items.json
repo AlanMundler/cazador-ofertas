@@ -1,0 +1,247 @@
+[
+ {
+  "id": "214524998",
+  "name": "Cerveza Stella Artois Pure Gold Lata 473 ml",
+  "defaultBrandName": "Stella Artois",
+  "gtin": "07792798015474",
+  "active": true,
+  "status": {
+   "enabled": true
+  },
+  "stock": 0,
+  "pricing": {
+   "price": 2865.85,
+   "beforePrice": 4409
+  },
+  "size": {
+   "content": 473,
+   "unit": "ml"
+  },
+  "campaigns": [
+   {
+    "configuration": {
+     "benefit": null,
+     "isBenefit": null,
+     "maxRedemption": 6,
+     "pay": 0,
+     "take": 1,
+     "type": "PERCENTAGE",
+     "value": 35,
+     "valueRaw": 35
+    },
+    "id": "e2f5f371-c723-42a1-b2f0-2572a849ffe7",
+    "tag": "35%",
+    "tagStyle": null,
+    "targetAudience": "ALL",
+    "terms": [
+     ""
+    ],
+    "type": "percentageDiscount"
+   }
+  ],
+  "deeplinks": {
+   "productDetail": "pedidosya://pharma/productConfiguration?productSku=214524998&vendorId=112970"
+  }
+ },
+ {
+  "id": "176397122",
+  "name": "Gomitas Mogul Moras 80 g",
+  "defaultBrandName": "Mogul",
+  "gtin": "07790580118617",
+  "active": true,
+  "status": {
+   "enabled": true
+  },
+  "stock": 0,
+  "pricing": {
+   "price": 1809,
+   "beforePrice": 1809
+  },
+  "size": {
+   "content": 80,
+   "unit": "g"
+  },
+  "campaigns": [
+   {
+    "configuration": {
+     "benefit": null,
+     "isBenefit": null,
+     "maxRedemption": 3,
+     "pay": 1,
+     "take": 2,
+     "type": "percentage",
+     "value": 50,
+     "valueRaw": 0
+    },
+    "id": "c094e4ff-1bc6-412d-bd45-8ad3d703b101",
+    "tag": "1 ud. al 50% dto",
+    "tagStyle": null,
+    "targetAudience": "ALL",
+    "terms": [
+     ""
+    ],
+    "type": "sameItemBundle"
+   }
+  ],
+  "deeplinks": {
+   "productDetail": "pedidosya://pharma/productConfiguration?productSku=176397122&vendorId=112970"
+  }
+ },
+ {
+  "id": "155225278",
+  "name": "Gaseosa Pepsi Black 2 L",
+  "defaultBrandName": "Pepsi",
+  "gtin": "07791813828464",
+  "active": true,
+  "status": {
+   "enabled": true
+  },
+  "stock": 0,
+  "pricing": {
+   "price": 4550,
+   "beforePrice": 4550
+  },
+  "size": {
+   "content": 2,
+   "unit": "L"
+  },
+  "campaigns": [
+   {
+    "configuration": {
+     "benefit": null,
+     "isBenefit": null,
+     "maxRedemption": 2,
+     "pay": 2,
+     "take": 3,
+     "type": "free_item",
+     "value": 100,
+     "valueRaw": 0
+    },
+    "id": "04c7b4a1-ac18-47b1-9cf7-6160b3afa1de",
+    "tag": "3 x 2",
+    "tagStyle": null,
+    "targetAudience": "ALL",
+    "terms": [
+     ""
+    ],
+    "type": "multi-buy"
+   }
+  ],
+  "deeplinks": {
+   "productDetail": "pedidosya://pharma/productConfiguration?productSku=155225278&vendorId=112970"
+  }
+ },
+ {
+  "id": "203793848",
+  "name": "Papas Fritas Carrefour Crema Y Cebolla 140 g",
+  "defaultBrandName": "Carrefour",
+  "gtin": "07791720018415",
+  "active": true,
+  "status": {
+   "enabled": true
+  },
+  "stock": 0,
+  "pricing": {
+   "price": 3990,
+   "beforePrice": 3990
+  },
+  "size": {
+   "content": 140,
+   "unit": "g"
+  },
+  "campaigns": null,
+  "deeplinks": {
+   "productDetail": "pedidosya://pharma/productConfiguration?productSku=203793848&vendorId=112970"
+  }
+ },
+ {
+  "id": "198441732",
+  "name": "Azúcar Bulnez Común 1 kg",
+  "defaultBrandName": "Bulnez",
+  "gtin": "07791720048726",
+  "active": true,
+  "status": {
+   "enabled": true
+  },
+  "stock": 0,
+  "pricing": {
+   "price": 1390,
+   "beforePrice": 1390
+  },
+  "size": {
+   "content": 1,
+   "unit": "kg"
+  },
+  "campaigns": null,
+  "deeplinks": {
+   "productDetail": "pedidosya://pharma/productConfiguration?productSku=198441732&vendorId=112970"
+  }
+ },
+ {
+  "id": "219656786",
+  "name": "Leche Condensada Nestle Descremada 395 g",
+  "defaultBrandName": "Nestlé",
+  "gtin": "08445290883858",
+  "active": true,
+  "status": {
+   "enabled": true
+  },
+  "stock": 0,
+  "pricing": {
+   "price": 2837.5,
+   "beforePrice": 5675
+  },
+  "size": {
+   "content": 395,
+   "unit": "g"
+  },
+  "campaigns": [
+   {
+    "configuration": {
+     "benefit": null,
+     "isBenefit": null,
+     "maxRedemption": 6,
+     "pay": 0,
+     "take": 1,
+     "type": "PERCENTAGE",
+     "value": 50,
+     "valueRaw": 50
+    },
+    "id": "1ca5d987-2248-497f-822f-73a9534b8afa",
+    "tag": "50%",
+    "tagStyle": null,
+    "targetAudience": "ALL",
+    "terms": [
+     ""
+    ],
+    "type": "percentageDiscount"
+   }
+  ],
+  "deeplinks": {
+   "productDetail": "pedidosya://pharma/productConfiguration?productSku=219656786&vendorId=112970"
+  }
+ },
+ {
+  "id": "222378241",
+  "name": "Palta Inmadura 1 Unidad",
+  "defaultBrandName": "unbranded",
+  "gtin": "",
+  "active": true,
+  "status": {
+   "enabled": true
+  },
+  "stock": 0,
+  "pricing": {
+   "price": 999,
+   "beforePrice": 999
+  },
+  "size": {
+   "content": 1,
+   "unit": "un"
+  },
+  "campaigns": null,
+  "deeplinks": {
+   "productDetail": "pedidosya://pharma/productConfiguration?productSku=222378241&vendorId=112970"
+  }
+ }
+]
