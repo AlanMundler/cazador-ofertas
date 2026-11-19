@@ -72,8 +72,8 @@
     "count": 15
   },
   "Rappi:Jumbo:50:50% OFF - Helado Palito Sei Tu Carita Choc Cre 6u": {
-    "lastSeen": 1795092170431,
-    "count": 15
+    "lastSeen": 1795095776130,
+    "count": 16
   },
   "Rappi:Turbo Market:50:50% OFF - Garnier Sérum Anti-Manchas con Vitamica C": {
     "lastSeen": 1795086782149,
@@ -88,12 +88,12 @@
     "count": 8
   },
   "Rappi:Turbo Market:50:50% OFF - Loreal Paris Protector Solar Uv Defender Fluido Invisible": {
-    "lastSeen": 1795092170431,
-    "count": 11
+    "lastSeen": 1795095776130,
+    "count": 12
   },
   "Rappi:La Despensa:50:50% OFF - Loreal Paris Protector Solar Uv Defender Fluido Invisible": {
-    "lastSeen": 1795092170431,
-    "count": 11
+    "lastSeen": 1795095776130,
+    "count": 12
   },
   "UberEats:Pachata  Manso Sabor.:50:50% off select items": {
     "lastSeen": 1795056714287,
@@ -305,6 +305,20 @@
   },
   "Rappi:33quince - Ventana Pastelera:50:Hasta 50% Off": {
     "lastSeen": 1795093964706,
+    "count": 1
+  },
+  "Rappi:Vitto:50:Hasta 50% Off": {
+    "lastSeen": 1795095776130,
+    "count": 1
+  },
+  "Rappi:The Gourmet House Belgrano:80:Hasta 80% Off": {
+    "lastSeen": 1795095776130,
+    "count": 1
+  },
+  "Rappi:The Gourmet House Belgrano:price": {
+    "lastSeen": 1795095776132,
+    "price": "",
+    "discount": 80,
     "count": 1
   }
 }
