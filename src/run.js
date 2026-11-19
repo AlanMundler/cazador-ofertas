@@ -1,4 +1,4 @@
-// Orquestador: corre los adaptadores, rankea intra-plataforma y persiste la corrida.
+﻿// Orquestador: corre los adaptadores, rankea intra-plataforma y persiste la corrida.
 
 import 'dotenv/config';
 
@@ -21,7 +21,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
 
 const POINT = { lat: -31.412943, lng: -64.1966036 };
-const ADDRESS = 'San José de Calasanz 58, Córdoba, Argentina';
+const ADDRESS = 'San JosÃ© de Calasanz 58, CÃ³rdoba, Argentina';
 
 function arg(name, fallback) {
   const found = process.argv.find(value => value.startsWith(`--${name}=`));
@@ -107,16 +107,16 @@ async function sendPlain(text, chatId, { dryRun = false } = {}) {
   return { sent: response && response.ok ? 1 : 0, dryRun: false };
 }
 
-/** Aviso explícito cuando una plataforma quedó degradada o caída. */
+/** Aviso explÃ­cito cuando una plataforma quedÃ³ degradada o caÃ­da. */
 async function notifyHealth(coverages, failures, dryRun) {
   const broken = coverages.filter(coverage => coverage.health !== 'ok');
   if (broken.length === 0 && failures.length === 0) return null;
 
-  const lines = ['⚠️ CAZADOR — salud de la corrida'];
+  const lines = ['âš ï¸ CAZADOR â€” salud de la corrida'];
   for (const coverage of coverages) {
-    lines.push(`${coverage.health === 'ok' ? '✅' : coverage.health === 'degraded' ? '⚠️' : '❌'} ${coverage.platform}: ${coverage.storesScanned}/${coverage.storesAvailable ?? '?'} tiendas, ${coverage.catalogCoverage.itemsSeen} productos (${coverage.health})`);
+    lines.push(`${coverage.health === 'ok' ? 'âœ…' : coverage.health === 'degraded' ? 'âš ï¸' : 'âŒ'} ${coverage.platform}: ${coverage.storesScanned}/${coverage.storesAvailable ?? '?'} tiendas, ${coverage.catalogCoverage.itemsSeen} productos (${coverage.health})`);
   }
-  for (const failure of failures) lines.push(`❌ ${failure.platform}: ${failure.error}`);
+  for (const failure of failures) lines.push(`âŒ ${failure.platform}: ${failure.error}`);
 
   const text = lines.join('\n');
   let chatId = config.telegram.adminChatId || null;
@@ -128,37 +128,6 @@ async function notifyHealth(coverages, failures, dryRun) {
   }
   await sendPlain(text, chatId, { dryRun });
   return text.split('\n').slice(1).join(' | ');
-}
-
-/** Mensaje aparte con el mejor precio por producto dentro de cada plataforma. */
-async function notifyBestPrice(ranked, { dryRun = false, max = 6, keep = () => true, minDiscount = 30 } = {}) {
-  const entries = [];
-  for (const [platformName, bucket] of Object.entries(ranked.byPlatform ?? {})) {
-    for (const entry of bucket.bestPriceByProduct ?? []) {
-      if ((entry.product.discount ?? 0) < minDiscount) continue;
-      if (!keep(entry.product)) continue;
-      entries.push({ platformName, entry });
-    }
-  }
-  if (entries.length === 0) return 0;
-
-  entries.sort((a, b) => (b.entry.product.discount ?? 0) - (a.entry.product.discount ?? 0));
-  const lines = ['💰 MEJOR PRECIO POR PRODUCTO'];
-  for (const { platformName, entry } of entries.slice(0, max)) {
-    const product = entry.product;
-    lines.push(`- ${product.name} — $${product.price.toLocaleString('es-AR')} en ${product.storeName} (${platformName})`);
-  }
-
-  const text = lines.join('\n');
-  if (dryRun) return entries.length;
-  const { token } = config.telegram;
-  if (!token) return 0;
-
-  const subscribersFile = join(ROOT, 'data', 'subscribers.json');
-  if (!existsSync(subscribersFile)) return 0;
-  const ids = JSON.parse(readFileSync(subscribersFile, 'utf8'))?.ids ?? [];
-  for (const id of ids) await sendPlain(text, id, { dryRun });
-  return entries.length;
 }
 
 async function main() {
@@ -203,11 +172,12 @@ async function main() {
         sampled: true,
         missingChains: missingChains(name, []),
       }));
-      log(`${name}: FALLÓ — ${error.message}`);
+      log(`${name}: FALLÃ“ â€” ${error.message}`);
     }
   }
 
-  const ranked = rankByPlatform(products, { minDiscount: 30, flash: 75, maxPerStore: 3 });
+  const thresholds = { [PEDIDOSYA]: 50, [RAPPI]: 50, [UBEREATS]: 35 };
+  const ranked = rankByPlatform(products, { minDiscount: thresholds, flash: 75, maxPerStore: 3 });
   const deck = {
     generatedAt: new Date().toISOString(),
     point: POINT,
@@ -261,27 +231,36 @@ async function main() {
   }
   for (const failure of failures) console.log(`FALLA ${failure.platform}: ${failure.error}`);
 
-  const { buildDigest, offerKey } = await import('./report.js');
+  const { buildDigest, chunk, offerKey } = await import('./report.js');
   const isNew = product => !previousKeys.has(`${product.platform}|${product.storeId}|${product.productId}|${product.price}`);
-  const digest = buildDigest(ranked, { keep: isNew });
+  const digest = buildDigest(ranked, { keep: isNew, coverages, thresholds });
   if (flag('send')) {
-    if (digest.offers.length === 0 && digest.flash.length === 0) {
-      console.log('[Telegram] sin ofertas nuevas desde la corrida anterior');
+    if (!digest.text) {
+      console.log('[Telegram] sin ofertas nuevas sobre el umbral');
     } else {
-      const { sendMessage } = await import('../notifier/telegram.js');
-      await sendMessage(digest.offers, [], digest.flash, { dryRun });
+      const parts = chunk(digest.text);
+      const subscribersFile = join(dataDir, 'subscribers.json');
+      const ids = existsSync(subscribersFile)
+        ? (JSON.parse(readFileSync(subscribersFile, 'utf8'))?.ids ?? [])
+        : [];
+      if (dryRun) {
+        console.log('\n[DRY-RUN] mensaje que se enviarÃ­a:\n');
+        console.log(digest.text);
+      } else {
+        for (const part of parts) {
+          for (const id of ids) await sendPlain(part, id, { dryRun });
+        }
+      }
       console.log(dryRun
-        ? `[Telegram] digest generado (dry-run): ${digest.offers.length} nuevas + ${digest.flash.length} flash`
-        : `[Telegram] digest enviado: ${digest.offers.length} nuevas + ${digest.flash.length} flash`);
+        ? `[Telegram] digest generado (dry-run): ${digest.count} ofertas, ${parts.length} parte(s)`
+        : `[Telegram] digest enviado: ${digest.count} ofertas a ${ids.length} suscriptores`);
     }
-    const bestPriceCount = await notifyBestPrice(ranked, { dryRun, keep: isNew });
-    if (bestPriceCount) console.log(`[Telegram] mejor precio por producto: ${bestPriceCount} grupos`);
   }
 
   if (!dryRun) {
     const seen = loadSeen(dataDir);
     const now = Date.now();
-    for (const product of [...digest.raw.offers, ...digest.raw.flash, ...digest.raw.bestPrice]) {
+    for (const product of [...digest.raw.offers, ...digest.raw.flash]) {
       seen.set(offerKey(product), now);
     }
     saveSeen(dataDir, seen);
@@ -292,7 +271,7 @@ async function main() {
     if (top.length) console.log(`\n${name} top:\n${top.join('\n')}`);
   }
   console.log(`\nProductos=${products.length} con descuento=${deck.totals.discounted} en ${((Date.now() - started) / 1000).toFixed(1)}s`);
-  if (dryRun) console.log('(dry-run: no se escribió data/deals.json)');
+  if (dryRun) console.log('(dry-run: no se escribiÃ³ data/deals.json)');
 
   const worst = coverages
     .map(coverage => exitCodeFor(coverage))
@@ -304,3 +283,4 @@ main().catch(error => {
   console.error('Error fatal:', error);
   process.exitCode = 1;
 });
+

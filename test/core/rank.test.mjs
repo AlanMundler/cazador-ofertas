@@ -145,3 +145,21 @@ test('minDiscount es configurable', () => {
   const { byPlatform } = rankByPlatform(products, { minDiscount: 50 });
   assert.deepEqual(byPlatform.PedidosYa.topDiscount.map(product => product.productId), ['b']);
 });
+
+test('minDiscount por plataforma: PY/Rappi 50, UE 35', () => {
+  const thresholds = { PedidosYa: 50, Rappi: 50, UberEats: 35 };
+  const make = (platform, discount) => ({
+    platform, storeId: 's', storeName: 'S', storeKind: 'super', productId: `${platform}-${discount}`,
+    name: `${platform} ${discount}`, rawName: `${platform} ${discount}`, brand: 'Marca',
+    size: { value: 1, unit: 'kg' }, price: 1000, beforePrice: 1000 / (1 - discount / 100),
+    discount, effectivePrice: 1000, requiresQty: 1, available: true,
+    deliverability: 'verified', url: 'https://x.test/p', sampled: false,
+  });
+  const { byPlatform } = rankByPlatform(
+    [make('PedidosYa', 45), make('PedidosYa', 55), make('Rappi', 40), make('Rappi', 60), make('UberEats', 30), make('UberEats', 40)],
+    { minDiscount: thresholds },
+  );
+  assert.deepEqual(byPlatform.PedidosYa.topDiscount.map(p => p.discount), [55]);
+  assert.deepEqual(byPlatform.Rappi.topDiscount.map(p => p.discount), [60]);
+  assert.deepEqual(byPlatform.UberEats.topDiscount.map(p => p.discount), [40]);
+});

@@ -30,9 +30,13 @@ function bestPriceKey(product) {
 
 /**
  * Rankea por plataforma: top descuento, mejor precio por producto y flash.
- * Devuelve {byPlatform, rejected:[{reason,count}]}.
+ * `minDiscount` puede ser número o mapa por plataforma: {PedidosYa:50, Rappi:50, UberEats:35}.
+ * Devuelve {byPlatform, rejected:[{reason,count}], thresholds}.
  */
 export function rankByPlatform(products, { minDiscount = 30, flash = 75, maxPerStore = 3 } = {}) {
+  const thresholdFor = platform => (typeof minDiscount === 'number'
+    ? minDiscount
+    : Number(minDiscount?.[platform] ?? minDiscount?.default ?? 30));
   const byPlatform = Object.fromEntries(PLATFORMS.map(platform => [platform, emptyBucket()]));
   const rejectedCounts = new Map();
   const valid = [];
@@ -73,7 +77,8 @@ export function rankByPlatform(products, { minDiscount = 30, flash = 75, maxPerS
     if (list.length === 0) continue;
 
     const perStore = new Map();
-    for (const product of list.filter(item => (item.discount ?? 0) >= minDiscount).sort(byDiscount)) {
+    const min = thresholdFor(platform);
+    for (const product of list.filter(item => (item.discount ?? 0) >= min).sort(byDiscount)) {
       const store = product.storeId ?? product.storeName ?? 'unknown';
       const count = perStore.get(store) ?? 0;
       if (count >= maxPerStore) continue;

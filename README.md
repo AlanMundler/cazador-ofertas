@@ -91,6 +91,22 @@ Cómo obtiene los datos cada plataforma:
 Salud por corrida: si una plataforma no alcanza el piso de tiendas, se marca `degraded`/`dead`,
 se imprime en el resumen y el proceso termina con código distinto de 0 (nunca "sin ofertas" silencioso).
 
+### Umbrales y alcance
+- **PedidosYa y Rappi: sólo ofertas ≥50%.** **Uber Eats: sólo ≥35%.** Flash: ≥75%.
+- **Sólo supermercados y markets.** Los restaurantes no existen en este pipeline.
+- Umbrales en `src/run.js` (`thresholds`) y respetados por `rankByPlatform`.
+
+### Mensaje
+Un solo mensaje, sin tablas: cabecera con fecha y reglas, bloque ⚡ FLASH, y por plataforma
+la lista con precio, precio anterior, ahorro, tienda y link directo. Se parte solo si supera
+3500 caracteres y sólo se envía lo que no se notificó antes (dedupe por producto+precio).
+
+### Proxies gratuitos para Uber Eats
+`src/proxies.js` arma un pool con listas públicas AR, valida país + feed de Uber Eats + CONNECT,
+cachea los que funcionan 15 minutos y se saltea todo si la IP local ya es argentina.
+Un proxy gratuito puede morir en minutos: si no hay ninguno vivo, Uber Eats se marca `dead`
+con aviso, nunca publica datos de otro país.
+
 Notas operativas:
 - Uber Eats y PedidosYa necesitan `xvfb-run` en CI (browser headed).
 - PedidosYa tolera ráfagas cortas: si devuelve "Acceso ha sido denegado", esperar ~90 s y reintentar.

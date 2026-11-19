@@ -148,7 +148,25 @@ export async function collectUberEats({
     geolocation: { latitude: point.lat, longitude: point.lng },
     permissions: ['geolocation'],
   };
-  const proxyUrl = process.env.UE_PROXY_URL || process.env.PROXY_URL;
+  const proxyUrl = process.env.UE_PROXY_URL || process.env.PROXY_URL || await (async () => {
+    try {
+      const { getFreeProxy, isArgentina } = await import('../proxies.js');
+      if (await isArgentina()) {
+        log('ubereats: IP local ya es AR, sin proxy');
+        return null;
+      }
+      const found = await getFreeProxy({
+        cacheFile: process.env.PROXY_CACHE || 'data/proxies.json',
+        log,
+      });
+      if (found) log(`ubereats: proxy gratuito AR ${found}`);
+      else log('ubereats: sin proxy gratuito AR disponible');
+      return found;
+    } catch (error) {
+      log(`ubereats: pool de proxies falló (${error.message})`);
+      return null;
+    }
+  })();
   if (proxyUrl) launchOptions.proxy = { server: proxyUrl };
   const context = await chromium.launchPersistentContext(profile, launchOptions);
 
