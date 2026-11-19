@@ -80,8 +80,6 @@ Sólo el chat configurado en `TELEGRAM_CHAT_ID` puede usarlos:
 /publicar         # procesa y envía la cola ahora mismo
 ```
 
-El pipeline viejo (`node index.js --target=...`) sigue disponible como fallback.
-
 ## Tests
 
 ```bash
