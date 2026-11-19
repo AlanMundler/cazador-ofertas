@@ -5,7 +5,7 @@
       "lat": -31.412943,
       "lng": -64.1966036
     },
-    "fetchedAt": "2026-11-19T13:13:46.173Z",
+    "fetchedAt": "2026-11-19T13:17:15.880Z",
     "storesAvailable": 50,
     "storesScanned": 50,
     "storesSeen": 50,
@@ -20,42 +20,11 @@
       "La Anónima"
     ],
     "catalogCoverage": {
-      "itemsSeen": 6996,
+      "itemsSeen": 6011,
       "aislesAnnounced": null,
       "sampled": true,
       "truncated": false
     },
     "health": "ok"
-  },
-  {
-    "platform": "UberEats",
-    "point": {
-      "lat": -31.412943,
-      "lng": -64.1966036
-    },
-    "fetchedAt": "2026-11-19T13:14:08.579Z",
-    "storesAvailable": null,
-    "storesScanned": 0,
-    "storesSeen": 0,
-    "storesByKind": {
-      "super": 0,
-      "vertical": 0,
-      "otro": 0
-    },
-    "missingChains": [
-      "Jumbo",
-      "Disco",
-      "Vea",
-      "Coto",
-      "La Anónima",
-      "Makro"
-    ],
-    "catalogCoverage": {
-      "itemsSeen": 0,
-      "aislesAnnounced": null,
-      "sampled": true,
-      "truncated": false
-    },
-    "health": "dead"
   }
 ]
