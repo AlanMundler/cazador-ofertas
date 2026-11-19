@@ -80,8 +80,8 @@
     "count": 8
   },
   "Rappi:Carrefour Express:50:50% OFF - Nestlé Leche Condensada Descremada 395 g": {
-    "lastSeen": 1795088620312,
-    "count": 14
+    "lastSeen": 1795093964706,
+    "count": 15
   },
   "Rappi:La Despensa:50:50% OFF - Garnier Sérum Anti-Manchas con Vitamica C": {
     "lastSeen": 1795086782149,
@@ -297,6 +297,14 @@
   },
   "Rappi:Empanadas Don Benito:50:Hasta 50% Off": {
     "lastSeen": 1795090385680,
+    "count": 1
+  },
+  "Rappi:Maru Botana:70:Hasta 70% Off": {
+    "lastSeen": 1795093964706,
+    "count": 1
+  },
+  "Rappi:33quince - Ventana Pastelera:50:Hasta 50% Off": {
+    "lastSeen": 1795093964706,
     "count": 1
   }
 }
