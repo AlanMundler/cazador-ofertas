@@ -1,58 +1,33 @@
 [
   {
-    "platform": "Rappi",
+    "platform": "UberEats",
     "point": {
       "lat": -31.412943,
       "lng": -64.1966036
     },
-    "fetchedAt": "2026-11-19T13:47:17.653Z",
-    "storesAvailable": 50,
-    "storesScanned": 50,
-    "storesSeen": 50,
+    "fetchedAt": "2026-11-19T13:49:37.379Z",
+    "storesAvailable": null,
+    "storesScanned": 0,
+    "storesSeen": 0,
     "storesByKind": {
-      "super": 5,
-      "vertical": 45,
+      "super": 0,
+      "vertical": 0,
       "otro": 0
     },
     "missingChains": [
+      "Jumbo",
+      "Disco",
+      "Vea",
       "Coto",
-      "Día",
-      "La Anónima"
+      "La Anónima",
+      "Makro"
     ],
     "catalogCoverage": {
-      "itemsSeen": 6093,
+      "itemsSeen": 0,
       "aislesAnnounced": null,
       "sampled": true,
       "truncated": false
     },
-    "health": "ok"
-  },
-  {
-    "platform": "PedidosYa",
-    "point": {
-      "lat": -31.412943,
-      "lng": -64.1966036
-    },
-    "fetchedAt": "2026-11-19T13:47:56.715Z",
-    "storesAvailable": 24,
-    "storesScanned": 23,
-    "storesSeen": 23,
-    "storesByKind": {
-      "super": 7,
-      "vertical": 16,
-      "otro": 0
-    },
-    "missingChains": [
-      "Coto",
-      "Vea",
-      "Makro"
-    ],
-    "catalogCoverage": {
-      "itemsSeen": 1031,
-      "aislesAnnounced": 386,
-      "sampled": true,
-      "truncated": true
-    },
-    "health": "ok"
+    "health": "dead"
   }
 ]
