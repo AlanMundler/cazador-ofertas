@@ -102,10 +102,12 @@ Notas operativas:
 | Entorno | Resultado verificado |
 |---|---|
 | **Tu PC (IP residencial)** | 10.245 productos / 2.093 ofertas; PY 22/22, Rappi 50/50, UE 23/23 |
-| **GitHub Actions + Cloudflare WARP** | Rappi 50/50 (6.011 productos, run 44531600913). Uber Eats no logra fijar la ubicación y PedidosYa sigue en 403 |
+| **GitHub Actions + WARP** | **Rappi 50/50** (6.093) y **PedidosYa 23/24** (1.031) OK, run 44536566017. **Uber Eats NO**: el feed GEOIP resuelve a EE.UU. y la guardia lo rechaza |
 | **GitHub Actions sin WARP** | Rappi `passport 403`, UberEats sin `uev2.loc`, PedidosYa 403 |
 
-Cloudflare WARP es la única opción de Cloudflare que cambia la IP de salida (Workers/Browser Rendering salen por rangos datacenter y no destraban nada). Verificado: con WARP la IP pasa a `2a09:bac5:…` y `rappi_passport=200`; `pedidosya_home` y `pedidosya_shoplist` siguen en 403.
+Cloudflare WARP es la única opción de Cloudflare que cambia la IP de salida (Workers/Browser Rendering salen por rangos datacenter y no destraban nada).
+Estado por plataforma en la nube: Rappi ✅, PedidosYa ✅, Uber Eats ❌ (necesita egress argentino).
+Uber Eats sin cookie usa `GEOIP`; con WARP eso apunta a EE.UU., por eso el adaptador exige marcas AR y falla explícito en vez de publicar tiendas de otro país.
 
 Opciones:
 1. **Local programado (recomendado hoy)**: `scripts/run-local.ps1` + Programador de tareas.
