@@ -249,12 +249,14 @@ export async function collectUberEats({
     if (available.length === 0) {
       throw new Error('ubereats: feed vacío (¿IP fuera de Argentina?)');
     }
-    // Guardia de ciudad: si el feed no trae marcas argentinas, no se publica nada.
-    const argentine = available.filter(store => /carrefour|tadicor|justmart|jumbo|disco|coto|día|dia|vea|farmacity|kiosco|market|carnave|almac[eé]n/i.test(store.title));
+    // Guardia de ciudad: sólo se acepta el feed si trae marcas argentinas conocidas.
+    // (Sin cookie, `GEOIP` en CI puede resolver a EE.UU. — caso real: Liquor Stores.)
+    const AR_BRANDS = /carrefour|tadicor|justmart|jumbo|disco|coto|pedidosya|farmacity|carnave|la an[oó]nima|makro|sumo|d[ií]a\b|vea\b|changomas|walmart argentina|kiosco 30|365 (argentina|kioscos)/i;
+    const argentine = available.filter(store => AR_BRANDS.test(store.title));
     if (argentine.length === 0) {
       throw new Error(`ubereats: feed fuera de Argentina (${available.slice(0, 3).map(s => s.title).join(', ')})`);
     }
-    const stores = available.slice(0, maxStores);
+    const stores = argentine.slice(0, maxStores);
     for (const store of stores) {
       const catalog = await replay('/_p/api/getStoreV1?localeCode=ar', {
         storeUuid: store.storeUuid,
