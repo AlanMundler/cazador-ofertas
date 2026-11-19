@@ -1,39 +1,11 @@
 [
   {
-    "platform": "PedidosYa",
-    "point": {
-      "lat": -31.412943,
-      "lng": -64.1966036
-    },
-    "fetchedAt": "2026-11-19T12:49:56.259Z",
-    "storesAvailable": 22,
-    "storesScanned": 22,
-    "storesSeen": 22,
-    "storesByKind": {
-      "super": 7,
-      "vertical": 15,
-      "otro": 0
-    },
-    "missingChains": [
-      "Coto",
-      "Vea",
-      "Makro"
-    ],
-    "catalogCoverage": {
-      "itemsSeen": 1018,
-      "aislesAnnounced": 393,
-      "sampled": false,
-      "truncated": false
-    },
-    "health": "ok"
-  },
-  {
     "platform": "Rappi",
     "point": {
       "lat": -31.412943,
       "lng": -64.1966036
     },
-    "fetchedAt": "2026-11-19T12:52:05.343Z",
+    "fetchedAt": "2026-11-19T13:06:33.314Z",
     "storesAvailable": 50,
     "storesScanned": 50,
     "storesSeen": 50,
@@ -48,7 +20,7 @@
       "La Anónima"
     ],
     "catalogCoverage": {
-      "itemsSeen": 6915,
+      "itemsSeen": 7294,
       "aislesAnnounced": null,
       "sampled": true,
       "truncated": false
@@ -61,14 +33,14 @@
       "lat": -31.412943,
       "lng": -64.1966036
     },
-    "fetchedAt": "2026-11-19T12:52:49.824Z",
-    "storesAvailable": 23,
-    "storesScanned": 23,
-    "storesSeen": 23,
+    "fetchedAt": "2026-11-19T13:06:48.597Z",
+    "storesAvailable": null,
+    "storesScanned": 0,
+    "storesSeen": 0,
     "storesByKind": {
-      "super": 2,
-      "vertical": 3,
-      "otro": 18
+      "super": 0,
+      "vertical": 0,
+      "otro": 0
     },
     "missingChains": [
       "Jumbo",
@@ -79,11 +51,11 @@
       "Makro"
     ],
     "catalogCoverage": {
-      "itemsSeen": 2312,
+      "itemsSeen": 0,
       "aislesAnnounced": null,
       "sampled": true,
       "truncated": false
     },
-    "health": "ok"
+    "health": "dead"
   }
 ]
