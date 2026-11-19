@@ -154,6 +154,17 @@ async function main() {
   const coverages = [];
   const failures = [];
 
+  // Mantiene altas/bajas de suscriptores sin depender del pipeline viejo.
+  if (!dryRun && config.telegram.token) {
+    try {
+      const { pollUpdates } = await import('../notifier/telegram.js');
+      const subscribers = await pollUpdates(config.telegram.token);
+      console.log(`[Telegram] suscriptores activos: ${subscribers.length}`);
+    } catch (error) {
+      console.log(`[Telegram] poll de suscriptores falló: ${error.message}`);
+    }
+  }
+
   for (const name of platforms) {
     const runner = RUNNERS[name];
     if (!runner) {
