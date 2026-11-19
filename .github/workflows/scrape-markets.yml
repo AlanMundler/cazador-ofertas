@@ -1,4 +1,4 @@
-name: Markets (ofertas)
+﻿name: Markets (ofertas)
 
 on:
   schedule:
@@ -79,7 +79,7 @@ jobs:
             echo "on=true" >> "$GITHUB_OUTPUT"
           else
             echo "on=false" >> "$GITHUB_OUTPUT"
-            echo "::warning::WARP no conectó tras 3 intentos; Rappi/UberEats van a fallar desde esta IP."
+            echo "::warning::WARP no conectÃ³ tras 3 intentos; Rappi/UberEats van a fallar desde esta IP."
           fi
           if [ "$trace" = "warp=on" ] || [ -n "$PROXY_URL" ]; then
             echo "run=true" >> "$GITHUB_OUTPUT"
@@ -96,22 +96,22 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           BOT_USERNAME: ${{ secrets.BOT_USERNAME }}
           PROXY_URL: ${{ secrets.PROXY_URL }}
-          CITY: ${{ secrets.CITY || 'Córdoba' }}
+          CITY: ${{ secrets.CITY || 'CÃ³rdoba' }}
           COUNTRY: ${{ secrets.COUNTRY || 'Argentina' }}
           LATITUDE: ${{ secrets.LATITUDE || '-31.412943' }}
           LONGITUDE: ${{ secrets.LONGITUDE || '-64.1966036' }}
           IN_PLATFORMS: ${{ inputs.platforms }}
         run: |
           mkdir -p data
-          # PedidosYa queda afuera sin PROXY_URL: su Cloudflare/PX también bloquea WARP (403 verificado).
+          # PedidosYa queda afuera sin PROXY_URL: su Cloudflare/PX tambiÃ©n bloquea WARP (403 verificado).
           if [ -n "$PROXY_URL" ]; then
             TARGET="${IN_PLATFORMS:-auto}"
             if [ "$TARGET" = "auto" ]; then TARGET=all; fi
             echo "Con PROXY_URL -> plataformas: $TARGET"
             xvfb-run --auto-servernum node src/run.js --send --verbose --platform="$TARGET" --max-stores=50 --py-stores=23
           else
-            TARGET="${IN_PLATFORMS:-Rappi,UberEats}"
-            if [ "$TARGET" = "auto" ]; then TARGET=Rappi,UberEats; fi
+            TARGET="${IN_PLATFORMS:-Rappi}"
+            if [ "$TARGET" = "auto" ]; then TARGET=Rappi; fi
             echo "::warning::Sin PROXY_URL: PedidosYa queda afuera (WARP no lo destraba). Plataformas: $TARGET"
             xvfb-run --auto-servernum node src/run.js --send --verbose --platform="$TARGET" --max-stores=50
           fi
@@ -125,8 +125,9 @@ jobs:
         run: |
           git config --global user.name "cazador-bot"
           git config --global user.email "bot@cazador-ofertas.local"
-          # Sólo artefactos chicos: deals.json y runs quedan como artefacto local (evita bloat).
+          # SÃ³lo artefactos chicos: deals.json y runs quedan como artefacto local (evita bloat).
           git add data/seen.json data/coverage.json 2>/dev/null || true
           git diff --cached --quiet || git commit -m "markets state $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           git pull --rebase origin master || true
           git push || true
+
