@@ -1,141 +1,89 @@
-# Cazador de Ofertas
+﻿# Cazador de Ofertas
 
-Bot de Telegram que busca ofertas en apps de delivery y las envía a los suscriptores.
+Bot de Telegram que busca ofertas en PedidosYa, Rappi y Uber Eats y las envía a los suscriptores.
+Corre **en GitHub Actions** (cron cada 30 min), sin depender de ninguna PC.
 
-## Targets
+Punto de entrega: **San José de Calasanz 58, Córdoba** (lat -31.412943, lng -64.1966036).
+Sólo se publican tiendas de supermercado/market que entregan en ese domicilio.
 
-```bash
-node index.js --target=rappi
-node index.js --target=ubereats
-node index.js --target=pedidosya   # usa la cola curada manual, no scrapea PedidosYa
-node index.js --target=all
-```
-
-Para probar sin enviar mensajes ni modificar suscriptores:
+## Pipeline v2 (markets)
 
 ```bash
-node index.js --target=pedidosya --dry-run
+node src/run.js                          # las 3 plataformas, escribe data/
+node src/run.js --dry-run                # no escribe deals.json ni envía Telegram
+node src/run.js --send                   # envía el digest a los suscriptores
+node src/run.js --platform=Rappi,UberEats --max-stores=5
+node src/run.js --py-stores=23 --py-categories=4 --py-pages=2
+node src/run.js --max-per-platform=20    # 0 (default) = todas las ofertas del umbral
 ```
 
-En dry-run la cola curada sí se consume (las ofertas válidas salen de `data/curated-pending.json`),
-pero no se hace POST a Telegram ni se toca `data/subscribers.json`. Tampoco se consultan los
-updates del bot (no se procesan comandos nuevos) ni se escribe el histórico.
+Salidas:
+- `data/deals.json` — ofertas rankeadas por plataforma.
+- `data/coverage.json` — cobertura: tiendas escaneadas/disponibles, ítems, `sampled`.
+- `data/seen.json` — dedupe entre corridas (producto + tamaño + precio).
+- `data/health.json` — último estado por plataforma (evita avisos repetidos).
+- `data/cross-platform-review.json` — pares "¿mismo producto?" para revisión humana.
+- `data/runs/*.jsonl` — snapshot crudo por corrida (poda 7 días).
 
-## Modo curado
+### Umbrales y alcance
+- **PedidosYa y Rappi: ≥50%.** **Uber Eats: ≥35%.** Flash: ≥75%.
+- Sólo supermercados y markets; no hay restaurantes en el pipeline.
+- Se publican **todas** las ofertas sobre el umbral, sin tope por tienda.
 
-El target `pedidosya` toma las ofertas de `data/curated-pending.json`. El admin las carga
-por Telegram; solo se aceptan comandos del chat configurado en `TELEGRAM_CHAT_ID`.
+### Mensaje
+Una línea por producto, link en el nombre del local (HTML de Telegram):
 
-### Encolar una oferta
+```
+🛒 OFERTAS SUPER · 19/11, 17:04 · PEDIDOSYA ≥50% · RAPPI ≥50% · UBER EATS ≥35%
+
+<b>PEDIDOSYA</b> · 10 ≥50%
+• 57% Pelador De Ristras Krea — $1.490 — <a href="https://...">Jumbo Córdoba</a>
+```
+
+Sin "antes" ni ahorro. Se parte en mensajes de ≤3800 caracteres y sólo se envía lo nuevo.
+
+## Cómo obtiene los datos
+
+- **Rappi**: HTTP puro con guest token (`passport` → `x-guest-api-key` → Bearer).
+  Cobertura por `stores-router/available/principal`; catálogo por `dynamic/context/content`.
+- **PedidosYa**: Chromium (patchright) sólo por cookies; cobertura por `v4/shoplist/vendors`
+  con `businessTypes:["GROCERIES"]`; catálogo por `groceries/web/v1/vendors/{id}/categories|products`.
+  No usa el flujo de dirección.
+- **Uber Eats**: Chromium headed (headless = reCAPTCHA). La ubicación se fija en el body:
+  `deliveryLocation:[{type:"MANUAL", location:{latitude,longitude}}]`, que manda sobre la IP.
+  Después `getFeedByIdV1` da el directorio y `getStoreV1` el catálogo.
+
+## Dónde corre
+
+| Entorno | Resultado verificado |
+|---|---|
+| **GitHub Actions + Cloudflare WARP** | **3/3**: Rappi 50/50, PedidosYa 23/24, Uber Eats 21/21 (2.029 productos) |
+| **GitHub Actions sin WARP** | Rappi `passport 403`, PedidosYa 403 |
+
+El workflow `.github/workflows/scrape-markets.yml` instala WARP (3 reintentos), corre el pipeline
+con las tres plataformas y commitea `data/seen.json`, `data/coverage.json`, `data/health.json`.
+
+Salud por corrida: si una plataforma no alcanza el piso de tiendas queda `degraded`/`dead`,
+se avisa **sólo cuando cambia el estado** y el proceso sale con código distinto de 0.
+
+Variables opcionales: `UE_PROXY_URL` / `PY_PROXY_URL` si querés forzar un proxy por plataforma;
+con WARP no son necesarias. `TELEGRAM_BOT_TOKEN` y `TELEGRAM_CHAT_ID` son obligatorias.
+
+## Bot de Telegram (comandos)
+
+Sólo el chat configurado en `TELEGRAM_CHAT_ID` puede usarlos:
 
 ```text
 /oferta <Plataforma> | <Tienda> | <Producto> | <precio original> | <precio actual> | [URL] [| #barato]
-```
-
-Ejemplos:
-
-```text
-/oferta PedidosYa | Market 25 de Mayo | Coca-Cola 2.25L | $1.700 | $1.200
-/oferta PedidosYa | Market Crisol | Pan lactal | $1.000 | $700 | https://www.pedidosya.com.ar/... | #barato
-```
-
-Precios aceptados: `$1.700`, `$1.700,50`, `1700`. El descuento se calcula solo.
-Una oferta con `#barato` se publica en la sección de productos baratos; el resto va a ofertas.
-
-### Otros comandos
-
-```text
 /ofertas          # lista la cola pendiente
 /oferta clear     # vacía la cola
 /publicar         # procesa y envía la cola ahora mismo
 ```
 
-El flujo normal de una corrida es: procesar updates del bot → tomar la cola curada →
-deduplicar contra el histórico → enviar → vaciar las ofertas válidas de la cola.
-Las ofertas inválidas se conservan en la cola para corregirlas.
+El pipeline viejo (`node index.js --target=...`) sigue disponible como fallback.
 
 ## Tests
 
 ```bash
 npm test
 ```
-
-## Pipeline nuevo: todos los markets (v2)
-
-Scrapea **todas las tiendas de mercado que entregan en San José de Calasanz 58, Córdoba**
-(lat -31.412943, lng -64.1966036), no una lista hardcodeada.
-
-```bash
-node src/run.js                        # las 3 plataformas, escribe data/
-node src/run.js --dry-run              # no escribe deals.json ni envía Telegram
-node src/run.js --send                 # envía el digest a los suscriptores
-node src/run.js --platform=Rappi --max-stores=3 --verbose
-node src/run.js --py-stores=23 --py-categories=4 --py-pages=2   # presupuesto de PedidosYa
-```
-
-Salidas:
-- `data/deals.json` — ofertas rankeadas por plataforma (top descuento, mejor precio, flash).
-- `data/coverage.json` — declaración de cobertura: tiendas por tipo, ítems vistos, `sampled`.
-- `data/cross-platform-review.json` — pares "¿mismo producto?" para revisión humana (no es ranking).
-- `data/runs/<Plataforma>-<ISO>.jsonl` — snapshot crudo por corrida (poda 7 días).
-
-Cómo obtiene los datos cada plataforma:
-- **Rappi**: HTTP puro con guest token (`passport` → `x-guest-api-key` → Bearer). Cobertura por
-  `stores-router/available/principal`; catálogo por `dynamic/context/content` (`store_home` + `sub_aisles`).
-- **PedidosYa**: Chromium (patchright) sólo por las cookies; cobertura por `v4/shoplist/vendors`
-  con `businessTypes:["GROCERIES"]`; catálogo por `groceries/web/v1/vendors/{id}/categories|products`.
-  No usa el flujo de dirección: la API es por tienda.
-- **Uber Eats**: Chromium headed (headless = reCAPTCHA); cookie `uev2.loc` fija el punto;
-  `getFeedByIdV1` con `feedID:"shop_feed"` da el directorio y `getStoreV1` el catálogo.
-
-Salud por corrida: si una plataforma no alcanza el piso de tiendas, se marca `degraded`/`dead`,
-se imprime en el resumen y el proceso termina con código distinto de 0 (nunca "sin ofertas" silencioso).
-
-### Umbrales y alcance
-- **PedidosYa y Rappi: sólo ofertas ≥50%.** **Uber Eats: sólo ≥35%.** Flash: ≥75%.
-- **Sólo supermercados y markets.** Los restaurantes no existen en este pipeline.
-- Umbrales en `src/run.js` (`thresholds`) y respetados por `rankByPlatform`.
-
-### Mensaje
-Una línea por producto: `• 57% Producto — $1.490 — Local` con el **link en el nombre del local**
-(HTML de Telegram). Sin "antes" ni ahorro. Se publican **todas** las ofertas que pasan el umbral,
-sin tope por tienda; el mensaje se parte solo si supera 3800 caracteres y sólo se envía lo que
-no se notificó antes (dedupe por producto + tamaño + precio).
-
-### Proxies gratuitos para Uber Eats
-`src/proxies.js` arma un pool con listas públicas AR, valida país + feed de Uber Eats + CONNECT,
-cachea los que funcionan 15 minutos y se saltea todo si la IP local ya es argentina.
-Un proxy gratuito puede morir en minutos: si no hay ninguno vivo, Uber Eats se marca `dead`
-con aviso, nunca publica datos de otro país.
-
-Notas operativas:
-- Uber Eats y PedidosYa necesitan `xvfb-run` en CI (browser headed).
-- PedidosYa tolera ráfagas cortas: si devuelve "Acceso ha sido denegado", esperar ~90 s y reintentar.
-- Dedupe entre corridas: sólo se envía lo que cambió de precio o es nuevo; el resto se omite.
-- Tests: `npm test` (100 tests, sin red).
-
-### Dónde conviene correrlo
-
-| Entorno | Resultado verificado |
-|---|---|
-| **Tu PC (IP residencial)** | 10.245 productos / 2.093 ofertas; PY 22/22, Rappi 50/50, UE 23/23 |
-| **GitHub Actions + WARP** | **Rappi 50/50** (6.093) y **PedidosYa 23/24** (1.031) OK, run 44536566017. **Uber Eats NO**: el feed GEOIP resuelve a EE.UU. y la guardia lo rechaza |
-| **GitHub Actions sin WARP** | Rappi `passport 403`, UberEats sin `uev2.loc`, PedidosYa 403 |
-
-Cloudflare WARP es la única opción de Cloudflare que cambia la IP de salida (Workers/Browser Rendering salen por rangos datacenter y no destraban nada).
-Estado por plataforma en la nube: Rappi ✅, PedidosYa ✅, Uber Eats ❌ (necesita egress argentino).
-Uber Eats sin cookie usa `GEOIP`; con WARP eso apunta a EE.UU., por eso el adaptador exige marcas AR y falla explícito en vez de publicar tiendas de otro país.
-
-Opciones:
-1. **Local programado (recomendado hoy)**: `scripts/run-local.ps1` + Programador de tareas.
-   ```powershell
-   schtasks /Create /TN "Cazador Markets" /SC MINUTE /MO 30 /TR "powershell -ExecutionPolicy Bypass -File E:\Proyectos\PEDIDOYA\cazador-ofertas\scripts\run-local.ps1" /F
-   ```
-2. **Nube con proxy residencial AR**: cargar `UE_PROXY_URL` (y opcionalmente `PY_PROXY_URL`) con formato
-   `http://usuario:clave@host:puerto`. Con `UE_PROXY_URL` el cron corre las tres plataformas.
-3. **Self-hosted runner** en tu PC: mismo efecto que (1) pero con la UI de Actions.
-
-Variables por plataforma (los adapters no comparten proxy para no romperse entre sí):
-- `UE_PROXY_URL` → sólo Uber Eats (necesita egress AR).
-- `PY_PROXY_URL` → sólo PedidosYa (por defecto usa WARP).
-- Rappi no usa proxy (WARP alcanza).
