@@ -208,9 +208,20 @@ export async function collectUberEats({
     const template = traffic
       .filter(record => /getFeedV1/.test(record.path) && record.status === 200 && record.json?.status === 'success')
       .sort((a, b) => JSON.stringify(b.json).length - JSON.stringify(a.json).length)[0];
-    if (!template) throw new Error('ubereats: no se capturó getFeedV1');
 
-    const headers = safeHeaders(template.headers);
+    // CI puede no disparar getFeedV1 en la home: se usan headers estáticos.
+    // Verificado: getFeedByIdV1 responde 200 con `x-csrf-token: x` (probe WARP, run 44529098634).
+    const headers = template
+      ? safeHeaders(template.headers)
+      : {
+        'content-type': 'application/json',
+        accept: 'application/json',
+        'x-csrf-token': 'x',
+        origin: ORIGIN,
+        referer: `${ORIGIN}/ar`,
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+      };
+    if (!template) log('ubereats: sin getFeedV1 capturado; headers estáticos');
     const replay = async (path, body) => {
       const result = await page.evaluate(async ({ path, body, headers }) => {
         const response = await fetch(`https://www.ubereats.com${path}`, {
