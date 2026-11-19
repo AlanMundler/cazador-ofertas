@@ -96,13 +96,13 @@ export function recentKeys(dir, platforms, maxFilesPerPlatform = 2) {
   return keys;
 }
 
-async function sendPlain(text, chatId, { dryRun = false } = {}) {
+async function sendPlain(text, chatId, { dryRun = false, html = false } = {}) {
   const { token } = config.telegram;
   if (dryRun || !token || !chatId) return { sent: 0, dryRun };
   const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ chat_id: chatId, text, disable_web_page_preview: true }),
+    body: JSON.stringify({ chat_id: chatId, text, disable_web_page_preview: true, ...(html ? { parse_mode: 'HTML' } : {}) }),
   }).catch(() => null);
   return { sent: response && response.ok ? 1 : 0, dryRun: false };
 }
@@ -195,7 +195,7 @@ async function main() {
   }
 
   const thresholds = { [PEDIDOSYA]: 50, [RAPPI]: 50, [UBEREATS]: 35 };
-  const ranked = rankByPlatform(products, { minDiscount: thresholds, flash: 75, maxPerStore: 3 });
+  const ranked = rankByPlatform(products, { minDiscount: thresholds, flash: 75 });
   const deck = {
     generatedAt: new Date().toISOString(),
     point: POINT,
@@ -266,7 +266,7 @@ async function main() {
         console.log(digest.text);
       } else {
         for (const part of parts) {
-          for (const id of ids) await sendPlain(part, id, { dryRun });
+          for (const id of ids) await sendPlain(part, id, { dryRun, html: true });
         }
       }
       console.log(dryRun
@@ -301,5 +301,7 @@ main().catch(error => {
   console.error('Error fatal:', error);
   process.exitCode = 1;
 });
+
+
 
 

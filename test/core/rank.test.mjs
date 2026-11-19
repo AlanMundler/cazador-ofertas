@@ -45,8 +45,14 @@ test('topDiscount aplica minDiscount y máximo 3 por tienda', () => {
     item({ storeId: 's1', productId: 'f', name: 'F', discount: 29 }),
   ];
 
-  const { byPlatform } = rankByPlatform(products);
+  const { byPlatform } = rankByPlatform(products, { maxPerStore: 3 });
   assert.deepEqual(byPlatform.PedidosYa.topDiscount.map(product => product.productId), ['a', 'b', 'c', 'e']);
+});
+
+test('por defecto devuelve todas las ofertas sobre el umbral (sin tope por tienda)', () => {
+  const products = Array.from({ length: 8 }, (_, i) => item({ storeId: 's1', productId: `p${i}`, name: `P${i}`, discount: 50 + i }));
+  const { byPlatform } = rankByPlatform(products, { minDiscount: 50 });
+  assert.equal(byPlatform.PedidosYa.topDiscount.length, 8);
 });
 
 test('flash usa su propio umbral y no se limita por tienda', () => {

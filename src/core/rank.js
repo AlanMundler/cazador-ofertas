@@ -33,7 +33,7 @@ function bestPriceKey(product) {
  * `minDiscount` puede ser número o mapa por plataforma: {PedidosYa:50, Rappi:50, UberEats:35}.
  * Devuelve {byPlatform, rejected:[{reason,count}], thresholds}.
  */
-export function rankByPlatform(products, { minDiscount = 30, flash = 75, maxPerStore = 3 } = {}) {
+export function rankByPlatform(products, { minDiscount = 30, flash = 75, maxPerStore = Infinity } = {}) {
   const thresholdFor = platform => (typeof minDiscount === 'number'
     ? minDiscount
     : Number(minDiscount?.[platform] ?? minDiscount?.default ?? 30));

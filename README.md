@@ -97,9 +97,10 @@ se imprime en el resumen y el proceso termina con código distinto de 0 (nunca "
 - Umbrales en `src/run.js` (`thresholds`) y respetados por `rankByPlatform`.
 
 ### Mensaje
-Un solo mensaje, sin tablas: cabecera con fecha y reglas, bloque ⚡ FLASH, y por plataforma
-la lista con precio, precio anterior, ahorro, tienda y link directo. Se parte solo si supera
-3500 caracteres y sólo se envía lo que no se notificó antes (dedupe por producto+precio).
+Una línea por producto: `• 57% Producto — $1.490 — Local` con el **link en el nombre del local**
+(HTML de Telegram). Sin "antes" ni ahorro. Se publican **todas** las ofertas que pasan el umbral,
+sin tope por tienda; el mensaje se parte solo si supera 3800 caracteres y sólo se envía lo que
+no se notificó antes (dedupe por producto + tamaño + precio).
 
 ### Proxies gratuitos para Uber Eats
 `src/proxies.js` arma un pool con listas públicas AR, valida país + feed de Uber Eats + CONNECT,

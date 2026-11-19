@@ -1,7 +1,7 @@
-// Formato del mensaje de ofertas: una sola pieza de texto clara, sin markdown.
-// Regla: sólo supermercados, umbral por plataforma y link directo a la tienda.
+// Mensaje de ofertas: compacto, una línea por producto, link en el nombre del local.
+// Formato HTML de Telegram: <a href="...">Local</a>. Sin "antes" ni ahorro: precio final + %.
 
-import { normalizeName } from './core/identity.js';
+import { normalizeName, sizeKey } from './core/identity.js';
 
 export function offerKey(product) {
   return `${product.platform}|${product.storeId}|${product.productId}|${product.price}`;
@@ -11,34 +11,36 @@ function money(value) {
   return `$${Number(value).toLocaleString('es-AR', { maximumFractionDigits: 0 })}`;
 }
 
-function saving(product) {
-  if (!product.beforePrice) return null;
-  const diff = product.beforePrice - product.price;
-  return diff > 0 ? money(diff) : null;
+export function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
-function offerBlock(product, index) {
-  const lines = [`${index}. ${product.discount}% ${product.name}`];
-  const before = product.beforePrice ? ` · antes ${money(product.beforePrice)}` : '';
-  const saved = saving(product);
-  lines.push(`   ${money(product.price)}${before}${saved ? ` · ahorrás ${saved}` : ''}`);
-  lines.push(`   ${product.storeName}`);
-  if (product.url && /^https:\/\//.test(product.url)) lines.push(`   ${product.url}`);
-  return lines.join('\n');
+function storeLink(product) {
+  const name = escapeHtml(product.storeName || product.platform);
+  if (product.url && /^https:\/\//.test(product.url)) {
+    return `<a href="${product.url}">${name}</a>`;
+  }
+  return name;
+}
+
+function offerLine(product) {
+  return `• ${product.discount}% ${escapeHtml(product.name)} — ${money(product.price)} — ${storeLink(product)}`;
 }
 
 const PLATFORM_LABEL = { PedidosYa: 'PEDIDOSYA', Rappi: 'RAPPI', UberEats: 'UBER EATS' };
 
 /**
- * Arma el mensaje completo. Sin tablas ni símbolos raros: se lee en el celular.
- * `keep` filtra productos ya notificados; `maxPerPlatform` evita listas infinitas.
+ * Arma el mensaje completo: todas las ofertas que pasan el umbral, una línea cada una.
+ * `keep` filtra lo ya notificado; `dedupe` evita repetir el mismo producto en varias sucursales.
  */
 export function buildDigest(ranked, {
   keep = () => true,
   coverages = [],
   thresholds = {},
-  maxPerPlatform = 6,
-  maxFlash = 4,
   now = new Date(),
 } = {}) {
   const when = now.toLocaleString('es-AR', {
@@ -50,84 +52,59 @@ export function buildDigest(ranked, {
     hour12: false,
   });
 
-  const buckets = Object.entries(ranked?.byPlatform ?? {});
-  const flash = buckets
-    .flatMap(([, bucket]) => bucket.flash ?? [])
-    .filter(keep)
-    .sort((a, b) => b.discount - a.discount)
-    .slice(0, maxFlash);
+  const exact = new Map();
+  for (const [platform, bucket] of Object.entries(ranked?.byPlatform ?? {})) {
+    exact[platform] = (bucket.topDiscount ?? []).filter(keep);
+  }
 
-  // Mismo producto repetido en varias sucursales: se muestra una sola vez.
-  const dedupe = list => {
-    const seen = new Set();
-    return list.filter(product => {
-      const key = `${product.platform}|${normalizeName(product.name)}`;
-      if (seen.has(key)) return false;
+  const seen = new Set();
+  const fresh = {};
+  for (const [platform, offers] of Object.entries(exact)) {
+    const deduped = [];
+    for (const product of offers) {
+      const key = `${platform}|${normalizeName(product.name)}|${sizeKey(product.size) ?? ''}`;
+      if (seen.has(key)) continue;
       seen.add(key);
-      return true;
-    });
-  };
+      deduped.push(product);
+    }
+    if (deduped.length) fresh[platform] = deduped;
+  }
 
   const rule = Object.entries(thresholds)
     .filter(([, value]) => Number.isFinite(value))
     .map(([platform, value]) => `${PLATFORM_LABEL[platform] ?? platform} ≥${value}%`)
     .join(' · ');
 
-  const lines = [];
-  lines.push('🛒 OFERTAS SUPER · Córdoba');
-  lines.push(`${when}${rule ? ` · ${rule}` : ''}`);
+  const lines = [`🛒 OFERTAS SUPER · ${when}${rule ? ` · ${rule}` : ''}`];
 
-  if (flash.length) {
+  for (const [platform, offers] of Object.entries(fresh)) {
     lines.push('');
-    lines.push('⚡ FLASH');
-    flash.forEach((product, index) => {
-      lines.push(offerBlock(product, index + 1));
-    });
+    lines.push(`<b>${PLATFORM_LABEL[platform] ?? platform.toUpperCase()}</b> · ${offers.length} ≥${thresholds[platform] ?? ''}%`);
+    for (const product of offers) lines.push(offerLine(product));
   }
 
-  const fresh = {};
-  for (const [platform, bucket] of buckets) {
-    const offers = dedupe((bucket.topDiscount ?? []).filter(keep));
-    if (!offers.length) continue;
-    fresh[platform] = offers.slice(0, maxPerPlatform);
+  const broken = coverages.filter(coverage => coverage.health && coverage.health !== 'ok');
+  if (broken.length) {
     lines.push('');
-    lines.push(`${PLATFORM_LABEL[platform] ?? platform.toUpperCase()} · ${offers.length} oferta${offers.length === 1 ? '' : 's'} ≥${thresholds[platform] ?? ''}%`);
-    fresh[platform].forEach((product, index) => {
-      lines.push(offerBlock(product, index + 1));
-    });
-    if (offers.length > maxPerPlatform) {
-      lines.push(`   …y ${offers.length - maxPerPlatform} más`);
-    }
+    lines.push(broken.map(coverage => `⚠️ ${coverage.platform} ${coverage.health}`).join(' · '));
   }
 
-  const covered = coverages
-    .filter(coverage => coverage.storesScanned > 0)
-    .map(coverage => `${coverage.platform} ${coverage.storesScanned}/${coverage.storesAvailable ?? '?'}`)
-    .join(' · ');
-  if (covered) {
-    lines.push('');
-    lines.push(`Cobertura: ${covered}`);
-  }
-
-  const hasOffers = flash.length > 0 || Object.keys(fresh).length > 0;
+  const count = Object.values(fresh).reduce((sum, list) => sum + list.length, 0);
   return {
-    text: hasOffers ? lines.join('\n') : '',
-    count: flash.length + Object.values(fresh).reduce((sum, list) => sum + list.length, 0),
-    raw: {
-      flash,
-      offers: Object.values(fresh).flat(),
-    },
+    text: count ? lines.join('\n') : '',
+    count,
+    raw: { offers: Object.values(fresh).flat(), flash: [] },
   };
 }
 
-/** Telegram corta en 4096; se parte por líneas para no romper un bloque. */
-export function chunk(text, limit = 3500) {
+/** Telegram corta en 4096; se parte por líneas para no romper un producto ni un tag HTML. */
+export function chunk(text, limit = 3800) {
   if (!text) return [];
   const parts = [];
   let current = '';
   for (const line of text.split('\n')) {
     if ((current + line).length + 1 > limit) {
-      parts.push(current.trimEnd());
+      if (current.trim()) parts.push(current.trimEnd());
       current = '';
     }
     current += `${line}\n`;

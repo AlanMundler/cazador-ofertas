@@ -1,7 +1,7 @@
-import test from 'node:test';
+﻿import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { buildDigest, chunk } from '../../src/report.js';
+import { buildDigest, chunk, escapeHtml } from '../../src/report.js';
 
 const product = (overrides = {}) => ({
   platform: 'PedidosYa',
@@ -19,55 +19,77 @@ const product = (overrides = {}) => ({
   ...overrides,
 });
 
-const ranked = {
-  byPlatform: {
-    PedidosYa: { topDiscount: [product({ discount: 57, price: 1490, beforePrice: 3505, name: 'Pelador Krea' })], flash: [], bestPriceByProduct: [] },
-    Rappi: { topDiscount: [product({ platform: 'Rappi', discount: 53, price: 1349, beforePrice: 2890, name: 'Salchichas Cuisine' })], flash: [], bestPriceByProduct: [] },
-    UberEats: { topDiscount: [product({ platform: 'UberEats', discount: 40, price: 975, beforePrice: 1625, name: 'Chocolate Nestlé' })], flash: [], bestPriceByProduct: [] },
-  },
-};
-
-const coverages = [
-  { platform: 'PedidosYa', storesScanned: 23, storesAvailable: 24 },
-  { platform: 'Rappi', storesScanned: 50, storesAvailable: 50 },
-  { platform: 'UberEats', storesScanned: 22, storesAvailable: 22 },
-];
+const rankedOf = offersByPlatform => ({
+  byPlatform: Object.fromEntries(Object.entries(offersByPlatform).map(([platform, list]) => [
+    platform,
+    { topDiscount: list, flash: [], bestPriceByProduct: [] },
+  ])),
+});
 
 const thresholds = { PedidosYa: 50, Rappi: 50, UberEats: 35 };
 
-test('buildDigest arma un mensaje legible con umbrales y cobertura', () => {
-  const digest = buildDigest(ranked, { coverages, thresholds, now: new Date('2026-11-19T14:35:00Z') });
-  assert.ok(digest.text.includes('OFERTAS SUPER'));
-  assert.ok(digest.text.includes('PEDIDOSYA ≥50%'));
-  assert.ok(digest.text.includes('UBER EATS ≥35%'));
-  assert.ok(digest.text.includes('57% Pelador Krea'));
-  assert.ok(digest.text.includes('$1.490'));
-  assert.ok(digest.text.includes('antes $3.505'));
-  assert.ok(digest.text.includes('Jumbo Córdoba'));
-  assert.ok(digest.text.includes('Cobertura: PedidosYa 23/24 · Rappi 50/50 · UberEats 22/22'));
-  assert.equal(digest.count, 3);
+test('una linea por producto con precio final y link en el local', () => {
+  const ranked = rankedOf({ PedidosYa: [product({ discount: 57, price: 1490, name: 'Pelador Krea' })] });
+  const digest = buildDigest(ranked, { thresholds, now: new Date('2026-11-19T14:35:00Z') });
+  const line = '57% Pelador Krea — $1.490 — <a href="https://www.pedidosya.com.ar/mi-compra/550495">Jumbo Córdoba</a>';
+
+  assert.ok(digest.text.includes(line), digest.text);
+  assert.ok(!digest.text.includes('antes'));
+  assert.ok(!digest.text.includes('ahorrás'));
+  assert.equal(digest.count, 1);
 });
 
-test('buildDigest no publica links que no sean https', () => {
-  const withDeepLink = {
-    byPlatform: {
-      PedidosYa: { topDiscount: [product({ url: 'pedidosya://pharma/product?sku=1' })], flash: [], bestPriceByProduct: [] },
-    },
-  };
-  const digest = buildDigest(withDeepLink, { coverages: [], thresholds });
-  assert.ok(!digest.text.includes('pedidosya://'));
+test('publica TODAS las ofertas sobre el umbral, sin recortar', () => {
+  const names = ['alfa', 'beta', 'gamma', 'delta', 'epsilon', 'zeta', 'eta', 'theta', 'iota', 'kappa',
+    'lambda', 'mu', 'nu', 'xi', 'omicron', 'pi', 'rho', 'sigma', 'tau', 'upsilon',
+    'phi', 'chi', 'psi', 'omega', 'extra'];
+  const many = names.map((name, index) => product({
+    productId: `p${index}`,
+    name: `Producto ${name} especial`,
+    discount: 50 + (index % 5),
+  }));
+
+  const digest = buildDigest(rankedOf({ Rappi: many }), { thresholds });
+  assert.equal(digest.count, 25);
+  assert.ok(digest.text.includes('Producto extra especial'));
+  assert.ok(!digest.text.includes('más'));
 });
 
-test('buildDigest respeta keep y devuelve lista vacía si todo fue notificado', () => {
-  const digest = buildDigest(ranked, { coverages, thresholds, keep: () => false });
+test('no repite el mismo producto en sucursales distintas', () => {
+  const a = product({ storeId: 'a', storeName: 'Turbo A', name: 'Garnier Serum facial' });
+  const b = product({ storeId: 'b', storeName: 'Turbo B', name: 'GARNIER SERUM FACIAL' });
+  const digest = buildDigest(rankedOf({ Rappi: [a, b] }), { thresholds });
+  assert.equal(digest.count, 1);
+});
+
+test('no mezcla tamanos distintos del mismo producto', () => {
+  const chico = product({ productId: 'a', name: 'Coca Cola 500 ml', size: { value: 500, unit: 'ml' } });
+  const grande = product({ productId: 'b', name: 'Coca Cola 2 L', size: { value: 2, unit: 'l' } });
+  const digest = buildDigest(rankedOf({ Rappi: [chico, grande] }), { thresholds });
+  assert.equal(digest.count, 2);
+});
+
+test('escapa HTML de nombres y locales', () => {
+  const weird = product({ name: 'Gaseosa <3 & "cola"', storeName: 'Market <Centro>' });
+  const digest = buildDigest(rankedOf({ PedidosYa: [weird] }), { thresholds });
+  assert.ok(digest.text.includes('Gaseosa &lt;3 &amp; &quot;cola&quot;'));
+  assert.ok(digest.text.includes('Market &lt;Centro&gt;'));
+  assert.equal(escapeHtml('<b>&</b>'), '&lt;b&gt;&amp;&lt;/b&gt;');
+});
+
+test('sin ofertas devuelve texto vacio', () => {
+  const digest = buildDigest(rankedOf({ PedidosYa: [] }), { thresholds });
   assert.equal(digest.text, '');
   assert.equal(digest.count, 0);
 });
 
-test('chunk parte el mensaje sin superar el límite', () => {
-  const text = Array.from({ length: 200 }, (_, i) => `linea ${i} ${'x'.repeat(60)}`).join('\n');
+test('chunk parte sin superar el limite y sin cortar tags', () => {
+  const text = Array.from({ length: 200 }, (_, i) => `• 50% producto ${i} — $1.000 — <a href="https://x">Local</a>`).join('\n');
   const parts = chunk(text, 1000);
   assert.ok(parts.length > 1);
-  for (const part of parts) assert.ok(part.length <= 1000, `parte de ${part.length}`);
-  assert.equal(parts.join('\n').replace(/\n+/g, '\n'), text.replace(/\n+/g, '\n'));
+  for (const part of parts) {
+    assert.ok(part.length <= 1000);
+    assert.ok(!/href="https:\/\/x"$/.test(part), 'no corta un tag a la mitad');
+  }
+  assert.equal(parts.join('\n'), text);
 });
