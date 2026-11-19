@@ -88,6 +88,17 @@ jobs:
           fi
           curl -s https://www.cloudflare.com/cdn-cgi/trace | grep -E '^(ip|warp)=' || true
 
+      - name: Verificar proxy (si existe)
+        env:
+          PROXY_URL: ${{ secrets.PROXY_URL }}
+        run: |
+          if [ -z "$PROXY_URL" ]; then
+            echo "sin PROXY_URL"
+            exit 0
+          fi
+          ip=$(curl -s -x "$PROXY_URL" --max-time 20 https://api.ipify.org || true)
+          echo "proxy_egress_ip=${ip:-sin-respuesta}"
+
       - name: Recolectar ofertas y notificar
         if: steps.warp.outputs.run == 'true'
         continue-on-error: true
