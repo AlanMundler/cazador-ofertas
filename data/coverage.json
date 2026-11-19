@@ -1,11 +1,67 @@
 [
   {
+    "platform": "Rappi",
+    "point": {
+      "lat": -31.412943,
+      "lng": -64.1966036
+    },
+    "fetchedAt": "2026-11-19T17:11:37.845Z",
+    "storesAvailable": 51,
+    "storesScanned": 50,
+    "storesSeen": 50,
+    "storesByKind": {
+      "super": 5,
+      "vertical": 45,
+      "otro": 0
+    },
+    "missingChains": [
+      "Coto",
+      "Día",
+      "La Anónima"
+    ],
+    "catalogCoverage": {
+      "itemsSeen": 6846,
+      "aislesAnnounced": null,
+      "sampled": true,
+      "truncated": true
+    },
+    "health": "ok"
+  },
+  {
+    "platform": "PedidosYa",
+    "point": {
+      "lat": -31.412943,
+      "lng": -64.1966036
+    },
+    "fetchedAt": "2026-11-19T17:12:18.236Z",
+    "storesAvailable": 22,
+    "storesScanned": 22,
+    "storesSeen": 22,
+    "storesByKind": {
+      "super": 7,
+      "vertical": 15,
+      "otro": 0
+    },
+    "missingChains": [
+      "Coto",
+      "Vea",
+      "Makro"
+    ],
+    "catalogCoverage": {
+      "itemsSeen": 732,
+      "aislesAnnounced": 248,
+      "sampled": false,
+      "truncated": false
+    },
+    "health": "ok"
+  },
+  {
     "platform": "UberEats",
     "point": {
       "lat": -31.412943,
       "lng": -64.1966036
     },
-    "fetchedAt": "2026-11-19T17:04:31.878Z",
+    "fetchedAt": "2026-11-19T17:12:39.341Z",
     "storesAvailable": 21,
     "storesScanned": 21,
     "storesSeen": 21,
@@ -23,7 +79,7 @@
       "Makro"
     ],
     "catalogCoverage": {
-      "itemsSeen": 2029,
+      "itemsSeen": 2039,
       "aislesAnnounced": null,
       "sampled": true,
       "truncated": false
