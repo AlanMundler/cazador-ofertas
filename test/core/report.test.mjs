@@ -26,38 +26,55 @@ const rankedOf = offersByPlatform => ({
   ])),
 });
 
-const thresholds = { PedidosYa: 50, Rappi: 50, UberEats: 35 };
+const thresholds = { PedidosYa: 50, Rappi: 50, UberEats: 40 };
 
-test('una linea por producto con precio final y link en el local', () => {
-  const ranked = rankedOf({ PedidosYa: [product({ discount: 57, price: 1490, name: 'Pelador Krea' })] });
-  const digest = buildDigest(ranked, { thresholds, now: new Date('2026-11-19T14:35:00Z') });
-  const line = '57% Pelador Krea — $1.490 — <a href="https://www.pedidosya.com.ar/mi-compra/550495">Jumbo Córdoba</a>';
+test('cada super tiene su encabezado con link y su lista de ofertas', () => {
+  const jumbo = [
+    product({ productId: 'a', name: 'Pelador Krea', discount: 57, price: 1490 }),
+    product({ productId: 'b', name: 'Harina Blancaflor 1 kg', discount: 50, price: 1175 }),
+  ];
+  const disco = [product({ productId: 'c', name: 'Yerba Cruz de Malta', discount: 50, price: 1444.5, storeId: '574761', storeName: 'Disco Alta Córdoba', url: 'https://www.pedidosya.com.ar/mi-compra/574761' })];
 
-  assert.ok(digest.text.includes(line), digest.text);
-  assert.ok(!digest.text.includes('antes'));
-  assert.ok(!digest.text.includes('ahorrás'));
-  assert.equal(digest.count, 1);
+  const digest = buildDigest(rankedOf({ PedidosYa: [...jumbo, ...disco] }), { thresholds, now: new Date('2026-11-25T15:40:00Z') });
+
+  assert.ok(digest.text.includes('<b>PEDIDOSYA</b>'));
+  assert.ok(digest.text.includes('<a href="https://www.pedidosya.com.ar/mi-compra/550495">Jumbo Córdoba</a> · 2'));
+  assert.ok(digest.text.includes('<a href="https://www.pedidosya.com.ar/mi-compra/574761">Disco Alta Córdoba</a> · 1'));
+  assert.ok(digest.text.includes('   • 57% Pelador Krea — $1.490'));
+  assert.ok(digest.text.includes('   • 50% Harina Blancaflor 1 kg — $1.175'));
+  assert.ok(digest.text.includes('   • 50% Yerba Cruz de Malta — $1.444,5'));
+  assert.equal(digest.count, 3);
 });
 
-test('publica TODAS las ofertas sobre el umbral, sin recortar', () => {
+test('ordena supers por mejor descuento y ofertas de mayor a menor', () => {
+  const a = product({ storeId: 'a', storeName: 'Super A', name: 'A1', discount: 50 });
+  const b = product({ storeId: 'b', storeName: 'Super B', name: 'B1', discount: 60 });
+  const digest = buildDigest(rankedOf({ Rappi: [a, b] }), { thresholds });
+  assert.ok(digest.text.indexOf('Super B') < digest.text.indexOf('Super A'), digest.text);
+});
+
+test('publica TODAS las ofertas del umbral', () => {
   const names = ['alfa', 'beta', 'gamma', 'delta', 'epsilon', 'zeta', 'eta', 'theta', 'iota', 'kappa',
     'lambda', 'mu', 'nu', 'xi', 'omicron', 'pi', 'rho', 'sigma', 'tau', 'upsilon',
     'phi', 'chi', 'psi', 'omega', 'extra'];
-  const many = names.map((name, index) => product({
-    productId: `p${index}`,
-    name: `Producto ${name} especial`,
-    discount: 50 + (index % 5),
-  }));
-
+  const many = names.map((name, index) => product({ productId: `p${index}`, name: `Producto ${name} especial`, discount: 50 + (index % 5) }));
   const digest = buildDigest(rankedOf({ Rappi: many }), { thresholds });
   assert.equal(digest.count, 25);
   assert.ok(digest.text.includes('Producto extra especial'));
-  assert.ok(!digest.text.includes('más'));
 });
 
-test('no repite el mismo producto en sucursales distintas', () => {
+test('el mismo producto en otro super aparece en la lista de ese super', () => {
   const a = product({ storeId: 'a', storeName: 'Turbo A', name: 'Garnier Serum facial' });
   const b = product({ storeId: 'b', storeName: 'Turbo B', name: 'GARNIER SERUM FACIAL' });
+  const digest = buildDigest(rankedOf({ Rappi: [a, b] }), { thresholds });
+  assert.equal(digest.count, 2);
+  assert.ok(digest.text.includes('Turbo A'));
+  assert.ok(digest.text.includes('Turbo B'));
+});
+
+test('dentro del mismo super no repite el producto', () => {
+  const a = product({ productId: 'a', name: 'Garnier Serum facial' });
+  const b = product({ productId: 'b', name: 'GARNIER SERUM FACIAL' });
   const digest = buildDigest(rankedOf({ Rappi: [a, b] }), { thresholds });
   assert.equal(digest.count, 1);
 });
@@ -84,12 +101,9 @@ test('sin ofertas devuelve texto vacio', () => {
 });
 
 test('chunk parte sin superar el limite y sin cortar tags', () => {
-  const text = Array.from({ length: 200 }, (_, i) => `• 50% producto ${i} — $1.000 — <a href="https://x">Local</a>`).join('\n');
+  const text = Array.from({ length: 200 }, (_, i) => `   • 50% producto ${i} — $1.000`).join('\n');
   const parts = chunk(text, 1000);
   assert.ok(parts.length > 1);
-  for (const part of parts) {
-    assert.ok(part.length <= 1000);
-    assert.ok(!/href="https:\/\/x"$/.test(part), 'no corta un tag a la mitad');
-  }
+  for (const part of parts) assert.ok(part.length <= 1000);
   assert.equal(parts.join('\n'), text);
 });

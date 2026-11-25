@@ -1,5 +1,5 @@
-// Mensaje de ofertas: compacto, una línea por producto, link en el nombre del local.
-// Formato HTML de Telegram: <a href="...">Local</a>. Sin "antes" ni ahorro: precio final + %.
+// Mensaje de ofertas: agrupado por plataforma y por supermercado.
+// Formato HTML de Telegram: el nombre del local es el link. Precio final + % (par si es multibuy).
 
 import { normalizeName, sizeKey } from './core/identity.js';
 
@@ -19,11 +19,9 @@ export function escapeHtml(value) {
     .replace(/"/g, '&quot;');
 }
 
-function storeLink(product) {
-  const name = escapeHtml(product.storeName || product.platform);
-  if (product.url && /^https:\/\//.test(product.url)) {
-    return `<a href="${product.url}">${name}</a>`;
-  }
+function storeLink(store) {
+  const name = escapeHtml(store.name || 'Local');
+  if (store.url && /^https:\/\//.test(store.url)) return `<a href="${store.url}">${name}</a>`;
   return name;
 }
 
@@ -34,24 +32,43 @@ function offerLine(product) {
   if (product.promoType === 'multibuy' && qty > 1) {
     const perUnit = Number.isFinite(product.effectivePrice) ? product.effectivePrice : product.price;
     const total = perUnit * qty;
-    const note = product.promoDetail ? ` (${product.promoDetail})` : '';
-    return `• ${shown}% ${escapeHtml(product.name)} — ${money(total)} las ${qty} (${money(perUnit)} c/u) — ${storeLink(product)}${note}`;
+    const note = product.promoDetail ? ` (${escapeHtml(product.promoDetail)})` : '';
+    return `   • ${shown}% ${escapeHtml(product.name)} — ${money(total)} las ${qty} (${money(perUnit)} c/u)${note}`;
   }
 
-  return `• ${shown}% ${escapeHtml(product.name)} — ${money(product.price)} — ${storeLink(product)}`;
+  return `   • ${shown}% ${escapeHtml(product.name)} — ${money(product.price)}`;
 }
 
 const PLATFORM_LABEL = { PedidosYa: 'PEDIDOSYA', Rappi: 'RAPPI', UberEats: 'UBER EATS' };
 
+function groupByStore(offers) {
+  const stores = new Map();
+  for (const product of offers) {
+    const key = `${product.storeId ?? product.storeName}`;
+    if (!stores.has(key)) {
+      stores.set(key, { name: product.storeName, url: product.url, offers: [], names: new Set() });
+    }
+    const store = stores.get(key);
+    const dedupeKey = `${normalizeName(product.name)}|${sizeKey(product.size) ?? ''}`;
+    if (store.names.has(dedupeKey)) continue;
+    store.names.add(dedupeKey);
+    store.offers.push(product);
+  }
+
+  const list = [...stores.values()];
+  for (const store of list) store.offers.sort((a, b) => (b.discount ?? 0) - (a.discount ?? 0));
+  list.sort((a, b) => (b.offers[0]?.discount ?? 0) - (a.offers[0]?.discount ?? 0) || a.name.localeCompare(b.name));
+  return list;
+}
+
 /**
- * Arma el mensaje completo: todas las ofertas que pasan el umbral, una línea cada una.
- * `keep` filtra lo ya notificado; `dedupe` evita repetir el mismo producto en varias sucursales.
+ * Arma el mensaje completo: todas las ofertas del umbral, cada supermercado con su lista.
+ * `keep` filtra lo ya notificado.
  */
 export function buildDigest(ranked, {
   keep = () => true,
   coverages = [],
   thresholds = {},
-  maxPerPlatform = 0,
   now = new Date(),
 } = {}) {
   const when = now.toLocaleString('es-AR', {
@@ -63,22 +80,10 @@ export function buildDigest(ranked, {
     hour12: false,
   });
 
-  const exact = new Map();
+  const byPlatform = {};
   for (const [platform, bucket] of Object.entries(ranked?.byPlatform ?? {})) {
-    exact[platform] = (bucket.topDiscount ?? []).filter(keep);
-  }
-
-  const seen = new Set();
-  const fresh = {};
-  for (const [platform, offers] of Object.entries(exact)) {
-    const deduped = [];
-    for (const product of offers) {
-      const key = `${platform}|${normalizeName(product.name)}|${sizeKey(product.size) ?? ''}`;
-      if (seen.has(key)) continue;
-      seen.add(key);
-      deduped.push(product);
-    }
-    if (deduped.length) fresh[platform] = maxPerPlatform > 0 ? deduped.slice(0, maxPerPlatform) : deduped;
+    const stores = groupByStore((bucket.topDiscount ?? []).filter(keep));
+    if (stores.length) byPlatform[platform] = stores;
   }
 
   const rule = Object.entries(thresholds)
@@ -88,10 +93,13 @@ export function buildDigest(ranked, {
 
   const lines = [`🛒 OFERTAS SUPER · ${when}${rule ? ` · ${rule}` : ''}`];
 
-  for (const [platform, offers] of Object.entries(fresh)) {
+  for (const [platform, stores] of Object.entries(byPlatform)) {
     lines.push('');
-    lines.push(`<b>${PLATFORM_LABEL[platform] ?? platform.toUpperCase()}</b> · ${offers.length} ≥${thresholds[platform] ?? ''}%`);
-    for (const product of offers) lines.push(offerLine(product));
+    lines.push(`<b>${PLATFORM_LABEL[platform] ?? platform.toUpperCase()}</b>`);
+    for (const store of stores) {
+      lines.push(`${storeLink(store)} · ${store.offers.length}`);
+      for (const product of store.offers) lines.push(offerLine(product));
+    }
   }
 
   const broken = coverages.filter(coverage => coverage.health && coverage.health !== 'ok');
@@ -100,11 +108,11 @@ export function buildDigest(ranked, {
     lines.push(broken.map(coverage => `⚠️ ${coverage.platform} ${coverage.health}`).join(' · '));
   }
 
-  const count = Object.values(fresh).reduce((sum, list) => sum + list.length, 0);
+  const all = Object.values(byPlatform).flatMap(stores => stores.flatMap(store => store.offers));
   return {
-    text: count ? lines.join('\n') : '',
-    count,
-    raw: { offers: Object.values(fresh).flat(), flash: [] },
+    text: all.length ? lines.join('\n') : '',
+    count: all.length,
+    raw: { offers: all, flash: [] },
   };
 }
 

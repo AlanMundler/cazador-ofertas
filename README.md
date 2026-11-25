@@ -33,19 +33,19 @@ Salidas:
   no aparecen en la API pública (ej. H2O: la etiqueta de Uber dice −35%, no −50%).
 
 ### Mensaje
-Una línea por producto, link en el nombre del local (HTML de Telegram):
+Agrupado por plataforma y por supermercado; el nombre del local es el link (HTML de Telegram):
 
 ```
-🛒 OFERTAS SUPER · 19/11, 17:04 · PEDIDOSYA ≥50% · RAPPI ≥50% · UBER EATS ≥35%
+🛒 OFERTAS SUPER · 25/11, 12:50 · PEDIDOSYA ≥50% · RAPPI ≥50% · UBER EATS ≥40%
 
-<b>PEDIDOSYA</b> · 10 ≥50%
-• 57% Pelador De Ristras Krea — $1.490 — <a href="https://...">Jumbo Córdoba</a>
+<b>PEDIDOSYA</b>
+<a href="https://...">Disco Alta Córdoba</a> · 2
+   • 50% Gomitas Mogul Colmillos — $1.050 las 2 ($525 c/u) (2 x 1)
+   • 50% Yerba Mate Cruz de Malta 500 g — $1.444,5
 ```
 
-Sin "antes" ni ahorro. En promos de cantidad el descuento se calcula **sobre el conjunto**
-(2x1 → 50%, "2da unidad al 50%" → 25%) y se muestra el precio del par con el unitario:
-`• 50% Gomitas — $1.050 las 2 ($525 c/u) — Local (2 x 1)`.
-Se parte en mensajes de ≤3800 caracteres y sólo se envía lo nuevo.
+En promos de cantidad el descuento se calcula **sobre el conjunto** (2x1 → 50%, "2da al 50%" → 25%)
+y se muestra el precio del par con el unitario. Se parte en mensajes de ≤3800 caracteres.
 
 ## Cómo obtiene los datos
 

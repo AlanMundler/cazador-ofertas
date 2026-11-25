@@ -71,13 +71,12 @@ test('con umbral 50% la promo de 2da unidad al 50% (25% real) no entra', () => {
 test('el mensaje muestra el precio del par y el unitario', () => {
   const ranked = { byPlatform: { PedidosYa: { topDiscount: [promoItem()], flash: [], bestPriceByProduct: [] } } };
   const digest = buildDigest(ranked, { thresholds: { PedidosYa: 50 } });
-  assert.ok(digest.text.includes('25% Gomitas Mogul — $1.500 las 2 ($750 c/u) —'));
-  assert.ok(digest.text.includes('(1 ud. al 50% dto)'));
+  assert.ok(digest.text.includes('25% Gomitas Mogul — $1.500 las 2 ($750 c/u) (1 ud. al 50% dto)'));
 });
 
 test('sin promo de cantidad muestra el precio simple', () => {
   const simple = promoItem({ promoType: null, requiresQty: 1, promoDetail: null, discount: 60, advertisedDiscount: 60, price: 1000, effectivePrice: 1000 });
   const ranked = { byPlatform: { PedidosYa: { topDiscount: [simple], flash: [], bestPriceByProduct: [] } } };
   const digest = buildDigest(ranked, { thresholds: { PedidosYa: 50 } });
-  assert.ok(digest.text.includes('60% Gomitas Mogul — $1.000 —'));
+  assert.ok(digest.text.includes('60% Gomitas Mogul — $1.000'));
 });
