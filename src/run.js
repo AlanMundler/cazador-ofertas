@@ -2,6 +2,7 @@
 
 import 'dotenv/config';
 
+import { createHash } from 'crypto';
 import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
@@ -266,13 +267,29 @@ async function main() {
 
   const { buildDigest, chunk, offerKey } = await import('./report.js');
   const sendAll = flag('all-offers');
-  const isNew = sendAll
-    ? () => true
-    : product => !previousKeys.has(`${product.platform}|${product.storeId}|${product.productId}|${product.price}`);
+  const onlyNew = flag('only-new') && !sendAll;
+  const isNew = onlyNew
+    ? product => !previousKeys.has(`${product.platform}|${product.storeId}|${product.productId}|${product.price}`)
+    : () => true;
   const digest = buildDigest(ranked, { keep: isNew, coverages, thresholds, maxPerPlatform: Number(arg('max-per-platform', '0')) });
+
+  // El listado es completo (todas las ofertas del umbral). Sólo se reenvía si el conjunto cambió.
+  const signature = digest.count
+    ? createHash('sha1').update(digest.raw.offers
+      .map(product => `${product.platform}|${product.productId}|${Math.max(product.discount ?? 0, product.advertisedDiscount ?? 0)}`)
+      .sort().join(',')).digest('hex')
+    : 'empty';
+  const digestFile = join(dataDir, 'digest.json');
+  let previousSignature = null;
+  if (existsSync(digestFile)) {
+    try { previousSignature = JSON.parse(readFileSync(digestFile, 'utf8'))?.signature ?? null; } catch {}
+  }
+
   if (flag('send')) {
     if (!digest.text) {
-      console.log('[Telegram] sin ofertas nuevas sobre el umbral');
+      console.log('[Telegram] sin ofertas sobre el umbral');
+    } else if (!sendAll && signature === previousSignature) {
+      console.log(`[Telegram] sin cambios en las ofertas (${digest.count}); no se reenvía`);
     } else {
       const parts = chunk(digest.text);
       const subscribersFile = join(dataDir, 'subscribers.json');
@@ -280,7 +297,7 @@ async function main() {
         ? (JSON.parse(readFileSync(subscribersFile, 'utf8'))?.ids ?? [])
         : [];
       if (dryRun) {
-        console.log('\n[DRY-RUN] mensaje que se enviarÃ­a:\n');
+        console.log('\n[DRY-RUN] mensaje que se enviaría:\n');
         console.log(digest.text);
       } else {
         for (const part of parts) {
@@ -294,6 +311,7 @@ async function main() {
   }
 
   if (!dryRun) {
+    writeFileSync(digestFile, `${JSON.stringify({ signature, count: digest.count, sentAt: new Date().toISOString() }, null, 2)}\n`, 'utf8');
     const seen = loadSeen(dataDir);
     const now = Date.now();
     for (const product of [...digest.raw.offers, ...digest.raw.flash]) {

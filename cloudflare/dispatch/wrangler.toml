@@ -1,0 +1,12 @@
+name = "cazador-dispatch"
+main = "src/index.js"
+compatibility_date = "2026-11-01"
+
+# Cada 30 minutos, exacto (Cloudflare Cron Triggers no se throttlean como GitHub).
+[triggers]
+crons = ["*/30 * * * *"]
+
+[vars]
+GITHUB_REPO = "AlanMundler/cazador-ofertas"
+WORKFLOW_FILE = "scrape-markets.yml"
+GITHUB_REF = "master"
