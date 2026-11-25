@@ -5,7 +5,7 @@
       "lat": -31.412943,
       "lng": -64.1966036
     },
-    "fetchedAt": "2026-11-25T20:02:58.467Z",
+    "fetchedAt": "2026-11-25T20:33:20.344Z",
     "storesAvailable": 51,
     "storesScanned": 51,
     "storesSeen": 51,
@@ -20,7 +20,7 @@
       "La Anónima"
     ],
     "catalogCoverage": {
-      "itemsSeen": 7211,
+      "itemsSeen": 7339,
       "aislesAnnounced": null,
       "sampled": true,
       "truncated": false
@@ -33,7 +33,7 @@
       "lat": -31.412943,
       "lng": -64.1966036
     },
-    "fetchedAt": "2026-11-25T20:03:06.741Z",
+    "fetchedAt": "2026-11-25T20:42:48.016Z",
     "storesAvailable": 22,
     "storesScanned": 22,
     "storesSeen": 22,
@@ -61,14 +61,14 @@
       "lat": -31.412943,
       "lng": -64.1966036
     },
-    "fetchedAt": "2026-11-25T20:03:28.929Z",
+    "fetchedAt": "2026-11-25T20:42:58.982Z",
     "storesAvailable": 22,
     "storesScanned": 22,
     "storesSeen": 22,
     "storesByKind": {
       "super": 2,
-      "vertical": 3,
-      "otro": 17
+      "vertical": 20,
+      "otro": 0
     },
     "missingChains": [
       "Jumbo",
@@ -79,11 +79,11 @@
       "Makro"
     ],
     "catalogCoverage": {
-      "itemsSeen": 2144,
+      "itemsSeen": 0,
       "aislesAnnounced": null,
       "sampled": true,
       "truncated": false
     },
-    "health": "ok"
+    "health": "dead"
   }
 ]
