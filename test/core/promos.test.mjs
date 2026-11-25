@@ -30,7 +30,7 @@ const promoItem = (overrides = {}) => ({
   price: 1000,
   beforePrice: null,
   discount: 25,
-  advertisedDiscount: 50,
+  advertisedDiscount: 25,
   effectivePrice: 750,
   requiresQty: 2,
   promoType: 'multibuy',
@@ -42,26 +42,42 @@ const promoItem = (overrides = {}) => ({
   ...overrides,
 });
 
-test('descuento anunciado: "1 ud. al 50%" entra como 50% aunque el efectivo sea 25%', () => {
+test('2da unidad al 50% se cuenta como 25% sobre el par, no 50%', () => {
   const base = py.find(item => item.name === 'Gomitas Mogul Moras 80 g');
   const product = normalizeProduct(base, PY_META).product;
+  assert.equal(product.requiresQty, 2);
+  assert.equal(product.effectivePrice, 1356.75);
   assert.equal(product.discount, 25);
-  assert.equal(product.advertisedDiscount, 50);
+  assert.equal(product.advertisedDiscount, 25);
 });
 
-test('el umbral usa el descuento anunciado', () => {
+test('2x1 real sigue siendo 50% sobre el par', () => {
+  const base = py.find(item => item.name === 'Gomitas Mogul Moras 80 g');
+  const raw = {
+    ...base,
+    pricing: { ...base.pricing, beforePrice: null },
+    campaigns: [{ type: 'sameItemBundle', tag: '2 x 1', configuration: { pay: 1, take: 2, value: 100 } }],
+  };
+  const product = normalizeProduct(raw, PY_META).product;
+  assert.equal(product.discount, 50);
+  assert.equal(product.requiresQty, 2);
+});
+
+test('con umbral 50% la promo de 2da unidad al 50% (25% real) no entra', () => {
   const { byPlatform } = rankByPlatform([promoItem()], { minDiscount: { PedidosYa: 50 } });
-  assert.equal(byPlatform.PedidosYa.topDiscount.length, 1);
-});
-
-test('un descuento real menor al umbral sigue afuera', () => {
-  const { byPlatform } = rankByPlatform([promoItem({ advertisedDiscount: 30, discount: 30, promoDetail: null, promoType: null })], { minDiscount: { PedidosYa: 50 } });
   assert.equal(byPlatform.PedidosYa.topDiscount.length, 0);
 });
 
-test('el mensaje muestra el % anunciado y la condición del multibuy', () => {
+test('el mensaje muestra el precio del par y el unitario', () => {
   const ranked = { byPlatform: { PedidosYa: { topDiscount: [promoItem()], flash: [], bestPriceByProduct: [] } } };
   const digest = buildDigest(ranked, { thresholds: { PedidosYa: 50 } });
-  assert.ok(digest.text.includes('50% Gomitas Mogul — $1.000 —'));
+  assert.ok(digest.text.includes('25% Gomitas Mogul — $1.500 las 2 ($750 c/u) —'));
   assert.ok(digest.text.includes('(1 ud. al 50% dto)'));
+});
+
+test('sin promo de cantidad muestra el precio simple', () => {
+  const simple = promoItem({ promoType: null, requiresQty: 1, promoDetail: null, discount: 60, advertisedDiscount: 60, price: 1000, effectivePrice: 1000 });
+  const ranked = { byPlatform: { PedidosYa: { topDiscount: [simple], flash: [], bestPriceByProduct: [] } } };
+  const digest = buildDigest(ranked, { thresholds: { PedidosYa: 50 } });
+  assert.ok(digest.text.includes('60% Gomitas Mogul — $1.000 —'));
 });

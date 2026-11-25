@@ -8,7 +8,7 @@ export function offerKey(product) {
 }
 
 function money(value) {
-  return `$${Number(value).toLocaleString('es-AR', { maximumFractionDigits: 0 })}`;
+  return `$${Number(value).toLocaleString('es-AR', { maximumFractionDigits: 2 })}`;
 }
 
 export function escapeHtml(value) {
@@ -29,10 +29,16 @@ function storeLink(product) {
 
 function offerLine(product) {
   const shown = Math.max(product.discount ?? 0, product.advertisedDiscount ?? 0);
-  const condition = product.promoType === 'multibuy' && product.promoDetail
-    ? ` (${product.promoDetail})`
-    : '';
-  return `• ${shown}% ${escapeHtml(product.name)} — ${money(product.price)} — ${storeLink(product)}${condition}`;
+  const qty = Number(product.requiresQty) > 1 ? Number(product.requiresQty) : 1;
+
+  if (product.promoType === 'multibuy' && qty > 1) {
+    const perUnit = Number.isFinite(product.effectivePrice) ? product.effectivePrice : product.price;
+    const total = perUnit * qty;
+    const note = product.promoDetail ? ` (${product.promoDetail})` : '';
+    return `• ${shown}% ${escapeHtml(product.name)} — ${money(total)} las ${qty} (${money(perUnit)} c/u) — ${storeLink(product)}${note}`;
+  }
+
+  return `• ${shown}% ${escapeHtml(product.name)} — ${money(product.price)} — ${storeLink(product)}`;
 }
 
 const PLATFORM_LABEL = { PedidosYa: 'PEDIDOSYA', Rappi: 'RAPPI', UberEats: 'UBER EATS' };

@@ -42,7 +42,10 @@ Una línea por producto, link en el nombre del local (HTML de Telegram):
 • 57% Pelador De Ristras Krea — $1.490 — <a href="https://...">Jumbo Córdoba</a>
 ```
 
-Sin "antes" ni ahorro. Se parte en mensajes de ≤3800 caracteres y sólo se envía lo nuevo.
+Sin "antes" ni ahorro. En promos de cantidad el descuento se calcula **sobre el conjunto**
+(2x1 → 50%, "2da unidad al 50%" → 25%) y se muestra el precio del par con el unitario:
+`• 50% Gomitas — $1.050 las 2 ($525 c/u) — Local (2 x 1)`.
+Se parte en mensajes de ≤3800 caracteres y sólo se envía lo nuevo.
 
 ## Cómo obtiene los datos
 
