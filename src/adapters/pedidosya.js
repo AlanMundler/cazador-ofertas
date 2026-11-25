@@ -10,6 +10,7 @@ import { normalizeProduct } from '../core/normalize.js';
 
 const HOME = 'https://www.pedidosya.com.ar/';
 
+const OFFER_MIN = 20;
 const SUPER_BRANDS = /(jumbo|disco|vea|carrefour|makro|coto|la an.nima|pedidosya market|sumo|changomas|walmart)/i;
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -123,7 +124,9 @@ export async function collectPedidosYa({
   maxPages = 0,
   concurrency = 4,
   cacheDir = 'data/cache/py',
-  cacheTtlMs = 90 * 60 * 1000,
+  cacheTtlMs = 6 * 60 * 60 * 1000,
+  storesPerRun = 2,
+  requestBudget = 170,
   timeBudgetMs = 25 * 60 * 1000,
   headless = false,
   log = () => {},
@@ -190,7 +193,7 @@ export async function collectPedidosYa({
       .sort((a, b) => (a.kind === 'super' ? 0 : 1) - (b.kind === 'super' ? 0 : 1));
     const eligible = maxStores > 0 ? pool.slice(0, maxStores) : pool;
 
-    // Caché por tienda: cada barrida cubre todas las tiendas, pero sólo refresca las vencidas.
+    // Caché por tienda (sólo ofertas, para que el archivo sea chico y se pueda versionar).
     const readCache = id => {
       try {
         const data = JSON.parse(readFileSync(join(cacheDir, `${id}.json`), 'utf8'));
@@ -207,36 +210,35 @@ export async function collectPedidosYa({
     const caches = new Map();
     for (const vendor of eligible) caches.set(vendor.id, readCache(vendor.id));
 
+    // PedidosYa bloquea (~200 requests por sesión): cada corrida barre unas pocas tiendas
+    // completas y el resto sale del caché. Así todas las tiendas están siempre en el mensaje.
     const startedAt = Date.now();
-    const ordered = [...eligible].sort((a, b) => (caches.get(a.id)?.fetchedAt ?? 0) - (caches.get(b.id)?.fetchedAt ?? 0));
-    let cachedCount = 0;
+    const stale = eligible
+      .filter(vendor => {
+        const cache = caches.get(vendor.id);
+        return !cache || Date.now() - cache.fetchedAt > cacheTtlMs;
+      })
+      .sort((a, b) => (caches.get(a.id)?.fetchedAt ?? 0) - (caches.get(b.id)?.fetchedAt ?? 0));
 
-    for (const vendor of ordered) {
-      const cache = caches.get(vendor.id);
-      const fresh = cache && Date.now() - cache.fetchedAt < cacheTtlMs;
-      const overBudget = Date.now() - startedAt > timeBudgetMs;
+    let refreshed = 0;
+    let remainingBudget = requestBudget;
 
-      if (fresh || (overBudget && cache)) {
-        products.push(...cache.products);
-        cachedCount += 1;
-        scanned.push({ id: vendor.id, name: vendor.name, kind: vendor.kind, items: cache.products.length, cached: true });
-        continue;
-      }
-      if (overBudget) {
-        scanned.push({ id: vendor.id, name: vendor.name, kind: vendor.kind, items: 0, error: 'sin tiempo en esta corrida' });
-        continue;
-      }
+    for (const vendor of stale) {
+      if (refreshed >= storesPerRun) break;
+      if (remainingBudget <= 0) break;
+      if (Date.now() - startedAt > timeBudgetMs) break;
 
       try {
         let catalog = await storeCatalog(page, vendor.id, { maxCategories, maxPages, concurrency, log });
-        // PedidosYa corta con 403 al pasar ~200 requests seguidas: se espera y se reintenta una vez.
         if (catalog.error) {
           log(`pedidosya ${vendor.name}: ${catalog.error}, esperando 45s`);
           await sleep(45000);
           catalog = await storeCatalog(page, vendor.id, { maxCategories, maxPages, concurrency, log });
         }
         if (catalog.error) throw new Error(`pedidosya ${vendor.name}: ${catalog.error}`);
-        const normalized = [];
+
+        remainingBudget -= catalog.requests || 0;
+        const offers = [];
         for (const item of catalog.items) {
           const result = normalizeProduct(item, {
             platform: PEDIDOSYA,
@@ -248,18 +250,41 @@ export async function collectPedidosYa({
             url: productUrl(vendor.id),
             fetchedAt: new Date().toISOString(),
           });
-          if (result.ok) normalized.push(result.product);
+          if (!result.ok) continue;
+          if ((result.product.discount ?? 0) >= OFFER_MIN) offers.push(result.product);
         }
-        products.push(...normalized);
-        writeCache(vendor.id, normalized);
-        scanned.push({ id: vendor.id, name: vendor.name, kind: vendor.kind, categories: catalog.categories, categoriesScanned: catalog.categoriesScanned, items: normalized.length, truncated: catalog.truncated, failed: catalog.failed });
-        log(`pedidosya ${vendor.name}: ${normalized.length} productos (${catalog.requests} requests, ${catalog.categoriesScanned}/${catalog.categories} categorías)`);
+
+        writeCache(vendor.id, offers);
+        caches.set(vendor.id, { fetchedAt: Date.now(), products: offers });
+        refreshed += 1;
+        log(`pedidosya ${vendor.name}: ${offers.length} ofertas de ${catalog.items.length} productos (${catalog.requests} requests, ${catalog.categoriesScanned}/${catalog.categories} categorías)`);
       } catch (error) {
-        scanned.push({ id: vendor.id, name: vendor.name, kind: vendor.kind, items: 0, error: error.message });
         log(`pedidosya ${vendor.name}: ${error.message}`);
       }
       await sleep(500);
     }
+
+    // El mensaje se arma con TODAS las tiendas: las recién barridas + las cacheadas.
+    let freshCached = 0;
+    for (const vendor of eligible) {
+      const cache = caches.get(vendor.id);
+      if (!cache) {
+        scanned.push({ id: vendor.id, name: vendor.name, kind: vendor.kind, items: 0, error: 'sin datos todavía' });
+        continue;
+      }
+      const isFresh = Date.now() - cache.fetchedAt <= cacheTtlMs;
+      if (isFresh) freshCached += 1;
+      products.push(...cache.products);
+      scanned.push({
+        id: vendor.id,
+        name: vendor.name,
+        kind: vendor.kind,
+        items: cache.products.length,
+        cached: true,
+        ageMinutes: Math.round((Date.now() - cache.fetchedAt) / 60000),
+      });
+    }
+    log(`pedidosya: ${refreshed} tiendas barridas ahora, ${freshCached}/${eligible.length} con datos frescos`);
 
     const byKind = scanned.reduce((acc, store) => ({ ...acc, [store.kind]: (acc[store.kind] ?? 0) + 1 }), {});
     return {
@@ -270,7 +295,8 @@ export async function collectPedidosYa({
         fetchedAt: new Date().toISOString(),
         storesSeen: scanned.length,
         storesAvailable: pool.length,
-        cachedStores: cachedCount,
+        storesRefreshed: refreshed,
+        cachedStores: freshCached,
         truncated: (maxStores > 0 && pool.length > maxStores) || scanned.some(store => store.truncated),
         storesByKind: byKind,
         missingChains: [],

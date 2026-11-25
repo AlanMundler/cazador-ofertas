@@ -130,10 +130,12 @@ jobs:
           git config --global user.name "cazador-bot"
           git config --global user.email "bot@cazador-ofertas.local"
           # Sólo artefactos chicos: deals.json y runs quedan como artefacto local (evita bloat).
-          git add data/seen.json data/coverage.json data/health.json data/digest.json 2>/dev/null || true
+          git add data/seen.json data/coverage.json data/health.json data/digest.json data/cache 2>/dev/null || true
           git diff --cached --quiet || git commit -m "markets state $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           git pull --rebase origin master || true
           git push || true
+
+
 
 
 
