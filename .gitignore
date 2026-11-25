@@ -11,3 +11,4 @@ data/deals.dry-run.json
 data/cross-platform-review.json
 spike/
 slots/
+data/cache/

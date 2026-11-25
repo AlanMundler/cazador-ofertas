@@ -35,7 +35,7 @@ const platforms = platform === 'all'
   ? PLATFORM_IDS
   : platform.split(',').map(name => name.trim()).filter(Boolean);
 const dryRun = flag('dry-run');
-const maxStores = Number(arg('max-stores', '25'));
+const maxStores = Number(arg('max-stores', '0'));
 const debug = flag('verbose');
 const log = (...args) => console.log(...args);
 
@@ -44,7 +44,7 @@ async function runRappi() {
     point: POINT,
     cacheFile: join(ROOT, 'data', '.cache', 'rappi-auth.json'),
     maxStores,
-    maxPages: Number(arg('rappi-pages', '6')),
+    maxPages: Number(arg('rappi-pages', '25')),
     log: debug ? log : () => {},
   });
 }
@@ -53,9 +53,11 @@ async function runPedidosYa() {
   return collectPedidosYa({
     point: { latitude: POINT.lat, longitude: POINT.lng },
     stateFile: join(ROOT, '.py-state.json'),
-    maxStores: Number(arg('py-stores', '23')),
-    maxCategories: Number(arg('py-categories', '4')),
-    maxPages: Number(arg('py-pages', '2')),
+    maxStores: Number(arg('py-stores', '0')),
+    maxCategories: Number(arg('py-categories', '0')),
+    maxPages: Number(arg('py-pages', '0')),
+    concurrency: Number(arg('py-concurrency', '6')),
+    cacheDir: join(ROOT, 'data', 'cache', 'py'),
     headless: process.env.HEADLESS === 'true',
     log: debug ? log : () => {},
   });
@@ -337,6 +339,11 @@ main().catch(error => {
   console.error('Error fatal:', error);
   process.exitCode = 1;
 });
+
+
+
+
+
 
 
 

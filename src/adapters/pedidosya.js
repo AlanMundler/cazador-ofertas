@@ -1,15 +1,16 @@
-// Adaptador PedidosYa: browser (sólo por cookies CF/PX) + APIs internas same-origin.
+﻿// Adaptador PedidosYa: browser (sÃ³lo por cookies CF/PX) + APIs internas same-origin.
 // Contrato verificado en spike/py/modal9.log y modal11.log (2026-11-18).
-// La dirección de entrega NO se usa: la cobertura sale del header `point` del shoplist.
+// La direcciÃ³n de entrega NO se usa: la cobertura sale del header `point` del shoplist.
 
-import { existsSync } from 'fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { dirname, join } from 'path';
 
 import { PEDIDOSYA } from '../core/platforms.js';
 import { normalizeProduct } from '../core/normalize.js';
 
 const HOME = 'https://www.pedidosya.com.ar/';
 
-const SUPER_BRANDS = /(jumbo|disco|vea|carrefour|makro|coto|la an[oó]nima|pedidosya market|sumo|changomas|walmart)/i;
+const SUPER_BRANDS = /(jumbo|disco|vea|carrefour|makro|coto|la an[oÃ³]nima|pedidosya market|sumo|changomas|walmart)/i;
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -47,8 +48,8 @@ async function shoplistPage(page, point, pageNumber) {
   }, { point, pageNumber });
 }
 
-async function storeCatalog(page, vendorId, { maxCategories, maxPages, log }) {
-  return page.evaluate(async ({ vendorId, maxCategories, maxPages }) => {
+async function storeCatalog(page, vendorId, { maxCategories, maxPages, concurrency = 4, log }) {
+  return page.evaluate(async ({ vendorId, maxCategories, maxPages, concurrency }) => {
     const categoriesResponse = await fetch(`/groceries/web/v1/vendors/${vendorId}/categories`, { credentials: 'include' });
     const categoriesBody = await categoriesResponse.json().catch(() => null);
     const categories = categoriesBody?.categories ?? [];
@@ -67,33 +68,47 @@ async function storeCatalog(page, vendorId, { maxCategories, maxPages, log }) {
     let scanned = 0;
     let truncated = false;
     let failed = 0;
-    for (const category of flat.slice(0, maxCategories)) {
-      for (let pageNumber = 0; pageNumber < maxPages; pageNumber += 1) {
-        const response = await fetch(`/groceries/web/v1/vendors/${vendorId}/products?categoryId=${category.id}&limit=100&page=${pageNumber}`, { credentials: 'include' });
-        requests += 1;
-        if (!response.ok) { failed += 1; break; }
-        const body = await response.json().catch(() => null);
-        const list = body?.items ?? [];
-        for (const item of list) {
-          const id = String(item?.id ?? item?.productId ?? '');
-          if (id && !items.has(id)) items.set(id, item);
+    const targets = maxCategories > 0 ? flat.slice(0, maxCategories) : flat;
+
+    // Varias categorías en paralelo para que el barrido completo entre en tiempo.
+    let cursor = 0;
+    async function worker() {
+      while (cursor < targets.length) {
+        const category = targets[cursor++];
+        let pageNumber = 0;
+        while (true) {
+          const response = await fetch(`/groceries/web/v1/vendors/${vendorId}/products?categoryId=${category.id}&limit=100&page=${pageNumber}`, { credentials: 'include' });
+          requests += 1;
+          if (!response.ok) { failed += 1; break; }
+          const body = await response.json().catch(() => null);
+          const list = body?.items ?? [];
+          for (const item of list) {
+            const id = String(item?.id ?? item?.productId ?? '');
+            if (id && !items.has(id)) items.set(id, item);
+          }
+          if (body?.lastPage || list.length < 100) break;
+          pageNumber += 1;
+          if (maxPages > 0 && pageNumber >= maxPages) { truncated = true; break; }
+          if (pageNumber > 40) { truncated = true; break; }
+          await new Promise(resolve => setTimeout(resolve, 100));
         }
-        if (body?.lastPage || list.length < 100) break;
-        if (pageNumber === maxPages - 1) truncated = true;
+        scanned += 1;
       }
-      scanned += 1;
     }
+
+    await Promise.all(Array.from({ length: Math.min(concurrency, targets.length) }, worker));
 
     return {
       status: categoriesResponse.status,
       categories: categories.length,
+      categoriesScanned: scanned,
       scanned,
       requests,
       truncated,
       failed,
       items: [...items.values()],
     };
-  }, { vendorId, maxCategories, maxPages });
+  }, { vendorId, maxCategories, maxPages, concurrency });
 }
 
 /**
@@ -103,9 +118,13 @@ async function storeCatalog(page, vendorId, { maxCategories, maxPages, log }) {
 export async function collectPedidosYa({
   point,
   stateFile = '.py-state.json',
-  maxStores = 23,
-  maxCategories = 8,
-  maxPages = 3,
+  maxStores = 0,
+  maxCategories = 0,
+  maxPages = 0,
+  concurrency = 4,
+  cacheDir = 'data/cache/py',
+  cacheTtlMs = 90 * 60 * 1000,
+  timeBudgetMs = 12 * 60 * 1000,
   headless = false,
   log = () => {},
 } = {}) {
@@ -116,8 +135,8 @@ export async function collectPedidosYa({
     timezoneId: 'America/Argentina/Buenos_Aires',
     viewport: { width: 1366, height: 768 },
   };
-  // PedidosYa funciona por WARP; un proxy público suele estar bloqueado (403).
-  // Por eso usa su propio env y no hereda PROXY_URL genérico.
+  // PedidosYa funciona por WARP; un proxy pÃºblico suele estar bloqueado (403).
+  // Por eso usa su propio env y no hereda PROXY_URL genÃ©rico.
   if (process.env.PY_PROXY_URL) launchOptions.proxy = { server: process.env.PY_PROXY_URL };
   if (stateFile && existsSync(stateFile)) launchOptions.storageState = stateFile;
 
@@ -169,12 +188,49 @@ export async function collectPedidosYa({
     const pool = [...vendors.values()]
       .filter(vendor => (vendor.modes.length === 0 || vendor.modes.includes('DELIVERY')))
       .sort((a, b) => (a.kind === 'super' ? 0 : 1) - (b.kind === 'super' ? 0 : 1));
-    const eligible = pool.slice(0, maxStores);
+    const eligible = maxStores > 0 ? pool.slice(0, maxStores) : pool;
 
-    for (const vendor of eligible) {
+    // Caché por tienda: cada barrida cubre todas las tiendas, pero sólo refresca las vencidas.
+    const readCache = id => {
       try {
-        const catalog = await storeCatalog(page, vendor.id, { maxCategories, maxPages, log });
+        const data = JSON.parse(readFileSync(join(cacheDir, `${id}.json`), 'utf8'));
+        return data && Array.isArray(data.products) ? data : null;
+      } catch { return null; }
+    };
+    const writeCache = (id, list) => {
+      try {
+        mkdirSync(cacheDir, { recursive: true });
+        writeFileSync(join(cacheDir, `${id}.json`), `${JSON.stringify({ fetchedAt: Date.now(), products: list })}\n`, 'utf8');
+      } catch {}
+    };
+
+    const caches = new Map();
+    for (const vendor of eligible) caches.set(vendor.id, readCache(vendor.id));
+
+    const startedAt = Date.now();
+    const ordered = [...eligible].sort((a, b) => (caches.get(a.id)?.fetchedAt ?? 0) - (caches.get(b.id)?.fetchedAt ?? 0));
+    let cachedCount = 0;
+
+    for (const vendor of ordered) {
+      const cache = caches.get(vendor.id);
+      const fresh = cache && Date.now() - cache.fetchedAt < cacheTtlMs;
+      const overBudget = Date.now() - startedAt > timeBudgetMs;
+
+      if (fresh || (overBudget && cache)) {
+        products.push(...cache.products);
+        cachedCount += 1;
+        scanned.push({ id: vendor.id, name: vendor.name, kind: vendor.kind, items: cache.products.length, cached: true });
+        continue;
+      }
+      if (overBudget) {
+        scanned.push({ id: vendor.id, name: vendor.name, kind: vendor.kind, items: 0, error: 'sin tiempo en esta corrida' });
+        continue;
+      }
+
+      try {
+        const catalog = await storeCatalog(page, vendor.id, { maxCategories, maxPages, concurrency, log });
         if (catalog.error) throw new Error(`pedidosya ${vendor.name}: ${catalog.error}`);
+        const normalized = [];
         for (const item of catalog.items) {
           const result = normalizeProduct(item, {
             platform: PEDIDOSYA,
@@ -186,15 +242,17 @@ export async function collectPedidosYa({
             url: productUrl(vendor.id),
             fetchedAt: new Date().toISOString(),
           });
-          if (result.ok) products.push(result.product);
+          if (result.ok) normalized.push(result.product);
         }
-        scanned.push({ id: vendor.id, name: vendor.name, kind: vendor.kind, categories: catalog.categories, items: catalog.items.length, truncated: catalog.truncated, failed: catalog.failed });
-        log(`pedidosya ${vendor.name}: ${catalog.items.length} productos (${catalog.requests} requests)`);
+        products.push(...normalized);
+        writeCache(vendor.id, normalized);
+        scanned.push({ id: vendor.id, name: vendor.name, kind: vendor.kind, categories: catalog.categories, categoriesScanned: catalog.categoriesScanned, items: normalized.length, truncated: catalog.truncated, failed: catalog.failed });
+        log(`pedidosya ${vendor.name}: ${normalized.length} productos (${catalog.requests} requests, ${catalog.categoriesScanned}/${catalog.categories} categorías)`);
       } catch (error) {
         scanned.push({ id: vendor.id, name: vendor.name, kind: vendor.kind, items: 0, error: error.message });
         log(`pedidosya ${vendor.name}: ${error.message}`);
       }
-      await sleep(700);
+      await sleep(500);
     }
 
     const byKind = scanned.reduce((acc, store) => ({ ...acc, [store.kind]: (acc[store.kind] ?? 0) + 1 }), {});
@@ -206,7 +264,8 @@ export async function collectPedidosYa({
         fetchedAt: new Date().toISOString(),
         storesSeen: scanned.length,
         storesAvailable: pool.length,
-        truncated: pool.length > maxStores || scanned.some(store => store.truncated),
+        cachedStores: cachedCount,
+        truncated: (maxStores > 0 && pool.length > maxStores) || scanned.some(store => store.truncated),
         storesByKind: byKind,
         missingChains: [],
         catalogCoverage: {
@@ -218,10 +277,14 @@ export async function collectPedidosYa({
       },
     };
   } finally {
-    // No pisar una sesión buena con una bloqueada: sólo se guarda si hubo datos.
+    // No pisar una sesiÃ³n buena con una bloqueada: sÃ³lo se guarda si hubo datos.
     if (stateFile && products.length > 0) {
       try { await context.storageState({ path: stateFile }); } catch {}
     }
     await context.close().catch(() => {});
   }
 }
+
+
+
+

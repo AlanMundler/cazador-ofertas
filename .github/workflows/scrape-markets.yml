@@ -118,7 +118,7 @@ jobs:
             TARGET=Rappi,PedidosYa,UberEats
           fi
                     echo "Plataformas: $TARGET"
-          xvfb-run --auto-servernum node src/run.js --send --verbose --platform="$TARGET" --max-stores=50 --py-stores=23
+          xvfb-run --auto-servernum node src/run.js --send --verbose --platform="$TARGET" --max-stores=0 --py-stores=0
 
       - name: Desconectar WARP
         if: always()
@@ -134,6 +134,7 @@ jobs:
           git diff --cached --quiet || git commit -m "markets state $(date -u +%Y-%m-%dT%H:%M:%SZ)"
           git pull --rebase origin master || true
           git push || true
+
 
 
 

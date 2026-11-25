@@ -1,8 +1,8 @@
-// Adaptador Uber Eats: browser headed (Cloudflare/bot-defense) + RPCs internos.
+﻿// Adaptador Uber Eats: browser headed (Cloudflare/bot-defense) + RPCs internos.
 // Contrato verificado en spike/ue/run-final.log (2026-11-18):
-//   getFeedByIdV1 {feedID:"shop_feed"} = directorio grocery del punto (una página, hasMore:false)
-//   getStoreV1     {storeUuid, catalogSectionOffset:1} = catálogo (~15 secciones)
-// La cookie `uev2.loc` manda: la ubicación se setea por la dirección, no por el body.
+//   getFeedByIdV1 {feedID:"shop_feed"} = directorio grocery del punto (una pÃ¡gina, hasMore:false)
+//   getStoreV1     {storeUuid, catalogSectionOffset:1} = catÃ¡logo (~15 secciones)
+// La cookie `uev2.loc` manda: la ubicaciÃ³n se setea por la direcciÃ³n, no por el body.
 
 import { mkdtempSync, rmSync } from 'fs';
 import { tmpdir } from 'os';
@@ -12,8 +12,8 @@ import { UBEREATS } from '../core/platforms.js';
 import { normalizeProduct } from '../core/normalize.js';
 
 const ORIGIN = 'https://www.ubereats.com';
-const SUPER_BRANDS = /(jumbo|disco|vea|carrefour|coto|makro|la an[oó]nima|walmart|changomas|sumo)/i;
-const MINI_SUPER = /(super|hiper|mercado|market|almac[eé]n)/i;
+const SUPER_BRANDS = /(jumbo|disco|vea|carrefour|coto|makro|la an[oÃ³]nima|walmart|changomas|sumo)/i;
+const MINI_SUPER = /(super|hiper|mercado|market|almac[eÃ©]n)/i;
 
 export function classifyUberStore({ title = '', merchantType = null } = {}) {
   if (merchantType && merchantType !== 'MERCHANT_TYPE_GROCERY') return 'otro';
@@ -97,7 +97,7 @@ export function locationFromCookie(value) {
 }
 
 async function setAddress(page, address, log) {
-  const input = await page.$('input[data-testid="address-autocomplete-input"], input[placeholder*="dirección"], input[placeholder*="address"], input[id*="location"], input[aria-label*="dirección"], input[aria-label*="address"]');
+  const input = await page.$('input[data-testid="address-autocomplete-input"], input[placeholder*="direcciÃ³n"], input[placeholder*="address"], input[id*="location"], input[aria-label*="direcciÃ³n"], input[aria-label*="address"]');
   if (!input) return false;
   await input.click();
   await page.waitForTimeout(400);
@@ -109,7 +109,7 @@ async function setAddress(page, address, log) {
     suggestions.push({ element, text: ((await element.textContent()) ?? '').trim() });
   }
   const best = suggestions
-    .filter(item => /c[oó]rdoba/i.test(item.text))
+    .filter(item => /c[oÃ³]rdoba/i.test(item.text))
     .map(item => ({
       ...item,
       score: (/calasanz/i.test(item.text) ? 2 : 0) + (/(^|\D)58(\D|$)/.test(item.text) ? 1 : 0),
@@ -117,20 +117,20 @@ async function setAddress(page, address, log) {
     .sort((a, b) => b.score - a.score)[0];
 
   if (!best) {
-    log(`ubereats: sin sugerencia de Córdoba (${suggestions.length} opciones)`);
+    log(`ubereats: sin sugerencia de CÃ³rdoba (${suggestions.length} opciones)`);
     return false;
   }
   await best.element.click();
   await page.waitForTimeout(5500);
-  log(`ubereats: dirección "${best.text.slice(0, 60)}"`);
+  log(`ubereats: direcciÃ³n "${best.text.slice(0, 60)}"`);
   return true;
 }
 
 export function buildShopFeedBody(point) {
   return {
     feedID: 'shop_feed',
-    // MANUAL fija la ubicación y manda sobre GEOIP: es lo que permite correr en CI
-    // sin proxy argentino (verificado: MANUAL con Córdoba devuelve las mismas 25 tiendas
+    // MANUAL fija la ubicaciÃ³n y manda sobre GEOIP: es lo que permite correr en CI
+    // sin proxy argentino (verificado: MANUAL con CÃ³rdoba devuelve las mismas 25 tiendas
     // que una IP argentina; MANUAL con NY devuelve tiendas de EE.UU.).
     deliveryLocation: [{ type: 'MANUAL', location: { latitude: point.lat, longitude: point.lng } }],
     feedmakerCtx: '',
@@ -139,11 +139,11 @@ export function buildShopFeedBody(point) {
 }
 
 /**
- * Recolecta ofertas de Uber Eats para una dirección.
+ * Recolecta ofertas de Uber Eats para una direcciÃ³n.
  * Requiere patchright + chromium y modo headed (headless = reCAPTCHA).
  */
 export async function collectUberEats({
-  address = 'San José de Calasanz 58, Córdoba, Argentina',
+  address = 'San JosÃ© de Calasanz 58, CÃ³rdoba, Argentina',
   point = { lat: -31.412943, lng: -64.1966036 },
   maxStores = 10,
   headless = false,
@@ -186,14 +186,14 @@ export async function collectUberEats({
       await page.waitForTimeout(20000);
     }
 
-    // La ubicación va en el body del feed (type MANUAL): no hace falta modal ni cookie.
-    log('ubereats: ubicación fijada por body (MANUAL)');
+    // La ubicaciÃ³n va en el body del feed (type MANUAL): no hace falta modal ni cookie.
+    log('ubereats: ubicaciÃ³n fijada por body (MANUAL)');
 
     const template = traffic
       .filter(record => /getFeedV1/.test(record.path) && record.status === 200 && record.json?.status === 'success')
       .sort((a, b) => JSON.stringify(b.json).length - JSON.stringify(a.json).length)[0];
 
-    // CI puede no disparar getFeedV1 en la home: se usan headers estáticos.
+    // CI puede no disparar getFeedV1 en la home: se usan headers estÃ¡ticos.
     // Verificado: getFeedByIdV1 responde 200 con `x-csrf-token: x` (probe WARP, run 44529098634).
     const headers = template
       ? safeHeaders(template.headers)
@@ -205,7 +205,7 @@ export async function collectUberEats({
         referer: `${ORIGIN}/ar`,
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
       };
-    if (!template) log('ubereats: sin getFeedV1 capturado; headers estáticos');
+    if (!template) log('ubereats: sin getFeedV1 capturado; headers estÃ¡ticos');
     const replay = async (path, body) => {
       const result = await page.evaluate(async ({ path, body, headers }) => {
         const response = await fetch(`https://www.ubereats.com${path}`, {
@@ -226,17 +226,17 @@ export async function collectUberEats({
     const available = feedStores(shopFeed.json)
       .filter(store => !/farmacia|veterinaria|drugstore|pets|mascota/i.test(store.title));
     if (available.length === 0) {
-      throw new Error('ubereats: feed vacío (¿IP fuera de Argentina?)');
+      throw new Error('ubereats: feed vacÃ­o (Â¿IP fuera de Argentina?)');
     }
-    // Guardia de ciudad: sólo se acepta el feed si trae marcas argentinas conocidas.
-    // (Sin cookie, `GEOIP` en CI puede resolver a EE.UU. — caso real: Liquor Stores.)
-    const AR_BRANDS = /carrefour|tadicor|justmart|jumbo|disco|coto|pedidosya|farmacity|carnave|la an[oó]nima|makro|sumo|d[ií]a\b|vea\b|changomas|walmart argentina|kiosco 30|365 (argentina|kioscos)/i;
+    // Guardia de ciudad: sÃ³lo se acepta el feed si trae marcas argentinas conocidas.
+    // (Sin cookie, `GEOIP` en CI puede resolver a EE.UU. â€” caso real: Liquor Stores.)
+    const AR_BRANDS = /carrefour|tadicor|justmart|jumbo|disco|coto|pedidosya|farmacity|carnave|la an[oÃ³]nima|makro|sumo|d[iÃ­]a\b|vea\b|changomas|walmart argentina|kiosco 30|365 (argentina|kioscos)/i;
     const argentine = available.filter(store => AR_BRANDS.test(store.title));
     if (argentine.length === 0) {
       throw new Error(`ubereats: feed fuera de Argentina (${available.slice(0, 3).map(s => s.title).join(', ')})`);
     }
     // La guardia valida el feed, pero se escanean todas las tiendas grocery disponibles.
-    const stores = available.slice(0, maxStores);
+    const stores = maxStores > 0 ? available.slice(0, maxStores) : available;
     for (const store of stores) {
       const catalog = await replay('/_p/api/getStoreV1?localeCode=ar', {
         storeUuid: store.storeUuid,
@@ -271,7 +271,7 @@ export async function collectUberEats({
         fetchedAt: new Date().toISOString(),
         storesSeen: scanned.length,
         storesAvailable: available.length,
-        truncated: available.length > maxStores,
+        truncated: maxStores > 0 && available.length > maxStores,
         storesByKind: byKind,
         missingChains: [],
         catalogCoverage: { itemsSeen: products.length, aislesAnnounced: null, sampled: true },
@@ -283,3 +283,4 @@ export async function collectUberEats({
     try { rmSync(profile, { recursive: true, force: true }); } catch {}
   }
 }
+

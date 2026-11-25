@@ -1,4 +1,4 @@
-// Adaptador Rappi: HTTP puro con guest token. Cobertura por punto de entrega.
+﻿// Adaptador Rappi: HTTP puro con guest token. Cobertura por punto de entrega.
 // Contrato verificado en spike/rappi/out/discover.log (2026-11-18).
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
@@ -62,7 +62,7 @@ async function jsonFetch(url, { method = 'GET', body, headers = {}, timeout = 25
   return { status: response.status, data, text };
 }
 
-/** Guest token cacheado ~7 días. Devuelve {accessToken, deviceId}. */
+/** Guest token cacheado ~7 dÃ­as. Devuelve {accessToken, deviceId}. */
 export async function rappiAuth(cacheFile, { force = false } = {}) {
   if (!force && cacheFile && existsSync(cacheFile)) {
     try {
@@ -233,7 +233,7 @@ export async function rappiStoreProducts(store, { auth, maxPages = 8, log = () =
 
 /**
  * Recolecta ofertas de Rappi para un punto de entrega.
- * Devuelve productos normalizados + declaración de cobertura.
+ * Devuelve productos normalizados + declaraciÃ³n de cobertura.
  */
 export async function collectRappi({
   point,
@@ -249,9 +249,10 @@ export async function collectRappi({
     .sort((a, b) => (a.kind === 'super' ? 0 : 1) - (b.kind === 'super' ? 0 : 1));
   const byKind = eligible.reduce((acc, store) => ({ ...acc, [store.kind]: (acc[store.kind] ?? 0) + 1 }), {});
 
+  const limited = maxStores > 0 ? eligible.slice(0, maxStores) : eligible;
   const products = [];
   const scanned = [];
-  for (const store of eligible.slice(0, maxStores)) {
+  for (const store of limited) {
     try {
       const raw = await rappiStoreProducts({ ...store, point }, { auth, maxPages, log });
       const url = `https://www.rappi.com.ar/tiendas/${store.slug}`;
@@ -282,7 +283,7 @@ export async function collectRappi({
       fetchedAt: new Date().toISOString(),
       storesSeen: scanned.length,
       storesAvailable: eligible.length,
-      truncated: eligible.length > maxStores,
+      truncated: maxStores > 0 && eligible.length > maxStores,
       storesByKind: byKind,
       missingChains: [],
       catalogCoverage: {
@@ -294,3 +295,4 @@ export async function collectRappi({
     },
   };
 }
+
