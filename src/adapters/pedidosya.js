@@ -10,7 +10,7 @@ import { normalizeProduct } from '../core/normalize.js';
 
 const HOME = 'https://www.pedidosya.com.ar/';
 
-const SUPER_BRANDS = /(jumbo|disco|vea|carrefour|makro|coto|la an[oÃ³]nima|pedidosya market|sumo|changomas|walmart)/i;
+const SUPER_BRANDS = /(jumbo|disco|vea|carrefour|makro|coto|la an.nima|pedidosya market|sumo|changomas|walmart)/i;
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
