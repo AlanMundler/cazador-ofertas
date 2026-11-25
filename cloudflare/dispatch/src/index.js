@@ -24,17 +24,32 @@ async function dispatch(env) {
     return { ok: false, error: 'falta GITHUB_TOKEN', startedAt };
   }
 
+  const apiHeaders = {
+    authorization: `Bearer ${env.GITHUB_TOKEN}`,
+    accept: 'application/vnd.github+json',
+    'user-agent': 'cazador-dispatch',
+    'x-github-api-version': '2022-11-28',
+  };
+
+  // Si ya hay una barrida corriendo, no encolar otra.
+  try {
+    const running = await fetch(
+      `https://api.github.com/repos/${repo}/actions/workflows/${workflow}/runs?status=in_progress&per_page=1`,
+      { headers: apiHeaders },
+    );
+    if (running.ok) {
+      const data = await running.json();
+      if ((data.total_count ?? 0) > 0) {
+        return { ok: true, skipped: 'run en curso', repo, workflow, startedAt };
+      }
+    }
+  } catch {}
+
   const response = await fetch(
     `https://api.github.com/repos/${repo}/actions/workflows/${workflow}/dispatches`,
     {
       method: 'POST',
-      headers: {
-        authorization: `Bearer ${env.GITHUB_TOKEN}`,
-        accept: 'application/vnd.github+json',
-        'content-type': 'application/json',
-        'user-agent': 'cazador-dispatch',
-        'x-github-api-version': '2022-11-28',
-      },
+      headers: { ...apiHeaders, 'content-type': 'application/json' },
       body: JSON.stringify({ ref }),
     },
   );
