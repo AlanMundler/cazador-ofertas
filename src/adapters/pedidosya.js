@@ -90,7 +90,7 @@ async function storeCatalog(page, vendorId, { maxCategories, maxPages, concurren
           pageNumber += 1;
           if (maxPages > 0 && pageNumber >= maxPages) { truncated = true; break; }
           if (pageNumber > 40) { truncated = true; break; }
-          await new Promise(resolve => setTimeout(resolve, 100));
+          await new Promise(resolve => setTimeout(resolve, 200));
         }
         scanned += 1;
       }
@@ -124,7 +124,7 @@ export async function collectPedidosYa({
   concurrency = 4,
   cacheDir = 'data/cache/py',
   cacheTtlMs = 90 * 60 * 1000,
-  timeBudgetMs = 12 * 60 * 1000,
+  timeBudgetMs = 25 * 60 * 1000,
   headless = false,
   log = () => {},
 } = {}) {
@@ -228,7 +228,13 @@ export async function collectPedidosYa({
       }
 
       try {
-        const catalog = await storeCatalog(page, vendor.id, { maxCategories, maxPages, concurrency, log });
+        let catalog = await storeCatalog(page, vendor.id, { maxCategories, maxPages, concurrency, log });
+        // PedidosYa corta con 403 al pasar ~200 requests seguidas: se espera y se reintenta una vez.
+        if (catalog.error) {
+          log(`pedidosya ${vendor.name}: ${catalog.error}, esperando 45s`);
+          await sleep(45000);
+          catalog = await storeCatalog(page, vendor.id, { maxCategories, maxPages, concurrency, log });
+        }
         if (catalog.error) throw new Error(`pedidosya ${vendor.name}: ${catalog.error}`);
         const normalized = [];
         for (const item of catalog.items) {
@@ -284,6 +290,7 @@ export async function collectPedidosYa({
     await context.close().catch(() => {});
   }
 }
+
 
 
 

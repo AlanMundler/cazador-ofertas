@@ -56,7 +56,7 @@ async function runPedidosYa() {
     maxStores: Number(arg('py-stores', '0')),
     maxCategories: Number(arg('py-categories', '0')),
     maxPages: Number(arg('py-pages', '0')),
-    concurrency: Number(arg('py-concurrency', '6')),
+    concurrency: Number(arg('py-concurrency', '3')),
     cacheDir: join(ROOT, 'data', 'cache', 'py'),
     headless: process.env.HEADLESS === 'true',
     log: debug ? log : () => {},
@@ -339,6 +339,7 @@ main().catch(error => {
   console.error('Error fatal:', error);
   process.exitCode = 1;
 });
+
 
 
 
