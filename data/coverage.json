@@ -5,7 +5,7 @@
       "lat": -31.412943,
       "lng": -64.1966036
     },
-    "fetchedAt": "2026-11-26T09:02:17.167Z",
+    "fetchedAt": "2026-11-26T09:35:56.845Z",
     "storesAvailable": 38,
     "storesScanned": 38,
     "storesSeen": 38,
@@ -20,7 +20,7 @@
       "La Anónima"
     ],
     "catalogCoverage": {
-      "itemsSeen": 3516,
+      "itemsSeen": 3515,
       "aislesAnnounced": null,
       "sampled": true,
       "truncated": false
@@ -33,7 +33,7 @@
       "lat": -31.412943,
       "lng": -64.1966036
     },
-    "fetchedAt": "2026-11-26T09:03:18.145Z",
+    "fetchedAt": "2026-11-26T09:37:10.903Z",
     "storesAvailable": 22,
     "storesScanned": 22,
     "storesSeen": 22,
@@ -48,7 +48,7 @@
       "Makro"
     ],
     "catalogCoverage": {
-      "itemsSeen": 2037,
+      "itemsSeen": 2493,
       "aislesAnnounced": 0,
       "sampled": false,
       "truncated": false
@@ -61,7 +61,7 @@
       "lat": -31.412943,
       "lng": -64.1966036
     },
-    "fetchedAt": "2026-11-26T09:03:27.543Z",
+    "fetchedAt": "2026-11-26T09:37:19.915Z",
     "storesAvailable": 22,
     "storesScanned": 22,
     "storesSeen": 22,
