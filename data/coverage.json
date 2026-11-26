@@ -5,13 +5,13 @@
       "lat": -31.412943,
       "lng": -64.1966036
     },
-    "fetchedAt": "2026-11-26T11:02:48.263Z",
-    "storesAvailable": 51,
-    "storesScanned": 51,
-    "storesSeen": 51,
+    "fetchedAt": "2026-11-26T11:32:46.449Z",
+    "storesAvailable": 50,
+    "storesScanned": 50,
+    "storesSeen": 50,
     "storesByKind": {
       "super": 5,
-      "vertical": 46,
+      "vertical": 45,
       "otro": 0
     },
     "missingChains": [
@@ -20,7 +20,7 @@
       "La Anónima"
     ],
     "catalogCoverage": {
-      "itemsSeen": 6787,
+      "itemsSeen": 7245,
       "aislesAnnounced": null,
       "sampled": true,
       "truncated": false
@@ -33,7 +33,7 @@
       "lat": -31.412943,
       "lng": -64.1966036
     },
-    "fetchedAt": "2026-11-26T11:03:49.730Z",
+    "fetchedAt": "2026-11-26T11:34:22.624Z",
     "storesAvailable": 22,
     "storesScanned": 22,
     "storesSeen": 22,
@@ -48,7 +48,7 @@
       "Makro"
     ],
     "catalogCoverage": {
-      "itemsSeen": 2635,
+      "itemsSeen": 3881,
       "aislesAnnounced": 0,
       "sampled": false,
       "truncated": false
@@ -61,7 +61,7 @@
       "lat": -31.412943,
       "lng": -64.1966036
     },
-    "fetchedAt": "2026-11-26T11:03:59.097Z",
+    "fetchedAt": "2026-11-26T11:34:31.286Z",
     "storesAvailable": 22,
     "storesScanned": 22,
     "storesSeen": 22,
