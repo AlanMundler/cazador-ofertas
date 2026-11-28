@@ -5,7 +5,7 @@
       "lat": -31.412943,
       "lng": -64.1966036
     },
-    "fetchedAt": "2026-11-28T06:32:24.536Z",
+    "fetchedAt": "2026-11-28T07:02:08.239Z",
     "storesAvailable": 36,
     "storesScanned": 36,
     "storesSeen": 36,
@@ -20,7 +20,7 @@
       "La Anónima"
     ],
     "catalogCoverage": {
-      "itemsSeen": 2944,
+      "itemsSeen": 3342,
       "aislesAnnounced": null,
       "sampled": true,
       "truncated": false
@@ -33,7 +33,7 @@
       "lat": -31.412943,
       "lng": -64.1966036
     },
-    "fetchedAt": "2026-11-28T06:33:37.358Z",
+    "fetchedAt": "2026-11-28T07:03:13.158Z",
     "storesAvailable": 22,
     "storesScanned": 22,
     "storesSeen": 22,
@@ -48,7 +48,7 @@
       "Makro"
     ],
     "catalogCoverage": {
-      "itemsSeen": 4790,
+      "itemsSeen": 4799,
       "aislesAnnounced": 0,
       "sampled": false,
       "truncated": false
@@ -61,14 +61,14 @@
       "lat": -31.412943,
       "lng": -64.1966036
     },
-    "fetchedAt": "2026-11-28T06:33:46.306Z",
+    "fetchedAt": "2026-11-28T07:03:23.314Z",
     "storesAvailable": 22,
     "storesScanned": 22,
     "storesSeen": 22,
     "storesByKind": {
       "super": 2,
-      "vertical": 20,
-      "otro": 0
+      "vertical": 19,
+      "otro": 1
     },
     "missingChains": [
       "Jumbo",
@@ -79,11 +79,11 @@
       "Makro"
     ],
     "catalogCoverage": {
-      "itemsSeen": 0,
+      "itemsSeen": 90,
       "aislesAnnounced": null,
       "sampled": true,
       "truncated": false
     },
-    "health": "dead"
+    "health": "ok"
   }
 ]
