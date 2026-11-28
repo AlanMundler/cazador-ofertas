@@ -5,7 +5,7 @@
       "lat": -31.412943,
       "lng": -64.1966036
     },
-    "fetchedAt": "2026-11-28T07:32:10.730Z",
+    "fetchedAt": "2026-11-28T08:02:30.870Z",
     "storesAvailable": 36,
     "storesScanned": 36,
     "storesSeen": 36,
@@ -33,7 +33,7 @@
       "lat": -31.412943,
       "lng": -64.1966036
     },
-    "fetchedAt": "2026-11-28T07:33:15.008Z",
+    "fetchedAt": "2026-11-28T08:03:57.048Z",
     "storesAvailable": 22,
     "storesScanned": 22,
     "storesSeen": 22,
@@ -48,7 +48,7 @@
       "Makro"
     ],
     "catalogCoverage": {
-      "itemsSeen": 3547,
+      "itemsSeen": 3485,
       "aislesAnnounced": 0,
       "sampled": false,
       "truncated": false
@@ -61,7 +61,7 @@
       "lat": -31.412943,
       "lng": -64.1966036
     },
-    "fetchedAt": "2026-11-28T07:33:26.855Z",
+    "fetchedAt": "2026-11-28T08:04:05.736Z",
     "storesAvailable": 22,
     "storesScanned": 22,
     "storesSeen": 22,
